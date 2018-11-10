@@ -24,5 +24,10 @@ namespace LogBookReader
         {
             InitializeComponent();
         }
+
+        private void ButtpnConnectToLog_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
