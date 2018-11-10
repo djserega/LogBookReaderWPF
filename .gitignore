@@ -328,3 +328,9 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+md demo/ICSharpCode.AvalonEdit.dll
+md demo/MaterialDesignColors.dll
+md demo/MaterialDesignDemo.exe
+md demo/MaterialDesignThemes.Wpf.dll
+md demo/ShowMeTheXAML.AvalonEdit.dll
+md demo/ShowMeTheXAML.dll
