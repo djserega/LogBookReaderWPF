@@ -9,9 +9,18 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="200" Width="200">
     <Grid>
-        <Button Content="Connect to Log"
-                Height="50"
-                Width="150"
-                Click="ButtpnConnectToLog_Click"/>
+        <StackPanel VerticalAlignment="Center">
+            <Button Content="Connect to Log"
+                    Height="50"
+                    Width="150"
+                    Margin="0 5"
+                    Click="ButtpnConnectToLog_Click"/>
+            <Button Content="Connect to Log"
+                    Height="50"
+                    Width="150"
+                    Margin="0 5"
+                    Style="{DynamicResource MaterialDesignRaisedAccentButton}"
+                    Click="ButtpnConnectToLog_Click"/>
+        </StackPanel>
     </Grid>
 </Window>
