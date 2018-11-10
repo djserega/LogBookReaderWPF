@@ -25,8 +25,15 @@ namespace LogBookReader
             InitializeComponent();
         }
 
-        private void ButtpnConnectToLog_Click(object sender, RoutedEventArgs e)
+        private async void ButtpnConnectToLog_Click(object sender, RoutedEventArgs e)
         {
+            EF.ReaderContext readerContext = new EF.ReaderContext();
+
+            var repoAppCodes = new EF.Repository<Models.AppCodes>(readerContext);
+            List<Models.AppCodes> appCodes = await repoAppCodes.GetListAsync();
+
+            var repoEventLogs = new EF.Repository<Models.EventLog>(readerContext);
+            List<Models.EventLog> eventLog = await repoEventLogs.GetListAsync();
 
         }
     }

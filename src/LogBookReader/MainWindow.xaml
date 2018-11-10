@@ -7,20 +7,28 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="200" Width="200">
+        Title="MainWindow" Height="400" Width="800">
     <Grid>
-        <StackPanel VerticalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="5"/>
+        </Grid.RowDefinitions>
+        
+        <Grid Grid.Row="1">
             <Button Content="Connect to Log"
                     Height="50"
                     Width="150"
                     Margin="0 5"
                     Click="ButtpnConnectToLog_Click"/>
-            <Button Content="Connect to Log"
-                    Height="50"
-                    Width="150"
-                    Margin="0 5"
-                    Style="{DynamicResource MaterialDesignRaisedAccentButton}"
-                    Click="ButtpnConnectToLog_Click"/>
-        </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            
+            
+            
+        </Grid>
+        
     </Grid>
 </Window>
