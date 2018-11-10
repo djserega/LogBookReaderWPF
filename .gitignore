@@ -334,3 +334,4 @@ md demo/MaterialDesignDemo.exe
 md demo/MaterialDesignThemes.Wpf.dll
 md demo/ShowMeTheXAML.AvalonEdit.dll
 md demo/ShowMeTheXAML.dll
+LogDB.lgd
