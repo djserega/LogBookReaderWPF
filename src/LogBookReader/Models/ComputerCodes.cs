@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace LogBookReader.Models
 {
-    public class AppCodes : IModels.IAppCodes
+    public class ComputerCodes : NotifyPropertyChangedClass, IModels.IComputerCodes
     {
         [Key]
         public int Code { get; set; }
         public string Name { get; set; }
+
     }
 }

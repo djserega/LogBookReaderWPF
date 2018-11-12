@@ -80,7 +80,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="EF\Repository.cs" />
+    <Compile Include="Filters\FiltersComputerCodes.cs" />
+    <Compile Include="Filters\FiltersAppCodes.cs" />
     <Compile Include="Models\AppCodes.cs" />
+    <Compile Include="Models\ComputerCodes.cs" />
     <Compile Include="Models\EventLog.cs" />
     <Compile Include="EF\ReaderContext.cs" />
     <Page Include="MainWindow.xaml">
@@ -97,6 +100,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IModels\IAppCodes.cs" />
+    <Compile Include="IModels\IComputerCodes.cs" />
+    <Compile Include="NotifyPropertyChangedClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
