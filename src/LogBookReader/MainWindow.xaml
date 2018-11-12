@@ -7,7 +7,8 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="400" Width="800">
+        Title="MainWindow" Height="400" Width="800"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="5"/>
@@ -17,16 +18,48 @@
         </Grid.RowDefinitions>
         
         <Grid Grid.Row="1">
-            <Button Content="Connect to Log"
+            <Button Content="Получить данные фильтров"
                     Height="50"
                     Width="150"
                     Margin="0 5"
-                    Click="ButtpnConnectToLog_Click"/>
+                    Click="ButtpnGetFilterData_Click"/>
         </Grid>
 
         <Grid Grid.Row="2">
-            
-            
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel>
+
+                    <Label Content="Приложения"/>
+                    <ListBox ItemsSource="{Binding FilterAppCodes}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox Content="{Binding Name}"
+                                          Tag="{Binding Code}"
+                                          IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <Label Content="Компьютеры"/>
+                    <ListBox ItemsSource="{Binding FiltersComputerCodes}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox Content="{Binding Name}"
+                                          Tag="{Binding Code}"
+                                          IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                </StackPanel>
+                
+            </Grid>
             
         </Grid>
         
