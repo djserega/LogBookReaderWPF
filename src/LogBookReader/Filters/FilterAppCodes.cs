@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace LogBookReader.Filters
 {
     
-    public class FilterAppCodes : NotifyPropertyChangedClass, IModels.IAppCodes
+    public class FilterAppCodes : IModels.IAppCodes
     {
         public FilterAppCodes() { }
 

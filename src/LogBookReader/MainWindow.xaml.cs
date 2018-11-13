@@ -24,6 +24,7 @@ namespace LogBookReader
     public partial class MainWindow : Window
     {
 
+        private EF.ReaderContext readerContext = new EF.ReaderContext();
 
         public MainWindow()
         {
@@ -31,11 +32,13 @@ namespace LogBookReader
             InitializeProperties();
         }
 
-        private void InitializeProperties()
+        private async void InitializeProperties()
         {
             FilterAppCodes = new ObservableCollection<Filters.FilterAppCodes>();
             FilterComputerCodes = new ObservableCollection<Filters.FilterComputerCodes>();
             FilterEventCodes = new ObservableCollection<Filters.FilterEventCodes>();
+
+            await GetFilterData();
         }
 
         #region DependencyProperty
@@ -68,16 +71,16 @@ namespace LogBookReader
 
         private async void ButtpnGetFilterData_Click(object sender, RoutedEventArgs e)
         {
-            FilterAppCodes.Clear();
+            await GetFilterData();
+        }
 
-            EF.ReaderContext readerContext = new EF.ReaderContext();
-
+        private async Task GetFilterData()
+        {
             try
             {
-                await FillDataAppCodes(readerContext);
-                await FillDataComputerCodes(readerContext);
-                await FillDataEventCodes(readerContext);
-
+                await FillDataAppCodes();
+                await FillDataComputerCodes();
+                await FillDataEventCodes();
             }
             catch (Exception ex)
             {
@@ -86,28 +89,57 @@ namespace LogBookReader
             }
         }
 
-        private async Task FillDataAppCodes(EF.ReaderContext readerContext)
+        private async Task FillDataAppCodes(bool isChecked = true)
         {
+            FilterAppCodes.Clear();
+
             var repoAppCodes = new EF.Repository<Models.AppCodes>(readerContext);
             List<Models.AppCodes> appCodes = await repoAppCodes.GetListAsync();
             foreach (Models.AppCodes item in appCodes)
-                FilterAppCodes.Add(new Filters.FilterAppCodes(item) { IsChecked = true });
+                FilterAppCodes.Add(new Filters.FilterAppCodes(item) { IsChecked = isChecked });
         }
 
-        private async Task FillDataComputerCodes(EF.ReaderContext readerContext)
+        private async Task FillDataComputerCodes(bool isChecked = true)
         {
+            FilterComputerCodes.Clear();
+
             var repoComputerCodes = new EF.Repository<Models.ComputerCodes>(readerContext);
             List<Models.ComputerCodes> computerCodes = await repoComputerCodes.GetListAsync();
             foreach (Models.ComputerCodes item in computerCodes)
-                FilterComputerCodes.Add(new Filters.FilterComputerCodes(item) { IsChecked = true });
+                FilterComputerCodes.Add(new Filters.FilterComputerCodes(item) { IsChecked = isChecked });
         }
 
-        private async Task FillDataEventCodes(EF.ReaderContext readerContext)
+        private async Task FillDataEventCodes(bool isChecked = true)
         {
+            FilterEventCodes.Clear();
+
             var repoEventCodes = new EF.Repository<Models.EventCodes>(readerContext);
             List<Models.EventCodes> eventCodes = await repoEventCodes.GetListAsync();
             foreach (Models.EventCodes item in eventCodes)
-                FilterEventCodes.Add(new Filters.FilterEventCodes(item) { IsChecked = true });
+                FilterEventCodes.Add(new Filters.FilterEventCodes(item) { IsChecked = isChecked });
+        }
+
+        private async void MenuItemCommandBarFilter_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem)
+            {
+                string[] dataTag = ((string)menuItem.Tag).Split('/');
+
+                bool isChecked = dataTag[1] == "Marked";
+
+                switch (dataTag[0])
+                {
+                    case "FilterAppCodes":
+                        await FillDataAppCodes(isChecked);
+                        break;
+                    case "FilterComputerCodes":
+                        await FillDataComputerCodes(isChecked);
+                        break;
+                    case "FilterEventCodes":
+                        await FillDataEventCodes(isChecked);
+                        break;
+                }
+            }
         }
     }
 }

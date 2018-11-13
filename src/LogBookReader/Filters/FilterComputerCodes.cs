@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LogBookReader.Filters
 {
-    public class FilterComputerCodes : NotifyPropertyChangedClass, IModels.IComputerCodes
+    public class FilterComputerCodes : IModels.IComputerCodes
     {
         public FilterComputerCodes() { }
         public FilterComputerCodes(Models.ComputerCodes computerCode)

@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LogBookReader"
+        xmlns:mdIcon="http://materialdesigninxaml.net/winfx/xaml/themes"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
@@ -39,41 +40,91 @@
 
                         <Expander HorizontalAlignment="Stretch"
                                   Header="Приложения">
-                            <ListBox ItemsSource="{Binding FilterAppCodes}">
+                            
+                            <ListBox x:Name="ListBoxFilterAppCodes"
+                                     ItemsSource="{Binding FilterAppCodes}">
+                                
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <CheckBox Content="{Binding Name}"
                                                   Tag="{Binding Code}"
-                                                  IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                                  IsChecked="{Binding IsChecked}"/>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
+
+                                <ListBox.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Icon="{mdIcon:PackIcon CheckboxMultipleMarkedOutline}"
+                                                  ToolTip="Выбрать все"
+                                                  Tag="FilterAppCodes/Marked"
+                                                  Click="MenuItemCommandBarFilter_Click"/>
+                                        <MenuItem Icon="{mdIcon:PackIcon CheckboxMultipleBlankOutline}"
+                                                  ToolTip="Отменить выбор всех"
+                                                  Tag="FilterAppCodes/Blank"
+                                                  Click="MenuItemCommandBarFilter_Click"/>
+                                    </ContextMenu>
+                                </ListBox.ContextMenu>
+
                             </ListBox>
                         </Expander>
 
                         <Expander HorizontalAlignment="Stretch"
                                   Header="Компьютеры">
+                            
                             <ListBox ItemsSource="{Binding FilterComputerCodes}">
+                                
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <CheckBox Content="{Binding Name}"
                                                   Tag="{Binding Code}"
-                                                  IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                                  IsChecked="{Binding IsChecked}"/>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
+                                
+                                <ListBox.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Icon="{mdIcon:PackIcon CheckboxMultipleMarkedOutline}"
+                                                  ToolTip="Выбрать все"
+                                                  Tag="FilterComputerCodes/Marked"
+                                                  Click="MenuItemCommandBarFilter_Click"/>
+                                        <MenuItem Icon="{mdIcon:PackIcon CheckboxMultipleBlankOutline}"
+                                                  ToolTip="Отменить выбор всех"
+                                                  Tag="FilterComputerCodes/Blank"
+                                                  Click="MenuItemCommandBarFilter_Click"/>
+                                    </ContextMenu>
+                                </ListBox.ContextMenu>
+                                
                             </ListBox>
+                            
                         </Expander>
 
                         <Expander HorizontalAlignment="Stretch"
                                   Header="События">
-                        <ListBox ItemsSource="{Binding FilterEventCodes}">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <CheckBox Content="{Binding Name}"
+                            
+                            <ListBox ItemsSource="{Binding FilterEventCodes}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <CheckBox Content="{Binding Name}"
                                               Tag="{Binding Code}"
-                                              IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
+                                              IsChecked="{Binding IsChecked}"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+
+                                <ListBox.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Icon="{mdIcon:PackIcon CheckboxMultipleMarkedOutline}"
+                                                  ToolTip="Выбрать все"
+                                                  Tag="FilterEventCodes/Marked"
+                                                  Click="MenuItemCommandBarFilter_Click"/>
+                                        <MenuItem Icon="{mdIcon:PackIcon CheckboxMultipleBlankOutline}"
+                                                  ToolTip="Отменить выбор всех"
+                                                  Tag="FilterEventCodes/Blank"
+                                                  Click="MenuItemCommandBarFilter_Click"/>
+                                    </ContextMenu>
+                                </ListBox.ContextMenu>
+
+                            </ListBox>
+                            
                         </Expander>
 
                     </StackPanel>

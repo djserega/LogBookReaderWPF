@@ -4,11 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LogBookReader.IModels;
 
 namespace LogBookReader.Filters
 {
-    public class FilterEventCodes : IEventCodes
+    public class FilterEventCodes : IModels.IEventCodes
     {
         public FilterEventCodes(Models.EventCodes eventCodes)
         {
