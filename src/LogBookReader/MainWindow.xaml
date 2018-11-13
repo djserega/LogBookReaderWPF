@@ -12,16 +12,16 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="5"/>
-            <RowDefinition Height="60"/>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="5"/>
         </Grid.RowDefinitions>
-        
+
         <Grid Grid.Row="1">
             <Button Content="Получить данные фильтров"
-                    Height="50"
-                    Width="150"
-                    Margin="0 5"
+                    Height="30"
+                    Margin="10 0"
+                    HorizontalAlignment="Left"
                     Click="ButtpnGetFilterData_Click"/>
         </Grid>
 
@@ -34,48 +34,54 @@
                 </Grid.ColumnDefinitions>
 
                 <ScrollViewer>
-                
+
                     <StackPanel>
 
-                        <Label Content="Приложения"/>
-                        <ListBox ItemsSource="{Binding FilterAppCodes}">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <CheckBox Content="{Binding Name}"
-                                          Tag="{Binding Code}"
-                                          IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
+                        <Expander HorizontalAlignment="Stretch"
+                                  Header="Приложения">
+                            <ListBox ItemsSource="{Binding FilterAppCodes}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <CheckBox Content="{Binding Name}"
+                                                  Tag="{Binding Code}"
+                                                  IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Expander>
 
-                        <Label Content="Компьютеры"/>
-                        <ListBox ItemsSource="{Binding FilterComputerCodes}">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <CheckBox Content="{Binding Name}"
-                                          Tag="{Binding Code}"
-                                          IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
+                        <Expander HorizontalAlignment="Stretch"
+                                  Header="Компьютеры">
+                            <ListBox ItemsSource="{Binding FilterComputerCodes}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <CheckBox Content="{Binding Name}"
+                                                  Tag="{Binding Code}"
+                                                  IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Expander>
 
-                        <Label Content="События"/>
+                        <Expander HorizontalAlignment="Stretch"
+                                  Header="События">
                         <ListBox ItemsSource="{Binding FilterEventCodes}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <CheckBox Content="{Binding Name}"
-                                          Tag="{Binding Code}"
-                                          IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                              Tag="{Binding Code}"
+                                              IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
+                        </Expander>
 
                     </StackPanel>
-                
+
                 </ScrollViewer>
             </Grid>
-            
+
         </Grid>
-        
+
     </Grid>
 </Window>
