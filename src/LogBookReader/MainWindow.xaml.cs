@@ -33,26 +33,38 @@ namespace LogBookReader
 
         private void InitializeProperties()
         {
-            FilterAppCodes = new ObservableCollection<Filters.FiltersAppCodes>();
-            FiltersComputerCodes = new ObservableCollection<Filters.FiltersComputerCodes>();
+            FilterAppCodes = new ObservableCollection<Filters.FilterAppCodes>();
+            FilterComputerCodes = new ObservableCollection<Filters.FilterComputerCodes>();
+            FilterEventCodes = new ObservableCollection<Filters.FilterEventCodes>();
         }
 
-        public ObservableCollection<Filters.FiltersAppCodes> FilterAppCodes
+        #region DependencyProperty
+
+        public ObservableCollection<Filters.FilterAppCodes> FilterAppCodes
         {
-            get { return (ObservableCollection<Filters.FiltersAppCodes>)GetValue(FilterAppCodesProperty); }
+            get { return (ObservableCollection<Filters.FilterAppCodes>)GetValue(FilterAppCodesProperty); }
             set { SetValue(FilterAppCodesProperty, value); }
         }
         public static readonly DependencyProperty FilterAppCodesProperty =
-         DependencyProperty.Register("FilterAppCodes", typeof(ObservableCollection<Filters.FiltersAppCodes>), typeof(MainWindow), new UIPropertyMetadata(null));
+         DependencyProperty.Register("FilterAppCodes", typeof(ObservableCollection<Filters.FilterAppCodes>), typeof(MainWindow), new UIPropertyMetadata(null));
 
-        public ObservableCollection<Filters.FiltersComputerCodes> FiltersComputerCodes
+        public ObservableCollection<Filters.FilterComputerCodes> FilterComputerCodes
         {
-            get { return (ObservableCollection<Filters.FiltersComputerCodes>)GetValue(FiltersComputerCodesProperty); }
+            get { return (ObservableCollection<Filters.FilterComputerCodes>)GetValue(FiltersComputerCodesProperty); }
             set { SetValue(FiltersComputerCodesProperty, value); }
         }
         public static readonly DependencyProperty FiltersComputerCodesProperty =
-            DependencyProperty.Register("FiltersComputerCodes", typeof(ObservableCollection<Filters.FiltersComputerCodes>), typeof(MainWindow), new UIPropertyMetadata(null));
+            DependencyProperty.Register("FilterComputerCodes", typeof(ObservableCollection<Filters.FilterComputerCodes>), typeof(MainWindow), new UIPropertyMetadata(null));
 
+        public ObservableCollection<Filters.FilterEventCodes> FilterEventCodes
+        {
+            get { return (ObservableCollection<Filters.FilterEventCodes>)GetValue(FilterEventCodesProperty); }
+            set { SetValue(FilterEventCodesProperty, value); }
+        }
+        public static readonly DependencyProperty FilterEventCodesProperty =
+            DependencyProperty.Register("FilterEventCodes", typeof(ObservableCollection<Filters.FilterEventCodes>), typeof(MainWindow), new UIPropertyMetadata(null));
+
+        #endregion
 
         private async void ButtpnGetFilterData_Click(object sender, RoutedEventArgs e)
         {
@@ -64,6 +76,7 @@ namespace LogBookReader
             {
                 await FillDataAppCodes(readerContext);
                 await FillDataComputerCodes(readerContext);
+                await FillDataEventCodes(readerContext);
 
             }
             catch (Exception ex)
@@ -78,7 +91,7 @@ namespace LogBookReader
             var repoAppCodes = new EF.Repository<Models.AppCodes>(readerContext);
             List<Models.AppCodes> appCodes = await repoAppCodes.GetListAsync();
             foreach (Models.AppCodes item in appCodes)
-                FilterAppCodes.Add(new Filters.FiltersAppCodes(item) { IsChecked = true });
+                FilterAppCodes.Add(new Filters.FilterAppCodes(item) { IsChecked = true });
         }
 
         private async Task FillDataComputerCodes(EF.ReaderContext readerContext)
@@ -86,7 +99,15 @@ namespace LogBookReader
             var repoComputerCodes = new EF.Repository<Models.ComputerCodes>(readerContext);
             List<Models.ComputerCodes> computerCodes = await repoComputerCodes.GetListAsync();
             foreach (Models.ComputerCodes item in computerCodes)
-                FiltersComputerCodes.Add(new Filters.FiltersComputerCodes(item) { IsChecked = true });
+                FilterComputerCodes.Add(new Filters.FilterComputerCodes(item) { IsChecked = true });
+        }
+
+        private async Task FillDataEventCodes(EF.ReaderContext readerContext)
+        {
+            var repoEventCodes = new EF.Repository<Models.EventCodes>(readerContext);
+            List<Models.EventCodes> eventCodes = await repoEventCodes.GetListAsync();
+            foreach (Models.EventCodes item in eventCodes)
+                FilterEventCodes.Add(new Filters.FilterEventCodes(item) { IsChecked = true });
         }
     }
 }
