@@ -19,11 +19,17 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="1">
-            <Button Content="Получить данные фильтров"
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Получить данные"
                     Height="30"
                     Margin="10 0"
                     HorizontalAlignment="Left"
-                    Click="ButtpnGetFilterData_Click"/>
+                    Click="ButtonGetFilterData_Click"/>
+                <Label Content="Количество записей"
+                       VerticalAlignment="Bottom"/>
+                <TextBox Text="{Binding CountEventLogRows}"
+                         Width="100"/>
+            </StackPanel>
         </Grid>
 
         <Grid Grid.Row="2">
@@ -34,16 +40,16 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <ScrollViewer>
+                <ScrollViewer Grid.Column="0">
 
                     <StackPanel>
 
                         <Expander HorizontalAlignment="Stretch"
                                   Header="Приложения">
-                            
+
                             <ListBox x:Name="ListBoxFilterAppCodes"
                                      ItemsSource="{Binding FilterAppCodes}">
-                                
+
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <CheckBox Content="{Binding Name}"
@@ -70,9 +76,9 @@
 
                         <Expander HorizontalAlignment="Stretch"
                                   Header="Компьютеры">
-                            
+
                             <ListBox ItemsSource="{Binding FilterComputerCodes}">
-                                
+
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <CheckBox Content="{Binding Name}"
@@ -80,7 +86,7 @@
                                                   IsChecked="{Binding IsChecked}"/>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
-                                
+
                                 <ListBox.ContextMenu>
                                     <ContextMenu>
                                         <MenuItem Icon="{mdIcon:PackIcon CheckboxMultipleMarkedOutline}"
@@ -93,14 +99,14 @@
                                                   Click="MenuItemCommandBarFilter_Click"/>
                                     </ContextMenu>
                                 </ListBox.ContextMenu>
-                                
+
                             </ListBox>
-                            
+
                         </Expander>
 
                         <Expander HorizontalAlignment="Stretch"
                                   Header="События">
-                            
+
                             <ListBox ItemsSource="{Binding FilterEventCodes}">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
@@ -124,12 +130,29 @@
                                 </ListBox.ContextMenu>
 
                             </ListBox>
-                            
+
                         </Expander>
 
                     </StackPanel>
 
                 </ScrollViewer>
+
+                <DataGrid Grid.Column="1"
+                          ItemsSource="{Binding FilterEventLogs}"
+                          IsReadOnly="True"
+                          AutoGenerateColumns="False"
+                          ScrollViewer.CanContentScroll="True">
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Номер строки" 
+                                            Binding="{Binding RowID}"/>
+                        <DataGridTextColumn Header="Дата"
+                                            Binding="{Binding Date}"/>
+                    </DataGrid.Columns>
+
+
+                </DataGrid>
+
             </Grid>
 
         </Grid>

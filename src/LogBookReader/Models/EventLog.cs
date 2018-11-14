@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace LogBookReader.Models
 {
     [Table("EventLog")]
-    public class EventLog
+    public class EventLog : IModels.IEventLog
     {
         [Key]
         public int RowID { get; set; }

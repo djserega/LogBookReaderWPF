@@ -24,7 +24,7 @@ namespace LogBookReader
     public partial class MainWindow : Window
     {
 
-        private EF.ReaderContext readerContext = new EF.ReaderContext();
+        private EF.ReaderContext _readerContext = new EF.ReaderContext();
 
         public MainWindow()
         {
@@ -37,8 +37,11 @@ namespace LogBookReader
             FilterAppCodes = new ObservableCollection<Filters.FilterAppCodes>();
             FilterComputerCodes = new ObservableCollection<Filters.FilterComputerCodes>();
             FilterEventCodes = new ObservableCollection<Filters.FilterEventCodes>();
+            FilterEventLogs = new ObservableCollection<Filters.FilterEventLog>();
 
-            await GetFilterData();
+            CountEventLogRows = 100;
+
+            await GetDataDB();
         }
 
         #region DependencyProperty
@@ -67,20 +70,41 @@ namespace LogBookReader
         public static readonly DependencyProperty FilterEventCodesProperty =
             DependencyProperty.Register("FilterEventCodes", typeof(ObservableCollection<Filters.FilterEventCodes>), typeof(MainWindow), new UIPropertyMetadata(null));
 
+        public ObservableCollection<Filters.FilterEventLog> FilterEventLogs
+        {
+            get { return (ObservableCollection<Filters.FilterEventLog>)GetValue(FilterEventLogProperty); }
+            set { SetValue(FilterEventLogProperty, value); }
+        }
+        public static readonly DependencyProperty FilterEventLogProperty =
+            DependencyProperty.Register("FilterEventLogs", typeof(ObservableCollection<Filters.FilterEventLog>), typeof(MainWindow), new UIPropertyMetadata(null));
+
+        public int CountEventLogRows
+        {
+            get { return (int)GetValue(CountEventLogRowsProperty); }
+            set { SetValue(CountEventLogRowsProperty, value); }
+        }
+        public static readonly DependencyProperty CountEventLogRowsProperty =
+            DependencyProperty.Register("CountEventLogRows", typeof(int), typeof(MainWindow), new UIPropertyMetadata(null));
+
         #endregion
 
-        private async void ButtpnGetFilterData_Click(object sender, RoutedEventArgs e)
+        private async void ButtonGetFilterData_Click(object sender, RoutedEventArgs e)
         {
-            await GetFilterData();
+            await GetDataDB(true);
         }
 
-        private async Task GetFilterData()
+        private async Task GetDataDB(bool readEventLog = false)
         {
             try
             {
-                await FillDataAppCodes();
-                await FillDataComputerCodes();
-                await FillDataEventCodes();
+                if (readEventLog)
+                    await FillDataEventLogs();
+                else
+                {
+                    await FillDataAppCodes();
+                    await FillDataComputerCodes();
+                    await FillDataEventCodes();
+                }
             }
             catch (Exception ex)
             {
@@ -93,7 +117,7 @@ namespace LogBookReader
         {
             FilterAppCodes.Clear();
 
-            var repoAppCodes = new EF.Repository<Models.AppCodes>(readerContext);
+            var repoAppCodes = new EF.Repository<Models.AppCodes>(_readerContext);
             List<Models.AppCodes> appCodes = await repoAppCodes.GetListAsync();
             foreach (Models.AppCodes item in appCodes)
                 FilterAppCodes.Add(new Filters.FilterAppCodes(item) { IsChecked = isChecked });
@@ -103,7 +127,7 @@ namespace LogBookReader
         {
             FilterComputerCodes.Clear();
 
-            var repoComputerCodes = new EF.Repository<Models.ComputerCodes>(readerContext);
+            var repoComputerCodes = new EF.Repository<Models.ComputerCodes>(_readerContext);
             List<Models.ComputerCodes> computerCodes = await repoComputerCodes.GetListAsync();
             foreach (Models.ComputerCodes item in computerCodes)
                 FilterComputerCodes.Add(new Filters.FilterComputerCodes(item) { IsChecked = isChecked });
@@ -113,10 +137,23 @@ namespace LogBookReader
         {
             FilterEventCodes.Clear();
 
-            var repoEventCodes = new EF.Repository<Models.EventCodes>(readerContext);
+            var repoEventCodes = new EF.Repository<Models.EventCodes>(_readerContext);
             List<Models.EventCodes> eventCodes = await repoEventCodes.GetListAsync();
             foreach (Models.EventCodes item in eventCodes)
                 FilterEventCodes.Add(new Filters.FilterEventCodes(item) { IsChecked = isChecked });
+        }
+
+        private async Task FillDataEventLogs()
+        {
+            FilterEventLogs.Clear();
+
+            var repoEventLogs = new EF.Repository<Models.EventLog>(_readerContext);
+            List<Models.EventLog> eventLogs = await repoEventLogs.GetListAsync(
+                f => f.UserCode == 1,
+                f => f.OrderBy(o => -o.RowID));
+
+            for (int i = 0; i < CountEventLogRows; i++)
+                FilterEventLogs.Add(new Filters.FilterEventLog(eventLogs[i]));
         }
 
         private async void MenuItemCommandBarFilter_Click(object sender, RoutedEventArgs e)
