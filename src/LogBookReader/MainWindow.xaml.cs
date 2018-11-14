@@ -152,8 +152,16 @@ namespace LogBookReader
                 f => f.UserCode == 1,
                 f => f.OrderBy(o => -o.RowID));
 
-            for (int i = 0; i < CountEventLogRows; i++)
-                FilterEventLogs.Add(new Filters.FilterEventLog(eventLogs[i]));
+
+            int maxRows = Math.Min(CountEventLogRows, eventLogs.Count);
+            for (int i = 0; i < maxRows; i++)
+            {
+                FilterEventLogs.Add(
+                    new Filters.FilterEventLog(eventLogs[i])
+                    {
+                        ComputerName = FilterComputerCodes.FirstOrDefault(f => f.Code == eventLogs[i].ComputerCode).Name
+                    });
+            }
         }
 
         private async void MenuItemCommandBarFilter_Click(object sender, RoutedEventArgs e)

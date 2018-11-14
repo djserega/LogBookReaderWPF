@@ -38,9 +38,11 @@ namespace LogBookReader.Filters
         public string DataPresentation { get; set; }
         public int WorkServerCode { get; set; }
         public int PrimaryPortCode { get; set; }
-        public int SecondaryPortCode { get; set; } 
+        public int SecondaryPortCode { get; set; }
 
         #endregion
+
+        public string ComputerName { get; set; }
 
         public void Fill(Models.EventLog eventLog)
         {

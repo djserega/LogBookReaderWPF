@@ -148,6 +148,8 @@
                                             Binding="{Binding RowID}"/>
                         <DataGridTextColumn Header="Дата"
                                             Binding="{Binding Date}"/>
+                        <DataGridTextColumn Header="Компьютер"
+                                            Binding="{Binding ComputerName}"/>
                     </DataGrid.Columns>
 
 
