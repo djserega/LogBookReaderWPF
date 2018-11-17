@@ -123,7 +123,7 @@ namespace LogBookReader
 
             var repoAppCodes = new EF.Repository<Models.AppCodes>(_readerContext);
             List<Models.AppCodes> appCodes = await repoAppCodes.GetListAsync();
-            foreach (Models.AppCodes item in appCodes)
+            foreach (Models.AppCodes item in appCodes.OrderBy(f => f.Name))
                 FilterAppCodes.Add(new Filters.FilterAppCodes(item) { IsChecked = isChecked });
         }
 
@@ -133,7 +133,7 @@ namespace LogBookReader
 
             var repoComputerCodes = new EF.Repository<Models.ComputerCodes>(_readerContext);
             List<Models.ComputerCodes> computerCodes = await repoComputerCodes.GetListAsync();
-            foreach (Models.ComputerCodes item in computerCodes)
+            foreach (Models.ComputerCodes item in computerCodes.OrderBy(f => f.Name))
                 FilterComputerCodes.Add(new Filters.FilterComputerCodes(item) { IsChecked = isChecked });
         }
 
@@ -143,7 +143,7 @@ namespace LogBookReader
 
             var repoEventCodes = new EF.Repository<Models.EventCodes>(_readerContext);
             List<Models.EventCodes> eventCodes = await repoEventCodes.GetListAsync();
-            foreach (Models.EventCodes item in eventCodes)
+            foreach (Models.EventCodes item in eventCodes.OrderBy(f => f.Name))
                 FilterEventCodes.Add(new Filters.FilterEventCodes(item) { IsChecked = isChecked });
         }
 
