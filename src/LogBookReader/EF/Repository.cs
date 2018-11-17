@@ -75,5 +75,21 @@ namespace LogBookReader.EF
             else
                 return query.ToListAsync();
         }
+
+        public Task<List<TEntity>> GetListTakeAsync(
+            Expression<Func<TEntity, bool>> predicate = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            int count = 100)
+        {
+            IQueryable<TEntity> query = _dbSet;
+
+            if (predicate != null)
+                query = query.Where(predicate);
+
+            if (orderBy != null)
+                return orderBy(query).Take(count).ToListAsync();
+            else
+                return query.Take(count).ToListAsync();
+        }
     }
 }

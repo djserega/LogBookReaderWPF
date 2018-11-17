@@ -152,9 +152,10 @@ namespace LogBookReader
             FilterEventLogs.Clear();
 
             var repoEventLogs = new EF.Repository<Models.EventLog>(_readerContext);
-            List<Models.EventLog> eventLogs = await repoEventLogs.GetListAsync(
+            List<Models.EventLog> eventLogs = await repoEventLogs.GetListTakeAsync(
                 //f => f.UserCode == 1,
-                orderBy: f => f.OrderBy(o => -o.RowID));
+                orderBy: f => f.OrderBy(o => -o.RowID),
+                count: CountEventLogRows);
 
 
             int countEvents = eventLogs.Count;
