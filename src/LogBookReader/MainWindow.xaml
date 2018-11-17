@@ -72,6 +72,7 @@
                                 </ListBox.ContextMenu>
 
                             </ListBox>
+                      
                         </Expander>
 
                         <Expander HorizontalAlignment="Stretch"
@@ -150,6 +151,8 @@
                                             Binding="{Binding Date}"/>
                         <DataGridTextColumn Header="Компьютер"
                                             Binding="{Binding ComputerName}"/>
+                        <DataGridTextColumn Header="Приложение"
+                                            Binding="{Binding AppName}"/>
                     </DataGrid.Columns>
 
 

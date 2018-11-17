@@ -149,8 +149,8 @@ namespace LogBookReader
 
             var repoEventLogs = new EF.Repository<Models.EventLog>(_readerContext);
             List<Models.EventLog> eventLogs = await repoEventLogs.GetListAsync(
-                f => f.UserCode == 1,
-                f => f.OrderBy(o => -o.RowID));
+                //f => f.UserCode == 1,
+                orderBy: f => f.OrderBy(o => -o.RowID));
 
 
             int maxRows = Math.Min(CountEventLogRows, eventLogs.Count);
@@ -159,7 +159,8 @@ namespace LogBookReader
                 FilterEventLogs.Add(
                     new Filters.FilterEventLog(eventLogs[i])
                     {
-                        ComputerName = FilterComputerCodes.FirstOrDefault(f => f.Code == eventLogs[i].ComputerCode).Name
+                        ComputerName = FilterComputerCodes.FirstOrDefault(f => f.Code == eventLogs[i].ComputerCode).Name,
+                        AppName = FilterAppCodes.FirstOrDefault(f => f.Code == eventLogs[i].AppCode).Name
                     });
             }
         }

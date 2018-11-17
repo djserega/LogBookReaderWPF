@@ -43,6 +43,7 @@ namespace LogBookReader.Filters
         #endregion
 
         public string ComputerName { get; set; }
+        public string AppName { get; set; }
 
         public void Fill(Models.EventLog eventLog)
         {
