@@ -22,10 +22,10 @@
         <Grid Grid.Row="1">
             <StackPanel Orientation="Horizontal">
                 <Button Content="Получить данные"
-                    Height="30"
-                    Margin="10 0"
-                    HorizontalAlignment="Left"
-                    Click="ButtonGetFilterData_Click"/>
+                        Height="30"
+                        Margin="10 0"
+                        HorizontalAlignment="Left"
+                        Click="ButtonGetFilterData_Click"/>
                 <Label Content="Количество записей"
                        VerticalAlignment="Bottom"/>
                 <TextBox Text="{Binding CountEventLogRows}"
@@ -37,7 +37,7 @@
 
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition MaxWidth="250"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
@@ -55,7 +55,8 @@
                                     <DataTemplate>
                                         <CheckBox Content="{Binding Name}"
                                                   Tag="{Binding Code}"
-                                                  IsChecked="{Binding IsChecked}"/>
+                                                  IsChecked="{Binding IsChecked}"
+                                                  ToolTip="{Binding Name}"/>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
 
@@ -85,7 +86,8 @@
                                     <DataTemplate>
                                         <CheckBox Content="{Binding Name}"
                                                   Tag="{Binding Code}"
-                                                  IsChecked="{Binding IsChecked}"/>
+                                                  IsChecked="{Binding IsChecked}"
+                                                  ToolTip="{Binding Name}"/>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
 
@@ -113,8 +115,9 @@
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <CheckBox Content="{Binding Name}"
-                                              Tag="{Binding Code}"
-                                              IsChecked="{Binding IsChecked}"/>
+                                                  Tag="{Binding Code}"
+                                                  IsChecked="{Binding IsChecked}"
+                                                  ToolTip="{Binding Name}"/>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
 
