@@ -153,15 +153,29 @@ namespace LogBookReader
                 orderBy: f => f.OrderBy(o => -o.RowID));
 
 
-            int maxRows = Math.Min(CountEventLogRows, eventLogs.Count);
+            int countEvents = eventLogs.Count;
+
+            int maxRows = Math.Min(CountEventLogRows, countEvents);
             for (int i = 0; i < maxRows; i++)
             {
-                FilterEventLogs.Add(
-                    new Filters.FilterEventLog(eventLogs[i])
-                    {
-                        ComputerName = FilterComputerCodes.FirstOrDefault(f => f.Code == eventLogs[i].ComputerCode).Name,
-                        AppName = FilterAppCodes.FirstOrDefault(f => f.Code == eventLogs[i].AppCode).Name
-                    });
+                string appName = FilterAppCodes.FirstOrDefault(f => f.Code == eventLogs[i].AppCode && f.IsChecked)?.Name;
+                string computerName = FilterComputerCodes.FirstOrDefault(f => f.Code == eventLogs[i].ComputerCode && f.IsChecked)?.Name;
+
+                if (string.IsNullOrEmpty(appName)
+                    || string.IsNullOrEmpty(computerName))
+                {
+                    if (maxRows < countEvents)
+                        maxRows++;
+                }
+                else
+                {
+                    FilterEventLogs.Add(
+                        new Filters.FilterEventLog(eventLogs[i])
+                        {
+                            ComputerName = computerName,
+                            AppName = appName
+                        });
+                }
             }
         }
 
