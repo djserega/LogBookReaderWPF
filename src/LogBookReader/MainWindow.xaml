@@ -152,7 +152,7 @@
                         <DataGridTextColumn Header="Номер строки" 
                                             Binding="{Binding RowID}"/>
                         <DataGridTextColumn Header="Дата"
-                                            Binding="{Binding Date}"/>
+                                            Binding="{Binding DateTime, StringFormat=\{0:dd.MM.yyyy HH:mm:ss\}}"/>
                         <DataGridTextColumn Header="Компьютер"
                                             Binding="{Binding ComputerName}"/>
                         <DataGridTextColumn Header="Приложение"

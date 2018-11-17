@@ -20,7 +20,7 @@ namespace LogBookReader.Filters
 
         public int RowID { get; set; }
         public int Severity { get; set; }
-        public int Date { get; set; }
+        public long Date { get; set; }
         public int ConnectID { get; set; }
         public int Session { get; set; }
         public int TransactionStatus { get; set; }
@@ -44,6 +44,7 @@ namespace LogBookReader.Filters
 
         public string ComputerName { get; set; }
         public string AppName { get; set; }
+        public DateTime DateTime { get => DateTime.MinValue.AddSeconds(Date / 10000); }
 
         public void Fill(Models.EventLog eventLog)
         {

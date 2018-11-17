@@ -9,7 +9,7 @@
         string Data { get; set; }
         string DataPresentation { get; set; }
         int DataType { get; set; }
-        int Date { get; set; }
+        long Date { get; set; }
         int EventCode { get; set; }
         string MetadataCodes { get; set; }
         int PrimaryPortCode { get; set; }

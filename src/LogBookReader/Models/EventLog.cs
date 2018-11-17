@@ -14,7 +14,7 @@ namespace LogBookReader.Models
         [Key]
         public int RowID { get; set; }
         public int Severity { get; set; }
-        public int Date { get; set; }
+        public long Date { get; set; }
         public int ConnectID { get; set; }
         public int Session { get; set; }
         public int TransactionStatus { get; set; }
