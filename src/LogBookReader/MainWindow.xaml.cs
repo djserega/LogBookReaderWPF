@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -153,7 +154,7 @@ namespace LogBookReader
 
             var repoEventLogs = new EF.Repository<Models.EventLog>(_readerContext);
             List<Models.EventLog> eventLogs = await repoEventLogs.GetListTakeAsync(
-                //f => f.UserCode == 1,
+                GetExpressionFilterLogs(),
                 orderBy: f => f.OrderBy(o => -o.RowID),
                 count: CountEventLogRows);
 
@@ -182,6 +183,13 @@ namespace LogBookReader
                         });
                 }
             }
+        }
+
+        private Expression<Func<Models.EventLog, bool>> GetExpressionFilterLogs()
+        {
+            Expression<Func<Models.EventLog, bool>> expression = f => f.ComputerCode == 0;
+
+            return expression;
         }
 
         private async void MenuItemCommandBarFilter_Click(object sender, RoutedEventArgs e)
