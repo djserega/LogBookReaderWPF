@@ -75,5 +75,10 @@ namespace LogBookReader
             TimeControl control = obj as TimeControl;
             control.Value = new TimeSpan(control.Hours, control.Minutes, control.Seconds);
         }
+
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            ((TextBox)sender).SelectAll();
+        }
     }
 }
