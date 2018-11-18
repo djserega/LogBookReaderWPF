@@ -46,6 +46,29 @@
                     <StackPanel>
 
                         <Expander HorizontalAlignment="Stretch"
+                                  Header="Период">
+
+                            <StackPanel>
+
+                                <Label Content="Начало периода"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <DatePicker Width="100"
+                                                HorizontalContentAlignment="Right"/>
+                                    <local:TimeControl/>
+                                </StackPanel>
+
+                                <Label Content="Конец периода"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <DatePicker Width="100"
+                                                HorizontalContentAlignment="Right"/>
+                                    <local:TimeControl/>
+                                </StackPanel>
+
+                            </StackPanel>
+                            
+                        </Expander>
+                        
+                        <Expander HorizontalAlignment="Stretch"
                                   Header="Приложения">
 
                             <ListBox x:Name="ListBoxFilterAppCodes"
