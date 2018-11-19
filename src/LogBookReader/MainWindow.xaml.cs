@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data.Entity.Core;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
@@ -25,11 +26,21 @@ namespace LogBookReader
     public partial class MainWindow : Window
     {
 
-        private EF.ReaderContext _readerContext = new EF.ReaderContext();
+        private EF.ReaderContext _readerContext;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            try
+            {
+                new EF.Initialize().FindCreateConnectionFile();
+                _readerContext = new EF.ReaderContext();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Не удалось инициализировать объект подключения.\nПроверьте наличие файла 'dbConnection.config'");
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -100,6 +111,9 @@ namespace LogBookReader
 
         private async Task GetDataDB(bool readEventLog = false)
         {
+            if (_readerContext == null)
+                return;
+
             try
             {
                 if (readEventLog)
@@ -110,6 +124,11 @@ namespace LogBookReader
                     await FillDataComputerCodes();
                     await FillDataEventCodes();
                 }
+            }
+            catch (EntityCommandExecutionException ex)
+            {
+                MessageBox.Show("Ошибка подключения к базе данных.\n" + ex.Message + "\n" + ex.InnerException?.Message + "\n" + ex.InnerException?.InnerException?.Message);
+                return;
             }
             catch (Exception ex)
             {
