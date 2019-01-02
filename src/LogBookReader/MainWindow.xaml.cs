@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Expression = System.Linq.Expressions.Expression;
 
 namespace LogBookReader
 {
@@ -206,7 +207,45 @@ namespace LogBookReader
 
         private Expression<Func<Models.EventLog, bool>> GetExpressionFilterLogs()
         {
-            Expression<Func<Models.EventLog, bool>> expression = f => f.ComputerCode == 0;
+            Expression result = null;
+
+            ParameterExpression parameter = Expression.Parameter(typeof(Models.EventLog));
+
+            List<Expression> expressions = new List<Expression>();
+
+            foreach (Filters.FilterComputerCodes item in FilterComputerCodes)
+                if (item.IsChecked)
+                    expressions.Add(Expression.Equal(Expression.Property(parameter, "ComputerCode"), Expression.Constant(item.Code)));
+
+            if (expressions.Count == 1)
+                result = expressions[0];
+            else if (expressions.Count > 1)
+            {
+                for (int i = 0; i < expressions.Count; i++)
+                {
+                    Expression currentExpression = expressions[i];
+
+                    if (result == null)
+                        result = currentExpression;
+                    else
+                        result = Expression.Or(result, currentExpression);
+                }
+            }
+
+            if (result == null)
+                return null;
+
+            Expression<Func<Models.EventLog, bool>> expression = null;
+
+            try
+            {
+                expression = Expression.Lambda<Func<Models.EventLog, bool>>(result, parameter);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
             return expression;
         }
