@@ -69,7 +69,7 @@ namespace LogBookReader
             set { SetValue(FilterAppCodesProperty, value); }
         }
         public static readonly DependencyProperty FilterAppCodesProperty =
-         DependencyProperty.Register("FilterAppCodes", typeof(ObservableCollection<Filters.FilterAppCodes>), typeof(MainWindow), new UIPropertyMetadata(null));
+         DependencyProperty.Register("FilterAppCodes", typeof(ObservableCollection<Filters.FilterAppCodes>), typeof(MainWindow));
 
         public ObservableCollection<Filters.FilterComputerCodes> FilterComputerCodes
         {
@@ -77,7 +77,7 @@ namespace LogBookReader
             set { SetValue(FiltersComputerCodesProperty, value); }
         }
         public static readonly DependencyProperty FiltersComputerCodesProperty =
-            DependencyProperty.Register("FilterComputerCodes", typeof(ObservableCollection<Filters.FilterComputerCodes>), typeof(MainWindow), new UIPropertyMetadata(null));
+            DependencyProperty.Register("FilterComputerCodes", typeof(ObservableCollection<Filters.FilterComputerCodes>), typeof(MainWindow));
 
         public ObservableCollection<Filters.FilterEventCodes> FilterEventCodes
         {
@@ -85,7 +85,7 @@ namespace LogBookReader
             set { SetValue(FilterEventCodesProperty, value); }
         }
         public static readonly DependencyProperty FilterEventCodesProperty =
-            DependencyProperty.Register("FilterEventCodes", typeof(ObservableCollection<Filters.FilterEventCodes>), typeof(MainWindow), new UIPropertyMetadata(null));
+            DependencyProperty.Register("FilterEventCodes", typeof(ObservableCollection<Filters.FilterEventCodes>), typeof(MainWindow));
 
         public ObservableCollection<Filters.FilterEventLog> FilterEventLogs
         {
@@ -93,7 +93,7 @@ namespace LogBookReader
             set { SetValue(FilterEventLogProperty, value); }
         }
         public static readonly DependencyProperty FilterEventLogProperty =
-            DependencyProperty.Register("FilterEventLogs", typeof(ObservableCollection<Filters.FilterEventLog>), typeof(MainWindow), new UIPropertyMetadata(null));
+            DependencyProperty.Register("FilterEventLogs", typeof(ObservableCollection<Filters.FilterEventLog>), typeof(MainWindow));
 
         public int CountEventLogRows
         {
@@ -101,7 +101,7 @@ namespace LogBookReader
             set { SetValue(CountEventLogRowsProperty, value); }
         }
         public static readonly DependencyProperty CountEventLogRowsProperty =
-            DependencyProperty.Register("CountEventLogRows", typeof(int), typeof(MainWindow), new UIPropertyMetadata(null));
+            DependencyProperty.Register("CountEventLogRows", typeof(int), typeof(MainWindow));
 
         #endregion
 
