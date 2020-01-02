@@ -20,17 +20,27 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="1">
-            <StackPanel Orientation="Horizontal">
-                <Button Content="Получить данные"
-                        Height="30"
-                        Margin="10 0"
-                        HorizontalAlignment="Left"
-                        Click="ButtonGetFilterData_Click"/>
-                <Label Content="Количество записей"
-                       VerticalAlignment="Bottom"/>
-                <TextBox Text="{Binding CountEventLogRows}"
-                         Width="100"/>
-            </StackPanel>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto" MinWidth="40"/>
+            </Grid.ColumnDefinitions>
+            
+            <Button Grid.Column="0"
+                    Content="Получить данные"
+                    Height="30"
+                    Margin="10 0"
+                    HorizontalAlignment="Left"
+                    Click="ButtonGetFilterData_Click"/>
+            
+            <Label Grid.Column="1"
+                   Content="Количество записей"
+                   VerticalAlignment="Center"/>
+                
+            <TextBox Grid.Column="2"
+                     Text="{Binding CountEventLogRows}"
+                     VerticalAlignment="Center"/>
+            
         </Grid>
 
         <Grid Grid.Row="2">
@@ -165,7 +175,8 @@
                                   Header="Другие отборы">
 
                             <CheckBox IsChecked="{Binding CommentIsFilled}"
-                                      Content="Не пустые комментарии"/>
+                                      Content="Не пустые комментарии"
+                                      Margin="10 0 0 0"/>
                             
                         </Expander>
                         
@@ -173,28 +184,42 @@
 
                 </ScrollViewer>
 
-                <DataGrid Grid.Column="1"
-                          ItemsSource="{Binding FilterEventLogs}"
-                          IsReadOnly="True"
-                          AutoGenerateColumns="False"
-                          ScrollViewer.CanContentScroll="True">
+                <Grid Grid.Column="1">
+                    
+                    <DataGrid ItemsSource="{Binding FilterEventLogs}"
+                              IsReadOnly="True"
+                              AutoGenerateColumns="False"
+                              ScrollViewer.CanContentScroll="True">
 
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Номер строки" 
-                                            Binding="{Binding RowID}"/>
-                        <DataGridTextColumn Header="Дата"
-                                            Binding="{Binding DateTime, StringFormat=\{0:dd.MM.yyyy HH:mm:ss\}}"/>
-                        <DataGridTextColumn Header="Компьютер"
-                                            Binding="{Binding ComputerName}"/>
-                        <DataGridTextColumn Header="Приложение"
-                                            Binding="{Binding AppName}"/>
-                        <DataGridTextColumn Header="Комментарий"
-                                            Binding="{Binding Comment}"/>
-                    </DataGrid.Columns>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Номер строки" 
+                                                Binding="{Binding RowID}"/>
+                            <DataGridTextColumn Header="Дата"
+                                                Binding="{Binding DateTime, StringFormat=\{0:dd.MM.yyyy HH:mm:ss\}}"/>
+                            <DataGridTextColumn Header="Компьютер"
+                                                Binding="{Binding ComputerName}"/>
+                            <DataGridTextColumn Header="Приложение"
+                                                Binding="{Binding AppName}"/>
+                            <DataGridTextColumn Header="Комментарий"
+                                                Binding="{Binding Comment}"
+                                                MaxWidth="750"/>
+                        </DataGrid.Columns>
 
+                    </DataGrid>
 
-                </DataGrid>
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                Opacity=".7"
+                                Margin="0,0,15,15">
+                        <Label Content="Выбрано:"
+                               Foreground="{DynamicResource PrimaryHueDarkBrush}"/>
+                        <Label x:Name="LabelCountElementsListBases"
+                               Foreground="{DynamicResource PrimaryHueDarkBrush}"
+                               Content="{Binding FilterEventLogs.Count}"/>
+                    </StackPanel>
 
+                </Grid>
             </Grid>
 
         </Grid>
