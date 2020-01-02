@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LogBookReader.Filters
 {
-    public class FilterEventCodes : IModels.IEventCodes
+    public class FilterEventCodes : IModels.IEventCodes, IModels.IFilterBase
     {
         public FilterEventCodes(Models.EventCodes eventCodes)
         {

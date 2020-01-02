@@ -81,6 +81,7 @@
     </ApplicationDefinition>
     <Compile Include="EF\Initialize.cs" />
     <Compile Include="EF\Repository.cs" />
+    <Compile Include="IModels\IFilterBase.cs" />
     <Compile Include="Filters\FilterEventLog.cs" />
     <Compile Include="Filters\FilterEventCodes.cs" />
     <Compile Include="Filters\FilterComputerCodes.cs" />

@@ -27,7 +27,7 @@ namespace LogBookReader
     public partial class MainWindow : Window
     {
 
-        private EF.ReaderContext _readerContext;
+        private readonly EF.ReaderContext _readerContext;
 
         public MainWindow()
         {
@@ -213,9 +213,9 @@ namespace LogBookReader
 
             List<Expression> expressions = new List<Expression>();
 
-            foreach (Filters.FilterComputerCodes item in FilterComputerCodes)
-                if (item.IsChecked)
-                    expressions.Add(Expression.Equal(Expression.Property(parameter, "ComputerCode"), Expression.Constant(item.Code)));
+            AddExpression(parameter, expressions, FilterAppCodes);
+            AddExpression(parameter, expressions, FilterComputerCodes);
+            AddExpression(parameter, expressions, FilterEventCodes);
 
             if (expressions.Count == 1)
                 result = expressions[0];
@@ -248,6 +248,16 @@ namespace LogBookReader
             }
 
             return expression;
+        }
+
+        private void AddExpression<T>(ParameterExpression parameter, List<Expression> expressions, ObservableCollection<T> listData) where T : IModels.IFilterBase
+        {
+            if (listData.Count(f => f.IsChecked) == listData.Count)
+                return;
+
+            foreach (T item in listData)
+                if (item.IsChecked)
+                    expressions.Add(Expression.Equal(Expression.Property(parameter, "ComputerCode"), Expression.Constant(item.Code)));
         }
 
         private async void MenuItemCommandBarFilter_Click(object sender, RoutedEventArgs e)
