@@ -184,8 +184,8 @@ namespace LogBookReader
             int maxRows = Math.Min(CountEventLogRows, countEvents);
             for (int i = 0; i < maxRows; i++)
             {
-                string appName = FilterAppCodes.FirstOrDefault(f => f.Code == eventLogs[i].AppCode && f.IsChecked)?.Name;
-                string computerName = FilterComputerCodes.FirstOrDefault(f => f.Code == eventLogs[i].ComputerCode && f.IsChecked)?.Name;
+                string appName = FilterAppCodes.FirstOrDefault(f => f.Code == eventLogs[i].AppCode)?.Name;
+                string computerName = FilterComputerCodes.FirstOrDefault(f => f.Code == eventLogs[i].ComputerCode)?.Name;
 
                 if (string.IsNullOrEmpty(appName)
                     || string.IsNullOrEmpty(computerName))
@@ -213,9 +213,9 @@ namespace LogBookReader
 
             List<Expression> expressions = new List<Expression>();
 
-            AddExpression(parameter, expressions, FilterAppCodes);
-            AddExpression(parameter, expressions, FilterComputerCodes);
-            AddExpression(parameter, expressions, FilterEventCodes);
+            AddExpression(parameter, expressions, FilterAppCodes, "AppCode");
+            AddExpression(parameter, expressions, FilterComputerCodes, "ComputerCode");
+            AddExpression(parameter, expressions, FilterEventCodes, "EventCode");
 
             if (expressions.Count == 1)
                 result = expressions[0];
@@ -250,14 +250,17 @@ namespace LogBookReader
             return expression;
         }
 
-        private void AddExpression<T>(ParameterExpression parameter, List<Expression> expressions, ObservableCollection<T> listData) where T : IModels.IFilterBase
+        private void AddExpression<T>(ParameterExpression parameter,
+                                      List<Expression> expressions,
+                                      ObservableCollection<T> listData,
+                                      string field) where T : IModels.IFilterBase
         {
             if (listData.Count(f => f.IsChecked) == listData.Count)
                 return;
 
             foreach (T item in listData)
                 if (item.IsChecked)
-                    expressions.Add(Expression.Equal(Expression.Property(parameter, "ComputerCode"), Expression.Constant(item.Code)));
+                    expressions.Add(Expression.Equal(Expression.Property(parameter, field), Expression.Constant(item.Code)));
         }
 
         private async void MenuItemCommandBarFilter_Click(object sender, RoutedEventArgs e)
