@@ -178,30 +178,17 @@ namespace LogBookReader
                 orderBy: f => f.OrderBy(o => -o.RowID),
                 count: CountEventLogRows);
 
-
-            int countEvents = eventLogs.Count;
-
-            int maxRows = Math.Min(CountEventLogRows, countEvents);
-            for (int i = 0; i < maxRows; i++)
+            foreach (Models.EventLog eventLog in eventLogs)
             {
-                string appName = FilterAppCodes.FirstOrDefault(f => f.Code == eventLogs[i].AppCode)?.Name;
-                string computerName = FilterComputerCodes.FirstOrDefault(f => f.Code == eventLogs[i].ComputerCode)?.Name;
+                string appName = FilterAppCodes.FirstOrDefault(f => f.Code == eventLog.AppCode)?.Name;
+                string computerName = FilterComputerCodes.FirstOrDefault(f => f.Code == eventLog.ComputerCode)?.Name;
 
-                if (string.IsNullOrEmpty(appName)
-                    || string.IsNullOrEmpty(computerName))
-                {
-                    if (maxRows < countEvents)
-                        maxRows++;
-                }
-                else
-                {
-                    FilterEventLogs.Add(
-                        new Filters.FilterEventLog(eventLogs[i])
-                        {
-                            ComputerName = computerName,
-                            AppName = appName
-                        });
-                }
+                FilterEventLogs.Add(
+                    new Filters.FilterEventLog(eventLog)
+                    {
+                        ComputerName = computerName,
+                        AppName = appName
+                    });
             }
         }
 
@@ -255,7 +242,8 @@ namespace LogBookReader
                                       ObservableCollection<T> listData,
                                       string field) where T : IModels.IFilterBase
         {
-            if (listData.Count(f => f.IsChecked) == listData.Count)
+            int countCheckedElement = listData.Count(f => f.IsChecked);
+            if (countCheckedElement == 0 || countCheckedElement == listData.Count)
                 return;
 
             foreach (T item in listData)
