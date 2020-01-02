@@ -103,6 +103,14 @@ namespace LogBookReader
         public static readonly DependencyProperty CountEventLogRowsProperty =
             DependencyProperty.Register("CountEventLogRows", typeof(int), typeof(MainWindow));
 
+        public bool CommentIsFilled
+        {
+            get { return (bool)GetValue(CommentIsFilledProperty); }
+            set { SetValue(CommentIsFilledProperty, value); }
+        }
+        public static readonly DependencyProperty CommentIsFilledProperty =
+            DependencyProperty.Register("CommentIsFilled", typeof(bool), typeof(MainWindow));
+
         #endregion
 
         private async void ButtonGetFilterData_Click(object sender, RoutedEventArgs e)
@@ -198,26 +206,10 @@ namespace LogBookReader
 
             ParameterExpression parameter = Expression.Parameter(typeof(Models.EventLog));
 
-            List<Expression> expressions = new List<Expression>();
-
-            AddExpression(parameter, expressions, FilterAppCodes, "AppCode");
-            AddExpression(parameter, expressions, FilterComputerCodes, "ComputerCode");
-            AddExpression(parameter, expressions, FilterEventCodes, "EventCode");
-
-            if (expressions.Count == 1)
-                result = expressions[0];
-            else if (expressions.Count > 1)
-            {
-                for (int i = 0; i < expressions.Count; i++)
-                {
-                    Expression currentExpression = expressions[i];
-
-                    if (result == null)
-                        result = currentExpression;
-                    else
-                        result = Expression.Or(result, currentExpression);
-                }
-            }
+            AddExpression(parameter, ref result, FilterAppCodes, "AppCode");
+            AddExpression(parameter, ref result, FilterComputerCodes, "ComputerCode");
+            AddExpression(parameter, ref result, FilterEventCodes, "EventCode");
+            AddExpression<IModels.IFilterBase>(parameter, ref result, null, "Comment");
 
             if (result == null)
                 return null;
@@ -227,7 +219,6 @@ namespace LogBookReader
             try
             {
                 expression = Expression.Lambda<Func<Models.EventLog, bool>>(result, parameter);
-
             }
             catch (Exception ex)
             {
@@ -238,17 +229,41 @@ namespace LogBookReader
         }
 
         private void AddExpression<T>(ParameterExpression parameter,
-                                      List<Expression> expressions,
+                                      ref Expression result,
                                       ObservableCollection<T> listData,
                                       string field) where T : IModels.IFilterBase
         {
-            int countCheckedElement = listData.Count(f => f.IsChecked);
-            if (countCheckedElement == 0 || countCheckedElement == listData.Count)
+            Expression resultExpression = null;
+
+            if (field == "Comment")
+            {
+                if (CommentIsFilled)
+                    resultExpression = Expression.NotEqual(Expression.Property(parameter, "Comment"), Expression.Constant(""));
+            }
+            else
+            {
+                int countCheckedElement = listData.Count(f => f.IsChecked);
+                if (countCheckedElement > 0 && countCheckedElement != listData.Count)
+                {
+                    foreach (T item in listData.Where(f => f.IsChecked))
+                    {
+                        Expression currentExpression = Expression.Equal(Expression.Property(parameter, field), Expression.Constant(item.Code));
+
+                        if (result == null)
+                            resultExpression = currentExpression;
+                        else
+                            resultExpression = Expression.Or(result, currentExpression);
+                    }
+                }
+            }
+
+            if (resultExpression == null)
                 return;
 
-            foreach (T item in listData)
-                if (item.IsChecked)
-                    expressions.Add(Expression.Equal(Expression.Property(parameter, field), Expression.Constant(item.Code)));
+            if (result == null)
+                result = resultExpression;
+            else
+                result = Expression.AndAlso(result, resultExpression);
         }
 
         private async void MenuItemCommandBarFilter_Click(object sender, RoutedEventArgs e)

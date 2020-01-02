@@ -161,6 +161,14 @@
 
                         </Expander>
 
+                        <Expander HorizontalAlignment="Stretch"
+                                  Header="Другие отборы">
+
+                            <CheckBox IsChecked="{Binding CommentIsFilled}"
+                                      Content="Не пустые комментарии"/>
+                            
+                        </Expander>
+                        
                     </StackPanel>
 
                 </ScrollViewer>
@@ -180,6 +188,8 @@
                                             Binding="{Binding ComputerName}"/>
                         <DataGridTextColumn Header="Приложение"
                                             Binding="{Binding AppName}"/>
+                        <DataGridTextColumn Header="Комментарий"
+                                            Binding="{Binding Comment}"/>
                     </DataGrid.Columns>
 
 
