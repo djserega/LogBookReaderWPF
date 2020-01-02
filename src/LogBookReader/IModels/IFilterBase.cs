@@ -10,5 +10,6 @@ namespace LogBookReader.IModels
     {
         bool IsChecked { get; set; }
         int Code { get; set; }
+        string Name { get; set; }
     }
 }
