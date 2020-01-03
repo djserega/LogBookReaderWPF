@@ -46,9 +46,8 @@ namespace LogBookReader.EF
                 return _dbSet.Count(predicate);
         }
 
-        public List<TEntity> GetList(
-            Expression<Func<TEntity, bool>> predicate = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
+        public List<TEntity> GetList(Expression<Func<TEntity, bool>> predicate = null,
+                                     Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
         {
             IQueryable<TEntity> query = _dbSet;
 
@@ -61,9 +60,8 @@ namespace LogBookReader.EF
                 return query.ToList();
         }
 
-        public Task<List<TEntity>> GetListAsync(
-            Expression<Func<TEntity, bool>> predicate = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
+        public Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate = null,
+                                                Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
         {
             IQueryable<TEntity> query = _dbSet;
 
@@ -76,10 +74,9 @@ namespace LogBookReader.EF
                 return query.ToListAsync();
         }
 
-        public Task<List<TEntity>> GetListTakeAsync(
-            Expression<Func<TEntity, bool>> predicate = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-            int count = 100)
+        public async Task<List<TEntity>> GetListTakeAsync(Expression<Func<TEntity, bool>> predicate = null,
+                                                          Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+                                                          int count = 100)
         {
             IQueryable<TEntity> query = _dbSet;
 
@@ -87,9 +84,10 @@ namespace LogBookReader.EF
                 query = query.Where(predicate);
 
             if (orderBy != null)
-                return orderBy(query).Take(count).ToListAsync();
+                return await orderBy(query).Take(count)
+                                           .ToListAsync();
             else
-                return query.Take(count).ToListAsync();
+                return await query.Take(count).ToListAsync();
         }
     }
 }

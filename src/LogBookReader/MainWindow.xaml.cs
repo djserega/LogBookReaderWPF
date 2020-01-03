@@ -49,7 +49,7 @@ namespace LogBookReader
             InitializeProperties();
         }
 
-        private async void InitializeProperties()
+        private void InitializeProperties()
         {
             FilterAppCodes = new ObservableCollection<Filters.FilterAppCodes>();
             FilterComputerCodes = new ObservableCollection<Filters.FilterComputerCodes>();
@@ -58,7 +58,7 @@ namespace LogBookReader
 
             CountEventLogRows = 100;
 
-            await GetDataDB();
+            GetDataDB();
         }
 
         #region DependencyProperty
@@ -113,12 +113,12 @@ namespace LogBookReader
 
         #endregion
 
-        private async void ButtonGetFilterData_Click(object sender, RoutedEventArgs e)
+        private void ButtonGetFilterData_Click(object sender, RoutedEventArgs e)
         {
-            await GetDataDB(true);
+            GetDataDB(true);
         }
 
-        private async Task GetDataDB(bool readEventLog = false)
+        private async void GetDataDB(bool readEventLog = false)
         {
             if (_readerContext == null)
                 return;
@@ -126,12 +126,12 @@ namespace LogBookReader
             try
             {
                 if (readEventLog)
-                    await FillDataEventLogs();
+                    FillDataEventLogs();
                 else
                 {
-                    await FillDataAppCodes();
-                    await FillDataComputerCodes();
-                    await FillDataEventCodes();
+                    FillDataAppCodes();
+                    FillDataComputerCodes();
+                    FillDataEventCodes();
                 }
             }
             catch (EntityCommandExecutionException ex)
@@ -146,7 +146,7 @@ namespace LogBookReader
             }
         }
 
-        private async Task FillDataAppCodes(bool isChecked = true)
+        private async void FillDataAppCodes(bool isChecked = true)
         {
             FilterAppCodes.Clear();
 
@@ -156,7 +156,7 @@ namespace LogBookReader
                 FilterAppCodes.Add(new Filters.FilterAppCodes(item) { IsChecked = isChecked });
         }
 
-        private async Task FillDataComputerCodes(bool isChecked = true)
+        private async void FillDataComputerCodes(bool isChecked = true)
         {
             FilterComputerCodes.Clear();
 
@@ -166,7 +166,7 @@ namespace LogBookReader
                 FilterComputerCodes.Add(new Filters.FilterComputerCodes(item) { IsChecked = isChecked });
         }
 
-        private async Task FillDataEventCodes(bool isChecked = true)
+        private async void FillDataEventCodes(bool isChecked = true)
         {
             FilterEventCodes.Clear();
 
@@ -176,15 +176,15 @@ namespace LogBookReader
                 FilterEventCodes.Add(new Filters.FilterEventCodes(item) { IsChecked = isChecked });
         }
 
-        private async Task FillDataEventLogs()
+        private async void FillDataEventLogs()
         {
             FilterEventLogs.Clear();
 
             var repoEventLogs = new EF.Repository<Models.EventLog>(_readerContext);
             List<Models.EventLog> eventLogs = await repoEventLogs.GetListTakeAsync(
                 GetExpressionFilterLogs(),
-                orderBy: f => f.OrderBy(o => -o.RowID),
-                count: CountEventLogRows);
+                f => f.OrderBy(o => -o.RowID),
+                CountEventLogRows);
 
             foreach (Models.EventLog eventLog in eventLogs)
             {
@@ -202,71 +202,29 @@ namespace LogBookReader
 
         private Expression<Func<Models.EventLog, bool>> GetExpressionFilterLogs()
         {
-            Expression result = null;
+            ExpressionEventLogCreator expressionCreator = new ExpressionEventLogCreator()
+            {
+                CommentIsFilled = CommentIsFilled
+            };
 
-            ParameterExpression parameter = Expression.Parameter(typeof(Models.EventLog));
-
-            AddExpression(parameter, ref result, FilterAppCodes, "AppCode");
-            AddExpression(parameter, ref result, FilterComputerCodes, "ComputerCode");
-            AddExpression(parameter, ref result, FilterEventCodes, "EventCode");
-            AddExpression<IModels.IFilterBase>(parameter, ref result, null, "Comment");
-
-            if (result == null)
-                return null;
-
-            Expression<Func<Models.EventLog, bool>> expression = null;
+            expressionCreator.AddExpression(FilterAppCodes, "AppCode");
+            expressionCreator.AddExpression(FilterComputerCodes, "ComputerCode");
+            expressionCreator.AddExpression(FilterEventCodes, "EventCode");
+            expressionCreator.AddExpression("Comment");
 
             try
             {
-                expression = Expression.Lambda<Func<Models.EventLog, bool>>(result, parameter);
+                return expressionCreator.GetResult();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return null;
             }
-
-            return expression;
         }
 
-        private void AddExpression<T>(ParameterExpression parameter,
-                                      ref Expression result,
-                                      ObservableCollection<T> listData,
-                                      string field) where T : IModels.IFilterBase
-        {
-            Expression resultExpression = null;
 
-            if (field == "Comment")
-            {
-                if (CommentIsFilled)
-                    resultExpression = Expression.NotEqual(Expression.Property(parameter, "Comment"), Expression.Constant(""));
-            }
-            else
-            {
-                int countCheckedElement = listData.Count(f => f.IsChecked);
-                if (countCheckedElement > 0 && countCheckedElement != listData.Count)
-                {
-                    foreach (T item in listData.Where(f => f.IsChecked))
-                    {
-                        Expression currentExpression = Expression.Equal(Expression.Property(parameter, field), Expression.Constant(item.Code));
-
-                        if (result == null)
-                            resultExpression = currentExpression;
-                        else
-                            resultExpression = Expression.Or(result, currentExpression);
-                    }
-                }
-            }
-
-            if (resultExpression == null)
-                return;
-
-            if (result == null)
-                result = resultExpression;
-            else
-                result = Expression.AndAlso(result, resultExpression);
-        }
-
-        private async void MenuItemCommandBarFilter_Click(object sender, RoutedEventArgs e)
+        private void MenuItemCommandBarFilter_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuItem menuItem)
             {
@@ -277,13 +235,13 @@ namespace LogBookReader
                 switch (dataTag[0])
                 {
                     case "FilterAppCodes":
-                        await FillDataAppCodes(isChecked);
+                        FillDataAppCodes(isChecked);
                         break;
                     case "FilterComputerCodes":
-                        await FillDataComputerCodes(isChecked);
+                        FillDataComputerCodes(isChecked);
                         break;
                     case "FilterEventCodes":
-                        await FillDataEventCodes(isChecked);
+                        FillDataEventCodes(isChecked);
                         break;
                 }
             }
