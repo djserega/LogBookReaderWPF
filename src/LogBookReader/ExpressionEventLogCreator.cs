@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LogBookReader
 {
@@ -28,7 +25,7 @@ namespace LogBookReader
             SetResultExpression(resultExpression);
         }
 
-        internal void AddExpression<T>(ObservableCollection<T> listData, string field) where T : IModels.IFilterBase
+        internal void AddExpression<T>(ObservableCollection<T> listData, string field) where T : IFilters.IFilterBase
         {
             Expression resultExpression = null;
 

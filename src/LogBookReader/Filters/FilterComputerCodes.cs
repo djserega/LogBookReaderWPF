@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LogBookReader.Filters
+﻿namespace LogBookReader.Filters
 {
-    public class FilterComputerCodes : IModels.IComputerCodes, IModels.IFilterBase
+    public class FilterComputerCodes : IModels.IComputerCodes, IFilters.IFilterBase
     {
         public FilterComputerCodes() { }
         public FilterComputerCodes(Models.ComputerCodes computerCode)

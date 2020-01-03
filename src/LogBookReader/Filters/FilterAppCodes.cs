@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LogBookReader.Filters
+﻿namespace LogBookReader.Filters
 {
-    
-    public class FilterAppCodes : IModels.IAppCodes, IModels.IFilterBase
+
+    public class FilterAppCodes : IModels.IAppCodes, IFilters.IFilterBase
     {
         public FilterAppCodes() { }
 

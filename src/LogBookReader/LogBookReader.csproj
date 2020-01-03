@@ -82,7 +82,7 @@
     <Compile Include="EF\Initialize.cs" />
     <Compile Include="EF\Repository.cs" />
     <Compile Include="ExpressionEventLogCreator.cs" />
-    <Compile Include="IModels\IFilterBase.cs" />
+    <Compile Include="IFilters\IFilterBase.cs" />
     <Compile Include="Filters\FilterEventLog.cs" />
     <Compile Include="Filters\FilterEventCodes.cs" />
     <Compile Include="Filters\FilterComputerCodes.cs" />
@@ -117,7 +117,6 @@
     <Compile Include="IModels\IComputerCodes.cs" />
     <Compile Include="IModels\IEventCodes.cs" />
     <Compile Include="IModels\IEventLog.cs" />
-    <Compile Include="NotifyPropertyChangedClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

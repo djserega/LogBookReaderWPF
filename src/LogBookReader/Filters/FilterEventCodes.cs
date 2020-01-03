@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LogBookReader.Filters
+﻿namespace LogBookReader.Filters
 {
-    public class FilterEventCodes : IModels.IEventCodes, IModels.IFilterBase
+    public class FilterEventCodes : IModels.IEventCodes, IFilters.IFilterBase
     {
         public FilterEventCodes(Models.EventCodes eventCodes)
         {

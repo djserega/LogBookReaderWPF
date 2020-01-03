@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LogBookReader.EF
@@ -20,9 +19,8 @@ namespace LogBookReader.EF
         }
 
 
-        public TEntity GetFirstOrDefault(
-            Expression<Func<TEntity, bool>> predicate = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
+        public TEntity GetFirstOrDefault(Expression<Func<TEntity, bool>> predicate = null,
+                                         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
         {
             IQueryable<TEntity> query = _dbSet;
 
