@@ -16,6 +16,7 @@ namespace LogBookReader
     {
 
         private readonly EF.ReaderContext _readerContext;
+        private readonly List<Filters.FilterEventLog> _filterEventLogsBase = new List<Filters.FilterEventLog>();
 
         public MainWindow()
         {
@@ -49,7 +50,7 @@ namespace LogBookReader
             GetDataDB();
         }
 
-        #region DependencyProperty
+        #region Dependency property
 
         public ObservableCollection<Filters.FilterAppCodes> FilterAppCodes
         {
@@ -99,7 +100,16 @@ namespace LogBookReader
         public static readonly DependencyProperty CommentIsFilledProperty =
             DependencyProperty.Register("CommentIsFilled", typeof(bool), typeof(MainWindow));
 
+        public string TextFilter
+        {
+            get { return (string)GetValue(TextFilterProperty); }
+            set { SetValue(TextFilterProperty, value); }
+        }
+        public static readonly DependencyProperty TextFilterProperty =
+            DependencyProperty.Register("TextFilter", typeof(string), typeof(MainWindow));
+
         #endregion
+
 
         private void ButtonGetFilterData_Click(object sender, RoutedEventArgs e)
         {
@@ -166,7 +176,7 @@ namespace LogBookReader
 
         private async void FillDataEventLogs()
         {
-            FilterEventLogs.Clear();
+            _filterEventLogsBase.Clear();
 
             var repoEventLogs = new EF.Repository<Models.EventLog>(_readerContext);
             List<Models.EventLog> eventLogs = await repoEventLogs.GetListTakeAsync(
@@ -179,13 +189,15 @@ namespace LogBookReader
                 string appName = FilterAppCodes.FirstOrDefault(f => f.Code == eventLog.AppCode)?.Name;
                 string computerName = FilterComputerCodes.FirstOrDefault(f => f.Code == eventLog.ComputerCode)?.Name;
 
-                FilterEventLogs.Add(
+                _filterEventLogsBase.Add(
                     new Filters.FilterEventLog(eventLog)
                     {
                         ComputerName = computerName,
                         AppName = appName
                     });
             }
+
+            FilterEventLogs = new ObservableCollection<Filters.FilterEventLog>(_filterEventLogsBase);
         }
 
         private Expression<Func<Models.EventLog, bool>> GetExpressionFilterLogs()
@@ -210,7 +222,7 @@ namespace LogBookReader
                 return null;
             }
         }
-        
+
         private void MenuItemCommandBarFilter_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuItem menuItem)
@@ -233,5 +245,36 @@ namespace LogBookReader
                 }
             }
         }
+
+        private void ButtonClearTextFilter_Click(object sender, RoutedEventArgs e)
+        {
+            TextFilter = string.Empty;
+            FilterListEventLog();
+        }
+
+        private void TextBoxTextFilter_SourceUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)
+        {
+            FilterListEventLog();
+        }
+
+        private void FilterListEventLog()
+        {
+            if (string.IsNullOrWhiteSpace(TextFilter))
+                FilterEventLogs = new ObservableCollection<Filters.FilterEventLog>(_filterEventLogsBase);
+            else
+            {
+                string textFilterLower = TextFilter.ToLower();
+
+                FilterEventLogs = new ObservableCollection<Filters.FilterEventLog>(_filterEventLogsBase?.Where(
+                    el =>
+                        (el.RowID.ToString().ToLower().Contains(textFilterLower))
+                        || (el.ComputerName?.ToLower().Contains(textFilterLower) ?? false)
+                        || (el.AppName?.ToLower().Contains(textFilterLower) ?? false)
+                        || (el.Comment?.ToLower().Contains(textFilterLower) ?? false)
+                    ));
+
+            }
+        }
+
     }
 }
