@@ -12,16 +12,39 @@ namespace LogBookReader
 
         internal bool CommentIsFilled { get; set; }
 
-        internal void AddExpression(string field)
+        internal void AddExpression(string field, ComparsionType comparsionType, long rightValue)
+            => AddExpression(field, comparsionType, Expression.Constant(rightValue));
+
+        internal void AddExpression(string field, ComparsionType comparsionType, DateTime rightValue)
+            => AddExpression(field, comparsionType, Expression.Constant(rightValue));
+
+        internal void AddExpression(string field, ComparsionType comparsionType, string rightValue) 
+            => AddExpression(field, comparsionType, Expression.Constant(rightValue));
+
+        internal void AddExpression(string field, ComparsionType comparsionType, Expression rightValue)
         {
             Expression resultExpression = null;
 
-            if (field == "Comment")
-            {
-                if (CommentIsFilled)
-                    resultExpression = Expression.NotEqual(Expression.Property(_parameter, "Comment"), Expression.Constant(""));
-            }
+            Expression leftValue = Expression.Property(_parameter, field);
 
+            switch (comparsionType)
+            {
+                case ComparsionType.Equal:
+                    resultExpression = Expression.Equal(leftValue, rightValue);
+                    break;
+                case ComparsionType.NotEqual:
+                    resultExpression = Expression.NotEqual(leftValue, rightValue); 
+                    break;
+                case ComparsionType.LessThanOrEqual:
+                    resultExpression = Expression.LessThanOrEqual(leftValue, rightValue);
+                    break;
+                case ComparsionType.GreaterThanOrEqual:
+                    resultExpression = Expression.GreaterThanOrEqual(leftValue, rightValue);
+                    break;
+                default:
+                    throw new NotImplementedException($"Реализация сравнения {comparsionType} не реализована.");
+            }
+            
             SetResultExpression(resultExpression);
         }
 

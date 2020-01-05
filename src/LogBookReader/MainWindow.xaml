@@ -134,15 +134,17 @@
                                 <Label Content="Начало периода"/>
                                 <StackPanel Orientation="Horizontal">
                                     <DatePicker Width="100"
-                                                HorizontalContentAlignment="Right"/>
-                                    <local:TimeControl/>
+                                                HorizontalContentAlignment="Right"
+                                                SelectedDate="{Binding StartPeriodDate}"/>
+                                    <local:TimeControl Value="{Binding StartPeriodTime}"/>
                                 </StackPanel>
 
                                 <Label Content="Конец периода"/>
                                 <StackPanel Orientation="Horizontal">
                                     <DatePicker Width="100"
-                                                HorizontalContentAlignment="Right"/>
-                                    <local:TimeControl/>
+                                                HorizontalContentAlignment="Right"
+                                                SelectedDate="{Binding EndPeriodDate}"/>
+                                    <local:TimeControl Value="{Binding EndPeriodTime}"/>
                                 </StackPanel>
 
                             </StackPanel>

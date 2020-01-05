@@ -81,6 +81,7 @@
     </ApplicationDefinition>
     <Compile Include="EF\Initialize.cs" />
     <Compile Include="EF\Repository.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="ExpressionEventLogCreator.cs" />
     <Compile Include="IFilters\IFilterBase.cs" />
     <Compile Include="Filters\FilterEventLog.cs" />

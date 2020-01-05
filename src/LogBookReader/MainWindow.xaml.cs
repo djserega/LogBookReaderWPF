@@ -47,6 +47,11 @@ namespace LogBookReader
 
             CountEventLogRows = 100;
 
+            StartPeriodDate = DateTime.Now;
+            StartPeriodTime = new TimeSpan(0, 0, 0);
+            EndPeriodDate = DateTime.Now;
+            EndPeriodTime = new TimeSpan(23, 59, 59);
+
             GetDataDB();
         }
 
@@ -108,8 +113,39 @@ namespace LogBookReader
         public static readonly DependencyProperty TextFilterProperty =
             DependencyProperty.Register("TextFilter", typeof(string), typeof(MainWindow));
 
-        #endregion
+        public DateTime StartPeriodDate
+        {
+            get { return (DateTime)GetValue(StartPeriodDateProperty); }
+            set { SetValue(StartPeriodDateProperty, value); }
+        }
+        public static readonly DependencyProperty StartPeriodDateProperty =
+            DependencyProperty.Register("StartPeriodDate", typeof(DateTime), typeof(MainWindow));
 
+        public TimeSpan StartPeriodTime
+        {
+            get { return (TimeSpan)GetValue(StartPeriodTimeProperty); }
+            set { SetValue(StartPeriodTimeProperty, value); }
+        }
+        public static readonly DependencyProperty StartPeriodTimeProperty =
+            DependencyProperty.Register("StartPeriodTime", typeof(TimeSpan), typeof(MainWindow));
+
+        public DateTime EndPeriodDate
+        {
+            get { return (DateTime)GetValue(EndPeriodDateProperty); }
+            set { SetValue(EndPeriodDateProperty, value); }
+        }
+        public static readonly DependencyProperty EndPeriodDateProperty =
+            DependencyProperty.Register("EndPeriodDate", typeof(DateTime), typeof(MainWindow));
+
+        public TimeSpan EndPeriodTime
+        {
+            get { return (TimeSpan)GetValue(EndPeriodTimeProperty); }
+            set { SetValue(EndPeriodTimeProperty, value); }
+        }
+        public static readonly DependencyProperty EndPeriodTimeProperty =
+            DependencyProperty.Register("EndPeriodTime", typeof(TimeSpan), typeof(MainWindow));
+
+        #endregion
 
         private void ButtonGetFilterData_Click(object sender, RoutedEventArgs e)
         {
@@ -202,15 +238,28 @@ namespace LogBookReader
 
         private Expression<Func<Models.EventLog, bool>> GetExpressionFilterLogs()
         {
-            ExpressionEventLogCreator expressionCreator = new ExpressionEventLogCreator()
-            {
-                CommentIsFilled = CommentIsFilled
-            };
+            ExpressionEventLogCreator expressionCreator = new ExpressionEventLogCreator();
 
             expressionCreator.AddExpression(FilterAppCodes, "AppCode");
             expressionCreator.AddExpression(FilterComputerCodes, "ComputerCode");
             expressionCreator.AddExpression(FilterEventCodes, "EventCode");
-            expressionCreator.AddExpression("Comment");
+
+            if (StartPeriodDate.Date != new DateTime(1, 1, 1))
+            {
+                long dateSqlite = (long)(StartPeriodDate.Date - DateTime.MinValue).TotalMilliseconds * 10;
+                dateSqlite += (long)StartPeriodTime.TotalMilliseconds * 10; 
+                expressionCreator.AddExpression("Date", ComparsionType.GreaterThanOrEqual, dateSqlite);
+            }
+
+            if (EndPeriodDate.Date != new DateTime(1, 1, 1))
+            {
+                long dateSqlite = (long)(EndPeriodDate.Date - DateTime.MinValue).TotalMilliseconds * 10;
+                dateSqlite += (long)EndPeriodTime.TotalMilliseconds * 10;
+                expressionCreator.AddExpression("Date", ComparsionType.LessThanOrEqual, dateSqlite);
+            }
+
+            if (CommentIsFilled)
+                expressionCreator.AddExpression("Comment", ComparsionType.NotEqual, "");
 
             try
             {
