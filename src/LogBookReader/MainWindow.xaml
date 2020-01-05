@@ -136,7 +136,8 @@
                                     <DatePicker Width="100"
                                                 HorizontalContentAlignment="Right"
                                                 SelectedDate="{Binding StartPeriodDate}"/>
-                                    <local:TimeControl Value="{Binding StartPeriodTime}"/>
+                                    <local:TimeControl x:Name="TimeControlStartPeriod"
+                                                       Value="{Binding StartPeriodTime}"/>
                                 </StackPanel>
 
                                 <Label Content="Конец периода"/>
@@ -144,7 +145,8 @@
                                     <DatePicker Width="100"
                                                 HorizontalContentAlignment="Right"
                                                 SelectedDate="{Binding EndPeriodDate}"/>
-                                    <local:TimeControl Value="{Binding EndPeriodTime}"/>
+                                    <local:TimeControl x:Name="TimeControlEndPeriod"
+                                                       Value="{Binding EndPeriodTime}"/>
                                 </StackPanel>
 
                             </StackPanel>

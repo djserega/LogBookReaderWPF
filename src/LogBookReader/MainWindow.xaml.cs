@@ -48,9 +48,9 @@ namespace LogBookReader
             CountEventLogRows = 100;
 
             StartPeriodDate = DateTime.Now;
-            StartPeriodTime = new TimeSpan(0, 0, 0);
+            TimeControlStartPeriod.Value = new TimeSpan(0, 0, 0);
             EndPeriodDate = DateTime.Now;
-            EndPeriodTime = new TimeSpan(23, 59, 59);
+            TimeControlEndPeriod.Value = new TimeSpan(23, 59, 59);
 
             GetDataDB();
         }
@@ -247,14 +247,14 @@ namespace LogBookReader
             if (StartPeriodDate.Date != new DateTime(1, 1, 1))
             {
                 long dateSqlite = (long)(StartPeriodDate.Date - DateTime.MinValue).TotalMilliseconds * 10;
-                dateSqlite += (long)StartPeriodTime.TotalMilliseconds * 10; 
+                dateSqlite += (long)TimeControlStartPeriod.Value.TotalMilliseconds * 10; 
                 expressionCreator.AddExpression("Date", ComparsionType.GreaterThanOrEqual, dateSqlite);
             }
 
             if (EndPeriodDate.Date != new DateTime(1, 1, 1))
             {
                 long dateSqlite = (long)(EndPeriodDate.Date - DateTime.MinValue).TotalMilliseconds * 10;
-                dateSqlite += (long)EndPeriodTime.TotalMilliseconds * 10;
+                dateSqlite += (long)TimeControlEndPeriod.Value.TotalMilliseconds * 10;
                 expressionCreator.AddExpression("Date", ComparsionType.LessThanOrEqual, dateSqlite);
             }
 
@@ -325,5 +325,14 @@ namespace LogBookReader
             }
         }
 
+        private void TimeControl_TargetUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)
+        {
+
+        }
+
+        private void TimeControl_ValueChanged()
+        {
+
+        }
     }
 }

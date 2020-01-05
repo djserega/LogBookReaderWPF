@@ -52,7 +52,11 @@ namespace LogBookReader
             set { SetValue(HoursProperty, value); }
         }
         public static readonly DependencyProperty HoursProperty =
-            DependencyProperty.Register("Hours", typeof(int), typeof(TimeControl), new UIPropertyMetadata(0, new PropertyChangedCallback(OnTimeChanged)));
+            DependencyProperty.Register(
+                "Hours",
+                typeof(int),
+                typeof(TimeControl),
+                new UIPropertyMetadata(0, new PropertyChangedCallback(OnTimeChanged)));
 
         public int Minutes
         {
@@ -60,7 +64,10 @@ namespace LogBookReader
             set { SetValue(MinutesProperty, value); }
         }
         public static readonly DependencyProperty MinutesProperty =
-            DependencyProperty.Register("Minutes", typeof(int), typeof(TimeControl), new UIPropertyMetadata(0, new PropertyChangedCallback(OnTimeChanged)));
+            DependencyProperty.Register("Minutes",
+                typeof(int),
+                typeof(TimeControl),
+                new UIPropertyMetadata(0, new PropertyChangedCallback(OnTimeChanged)));
 
         public int Seconds
         {
@@ -69,13 +76,33 @@ namespace LogBookReader
         }
 
         public static readonly DependencyProperty SecondsProperty =
-            DependencyProperty.Register("Seconds", typeof(int), typeof(TimeControl), new UIPropertyMetadata(0, new PropertyChangedCallback(OnTimeChanged)));
+            DependencyProperty.Register("Seconds",
+                typeof(int),
+                typeof(TimeControl),
+                new UIPropertyMetadata(0, new PropertyChangedCallback(OnTimeChanged)));
 
 
         private static void OnTimeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             TimeControl control = obj as TimeControl;
-            control.Value = new TimeSpan(control.Hours, control.Minutes, control.Seconds);
+
+            control.Hours = GetMinMaxTimeValue(control.Hours, 23);
+            control.Minutes = GetMinMaxTimeValue(control.Minutes, 59);
+            control.Seconds = GetMinMaxTimeValue(control.Seconds, 59);
+
+            control.Value = new TimeSpan(control.Hours,
+                                         control.Minutes,
+                                         control.Seconds);
+        }
+
+        private static int GetMinMaxTimeValue(int timeValue, int maxValue)
+        {
+            if (timeValue < 0)
+                timeValue = 0;
+            else if (timeValue > maxValue)
+                timeValue = maxValue;
+
+            return timeValue;
         }
 
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)
