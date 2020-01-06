@@ -30,7 +30,7 @@ namespace LogBookReader
             get { return (TimeSpan)GetValue(ValueProperty); }
             set { SetValue(ValueProperty, value); }
         }
-        
+
         public static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register(
                 "Value",
@@ -108,6 +108,67 @@ namespace LogBookReader
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)
         {
             ((TextBox)sender).SelectAll();
+        }
+
+        private void TextBox_Error(object sender, ValidationErrorEventArgs e)
+        {
+            //if (e.Action == ValidationErrorEventAction.Added)
+            //{
+            //    ((TextBox)sender).Text = "1";
+            //    e.Handled = true;
+            //}
+        }
+
+        private void TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.D0:
+                case Key.D1:
+                case Key.D2:
+                case Key.D3:
+                case Key.D4:
+                case Key.D5:
+                case Key.D6:
+                case Key.D7:
+                case Key.D8:
+                case Key.D9:
+                case Key.NumPad0:
+                case Key.NumPad1:
+                case Key.NumPad2:
+                case Key.NumPad3:
+                case Key.NumPad4:
+                case Key.NumPad5:
+                case Key.NumPad6:
+                case Key.NumPad7:
+                case Key.NumPad8:
+                case Key.NumPad9:
+
+                    string textSender = ((TextBox)sender).Text;
+                    string selectedTextSender = ((TextBox)sender).SelectedText;
+
+                    if (textSender.Length > 1
+                        && selectedTextSender.Length == 0)
+                        e.Handled = true;
+
+                    break;
+
+                case Key.Tab:
+                case Key.Home:
+                case Key.End:
+                case Key.Left:
+                case Key.Up:
+                case Key.Right:
+                case Key.Down:
+                case Key.Insert:
+                case Key.Back:
+                case Key.Delete:
+                    break;
+
+                default:
+                    e.Handled = true;
+                    break;
+            }
         }
     }
 }

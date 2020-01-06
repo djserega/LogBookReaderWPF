@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LogBookReader"
+             xmlns:validators="clr-namespace:LogBookReader.Validators"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -32,24 +33,56 @@
         </Grid.ColumnDefinitions>
 
         <TextBox Grid.Column="0"
-                 Text="{Binding Hours}"
                  Style="{StaticResource TextBoxNumbers}"
-                 GotFocus="TextBox_GotFocus"/>
+                 GotFocus="TextBox_GotFocus"
+                 PreviewKeyDown="TextBox_PreviewKeyDown"
+                 Validation.Error="TextBox_Error">
+            <TextBox.Text>
+                <Binding Path="Hours"
+                         NotifyOnValidationError="True">
+                    <Binding.ValidationRules>
+                        <validators:TimeControl Min="0" Max="23"/>
+                        <ExceptionValidationRule/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
         
         <TextBlock Grid.Column="1"
                    Style="{StaticResource TextBlockSeparator}"/>
 
         <TextBox Grid.Column="2"
-                 Text="{Binding Minutes}"
                  Style="{StaticResource TextBoxNumbers}"
-                 GotFocus="TextBox_GotFocus"/>
+                 GotFocus="TextBox_GotFocus"
+                 PreviewKeyDown="TextBox_PreviewKeyDown">
+            <TextBox.Text>
+                <Binding Path="Minutes"
+                         NotifyOnValidationError="True">
+                    <Binding.ValidationRules>
+                        <validators:TimeControl Min="0" Max="23"/>
+                        <ExceptionValidationRule/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
 
         <TextBlock Grid.Column="3"
                    Style="{StaticResource TextBlockSeparator}"/>
 
         <TextBox Grid.Column="4"
-                 Text="{Binding Seconds}"
                  Style="{StaticResource TextBoxNumbers}"
-                 GotFocus="TextBox_GotFocus"/>
+                 GotFocus="TextBox_GotFocus"
+                 PreviewKeyDown="TextBox_PreviewKeyDown">
+            <TextBox.Text>
+                <Binding Path="Seconds"
+                         NotifyOnValidationError="True">
+                    <Binding.ValidationRules>
+                        <validators:TimeControl Min="0" Max="23"/>
+                        <ExceptionValidationRule/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+        
     </Grid>
 </UserControl>
