@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Data.Entity.Core;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -36,6 +37,11 @@ namespace LogBookReader
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             InitializeProperties();
+
+            Events.ChangeIsLoadingEventLogEvents.ChangeIsLoadingEventLog += (bool newValue) => 
+            {
+                Dispatcher.Invoke(new ThreadStart(delegate { IsLoadingEventLog = newValue; }));
+            };
         }
 
         private void InitializeProperties()
@@ -55,6 +61,7 @@ namespace LogBookReader
             GetDataDB();
         }
 
+     
         #region Dependency property
 
         public ObservableCollection<Filters.FilterAppCodes> FilterAppCodes
@@ -145,10 +152,21 @@ namespace LogBookReader
         public static readonly DependencyProperty EndPeriodTimeProperty =
             DependencyProperty.Register("EndPeriodTime", typeof(TimeSpan), typeof(MainWindow));
 
+        public bool IsLoadingEventLog
+        {
+            get { return (bool)GetValue(IsLoadingEventLogProperty); }
+            set { SetValue(IsLoadingEventLogProperty, value); }
+        }
+        public static readonly DependencyProperty IsLoadingEventLogProperty =
+            DependencyProperty.Register("IsLoadingEventLog", typeof(bool), typeof(MainWindow));
+
         #endregion
 
         private void ButtonGetFilterData_Click(object sender, RoutedEventArgs e)
         {
+            if (IsLoadingEventLog)
+                return;
+
             GetDataDB(true);
         }
 

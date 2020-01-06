@@ -82,8 +82,19 @@ namespace LogBookReader.EF
                 query = query.Where(predicate);
 
             if (orderBy != null)
-                return await orderBy(query).Take(count)
-                                           .ToListAsync();
+                return await Task.Run(
+                    () =>
+                    {
+                        Events.ChangeIsLoadingEventLogEvents.ChangeValue(true);
+
+                        var result = orderBy(query).Take(count)
+                                               .ToListAsync();
+
+                        Events.ChangeIsLoadingEventLogEvents.ChangeValue(false);
+                        
+                        return result;
+                    }
+                    );
             else
                 return await query.Take(count).ToListAsync();
         }

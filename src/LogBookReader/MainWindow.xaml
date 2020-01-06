@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LogBookReader"
-        xmlns:mdIcon="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
@@ -33,8 +33,10 @@
                     Height="30"
                     Margin="10 0"
                     HorizontalAlignment="Left"
+                    md:ButtonProgressAssist.IsIndicatorVisible="{Binding IsLoadingEventLog}"
+                    md:ButtonProgressAssist.IsIndeterminate="True"
                     Click="ButtonGetFilterData_Click"/>
-
+            
             <Label Grid.Column="1"
                    Content="Количество записей"
                    VerticalAlignment="Center"/>
@@ -170,11 +172,11 @@
 
                                 <ListBox.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Icon="{mdIcon:PackIcon CheckboxMultipleMarkedOutline}"
+                                        <MenuItem Icon="{md:PackIcon CheckboxMultipleMarkedOutline}"
                                                   ToolTip="Выбрать все"
                                                   Tag="FilterAppCodes/Marked"
                                                   Click="MenuItemCommandBarFilter_Click"/>
-                                        <MenuItem Icon="{mdIcon:PackIcon CheckboxMultipleBlankOutline}"
+                                        <MenuItem Icon="{md:PackIcon CheckboxMultipleBlankOutline}"
                                                   ToolTip="Отменить выбор всех"
                                                   Tag="FilterAppCodes/Blank"
                                                   Click="MenuItemCommandBarFilter_Click"/>
@@ -201,11 +203,11 @@
 
                                 <ListBox.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Icon="{mdIcon:PackIcon CheckboxMultipleMarkedOutline}"
+                                        <MenuItem Icon="{md:PackIcon CheckboxMultipleMarkedOutline}"
                                                   ToolTip="Выбрать все"
                                                   Tag="FilterComputerCodes/Marked"
                                                   Click="MenuItemCommandBarFilter_Click"/>
-                                        <MenuItem Icon="{mdIcon:PackIcon CheckboxMultipleBlankOutline}"
+                                        <MenuItem Icon="{md:PackIcon CheckboxMultipleBlankOutline}"
                                                   ToolTip="Отменить выбор всех"
                                                   Tag="FilterComputerCodes/Blank"
                                                   Click="MenuItemCommandBarFilter_Click"/>
@@ -231,11 +233,11 @@
 
                                 <ListBox.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Icon="{mdIcon:PackIcon CheckboxMultipleMarkedOutline}"
+                                        <MenuItem Icon="{md:PackIcon CheckboxMultipleMarkedOutline}"
                                                   ToolTip="Выбрать все"
                                                   Tag="FilterEventCodes/Marked"
                                                   Click="MenuItemCommandBarFilter_Click"/>
-                                        <MenuItem Icon="{mdIcon:PackIcon CheckboxMultipleBlankOutline}"
+                                        <MenuItem Icon="{md:PackIcon CheckboxMultipleBlankOutline}"
                                                   ToolTip="Отменить выбор всех"
                                                   Tag="FilterEventCodes/Blank"
                                                   Click="MenuItemCommandBarFilter_Click"/>
