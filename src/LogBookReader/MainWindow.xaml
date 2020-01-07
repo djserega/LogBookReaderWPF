@@ -1,4 +1,5 @@
 ﻿<Window x:Class="LogBookReader.MainWindow"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -9,7 +10,6 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
         Title="MainWindow" Height="400" Width="800"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Loaded="Window_Loaded">
     <Grid>
         <Grid.RowDefinitions>
@@ -269,16 +269,11 @@
                               ScrollViewer.CanContentScroll="True">
 
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Номер строки" 
-                                                Binding="{Binding RowID}"/>
-                            <DataGridTextColumn Header="Дата"
-                                                Binding="{Binding DateTime, StringFormat=\{0:dd.MM.yyyy HH:mm:ss\}}"/>
-                            <DataGridTextColumn Header="Компьютер"
-                                                Binding="{Binding ComputerName}"/>
-                            <DataGridTextColumn Header="Приложение"
-                                                Binding="{Binding AppName}"/>
-                            <DataGridTextColumn Header="Комментарий"
-                                                Binding="{Binding Comment}"
+                            <DataGridTextColumn Header="Номер строки"   Binding="{Binding RowID}"/>
+                            <DataGridTextColumn Header="Дата"           Binding="{Binding DateTime, StringFormat=\{0:dd.MM.yyyy HH:mm:ss\}}"/>
+                            <DataGridTextColumn Header="Компьютер"      Binding="{Binding ComputerName}"/>
+                            <DataGridTextColumn Header="Приложение"     Binding="{Binding AppName}"/>
+                            <DataGridTextColumn Header="Комментарий"    Binding="{Binding Comment}"
                                                 MaxWidth="750"/>
                         </DataGrid.Columns>
 
@@ -291,8 +286,7 @@
                                 Margin="0,0,15,15">
                         <Label Content="Выбрано:"
                                Foreground="{DynamicResource PrimaryHueDarkBrush}"/>
-                        <Label x:Name="LabelCountElementsListBases"
-                               Foreground="{DynamicResource PrimaryHueDarkBrush}"
+                        <Label Foreground="{DynamicResource PrimaryHueDarkBrush}"
                                Content="{Binding FilterEventLogs.Count}"/>
                     </StackPanel>
 
