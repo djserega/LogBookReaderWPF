@@ -30,7 +30,8 @@ namespace LogBookReader
             }
             catch (Exception)
             {
-                MessageBox.Show("Не удалось инициализировать объект подключения.\nПроверьте наличие файла 'dbConnection.config'");
+                MessageBox.Show("Не удалось инициализировать объект подключения." +
+                    "\nПроверьте наличие файла 'dbConnection.config'.");
             }
         }
 
@@ -203,7 +204,9 @@ namespace LogBookReader
             FilterAppCodes.Clear();
 
             var repoAppCodes = new EF.Repository<Models.AppCodes>(_readerContext);
+         
             List<Models.AppCodes> appCodes = await repoAppCodes.GetListAsync();
+            
             foreach (Models.AppCodes item in appCodes.OrderBy(f => f.Name))
                 FilterAppCodes.Add(new Filters.FilterAppCodes(item) { IsChecked = isChecked });
         }
@@ -213,7 +216,9 @@ namespace LogBookReader
             FilterComputerCodes.Clear();
 
             var repoComputerCodes = new EF.Repository<Models.ComputerCodes>(_readerContext);
+           
             List<Models.ComputerCodes> computerCodes = await repoComputerCodes.GetListAsync();
+            
             foreach (Models.ComputerCodes item in computerCodes.OrderBy(f => f.Name))
                 FilterComputerCodes.Add(new Filters.FilterComputerCodes(item) { IsChecked = isChecked });
         }
@@ -223,7 +228,9 @@ namespace LogBookReader
             FilterEventCodes.Clear();
 
             var repoEventCodes = new EF.Repository<Models.EventCodes>(_readerContext);
+            
             List<Models.EventCodes> eventCodes = await repoEventCodes.GetListAsync();
+
             foreach (Models.EventCodes item in eventCodes.OrderBy(f => f.Name))
                 FilterEventCodes.Add(new Filters.FilterEventCodes(item) { IsChecked = isChecked });
         }
@@ -264,16 +271,16 @@ namespace LogBookReader
 
             if (StartPeriodDate.Date != new DateTime(1, 1, 1))
             {
-                long dateSqlite = (long)(StartPeriodDate.Date - DateTime.MinValue).TotalMilliseconds * 10;
-                dateSqlite += (long)TimeControlStartPeriod.Value.TotalMilliseconds * 10; 
-                expressionCreator.AddExpression("Date", ComparsionType.GreaterThanOrEqual, dateSqlite);
+                expressionCreator.AddExpression("Date",
+                                                ComparsionType.GreaterThanOrEqual,
+                                                GetDateSQLite(StartPeriodDate.Date, TimeControlStartPeriod.Value));
             }
 
             if (EndPeriodDate.Date != new DateTime(1, 1, 1))
             {
-                long dateSqlite = (long)(EndPeriodDate.Date - DateTime.MinValue).TotalMilliseconds * 10;
-                dateSqlite += (long)TimeControlEndPeriod.Value.TotalMilliseconds * 10;
-                expressionCreator.AddExpression("Date", ComparsionType.LessThanOrEqual, dateSqlite);
+                expressionCreator.AddExpression("Date",
+                                                ComparsionType.LessThanOrEqual,
+                                                GetDateSQLite(EndPeriodDate.Date, TimeControlEndPeriod.Value));
             }
 
             if (CommentIsFilled)
@@ -288,6 +295,14 @@ namespace LogBookReader
                 MessageBox.Show(ex.Message);
                 return null;
             }
+        }
+
+        private static long GetDateSQLite(DateTime date, TimeSpan time)
+        {
+            long dateSqlite = (long)(date - DateTime.MinValue).TotalMilliseconds * 10;
+            dateSqlite += (long)time.TotalMilliseconds * 10;
+            
+            return dateSqlite;
         }
 
         private void MenuItemCommandBarFilter_Click(object sender, RoutedEventArgs e)
@@ -316,6 +331,7 @@ namespace LogBookReader
         private void ButtonClearTextFilter_Click(object sender, RoutedEventArgs e)
         {
             TextFilter = string.Empty;
+
             FilterListEventLog();
         }
 
@@ -341,16 +357,6 @@ namespace LogBookReader
                     ));
 
             }
-        }
-
-        private void TimeControl_TargetUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)
-        {
-
-        }
-
-        private void TimeControl_ValueChanged()
-        {
-
         }
     }
 }
