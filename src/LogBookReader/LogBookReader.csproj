@@ -84,16 +84,19 @@
     <Compile Include="Enums.cs" />
     <Compile Include="Events.cs" />
     <Compile Include="ExpressionEventLogCreator.cs" />
+    <Compile Include="Filters\FilterUserCodes.cs" />
     <Compile Include="IFilters\IFilterBase.cs" />
     <Compile Include="Filters\FilterEventLog.cs" />
     <Compile Include="Filters\FilterEventCodes.cs" />
     <Compile Include="Filters\FilterComputerCodes.cs" />
     <Compile Include="Filters\FilterAppCodes.cs" />
+    <Compile Include="IModels\IUserCodes.cs" />
     <Compile Include="Models\AppCodes.cs" />
     <Compile Include="Models\ComputerCodes.cs" />
     <Compile Include="Models\EventCodes.cs" />
     <Compile Include="Models\EventLog.cs" />
     <Compile Include="EF\ReaderContext.cs" />
+    <Compile Include="Models\UserCodes.cs" />
     <Compile Include="TimeControl.xaml.cs">
       <DependentUpon>TimeControl.xaml</DependentUpon>
     </Compile>

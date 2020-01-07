@@ -249,6 +249,36 @@
                         </Expander>
 
                         <Expander HorizontalAlignment="Stretch"
+                                  Header="Пользователи">
+
+                            <ListBox ItemsSource="{Binding FilterUserCodes}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <CheckBox Content="{Binding Name}"
+                                                  Tag="{Binding Code}"
+                                                  IsChecked="{Binding IsChecked}"
+                                                  ToolTip="{Binding Name}"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+
+                                <ListBox.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Icon="{md:PackIcon CheckboxMultipleMarkedOutline}"
+                                                  ToolTip="Выбрать все"
+                                                  Tag="FilterUserCodes/Marked"
+                                                  Click="MenuItemCommandBarFilter_Click"/>
+                                        <MenuItem Icon="{md:PackIcon CheckboxMultipleBlankOutline}"
+                                                  ToolTip="Отменит выбор всех"
+                                                  Tag="FilterUserCodes/Blank"
+                                                  Click="MenuItemCommandBarFilter_Click"/>
+                                    </ContextMenu>
+                                </ListBox.ContextMenu>
+                                
+                            </ListBox>
+                            
+                        </Expander>
+
+                        <Expander HorizontalAlignment="Stretch"
                                   Header="Другие отборы">
 
                             <CheckBox IsChecked="{Binding CommentIsFilled}"
@@ -271,6 +301,7 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Номер строки"   Binding="{Binding RowID}"/>
                             <DataGridTextColumn Header="Дата"           Binding="{Binding DateTime, StringFormat=\{0:dd.MM.yyyy HH:mm:ss\}}"/>
+                            <DataGridTextColumn Header="Пользователь"   Binding="{Binding UserName}"/>
                             <DataGridTextColumn Header="Компьютер"      Binding="{Binding ComputerName}"/>
                             <DataGridTextColumn Header="Приложение"     Binding="{Binding AppName}"/>
                             <DataGridTextColumn Header="Комментарий"    Binding="{Binding Comment}"
@@ -291,6 +322,7 @@
                     </StackPanel>
 
                 </Grid>
+          
             </Grid>
 
         </Grid>

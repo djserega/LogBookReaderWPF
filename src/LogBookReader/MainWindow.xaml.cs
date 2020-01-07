@@ -16,7 +16,6 @@ namespace LogBookReader
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool _fileDBNotFound;
         private EF.ReaderContext _readerContext;
         private readonly List<Filters.FilterEventLog> _filterEventLogsBase = new List<Filters.FilterEventLog>();
 
@@ -53,6 +52,7 @@ namespace LogBookReader
             FilterComputerCodes = new ObservableCollection<Filters.FilterComputerCodes>();
             FilterEventCodes = new ObservableCollection<Filters.FilterEventCodes>();
             FilterEventLogs = new ObservableCollection<Filters.FilterEventLog>();
+            FilterUserCodes = new ObservableCollection<Filters.FilterUserCodes>();
 
             CountEventLogRows = 100;
 
@@ -97,6 +97,14 @@ namespace LogBookReader
         }
         public static readonly DependencyProperty FilterEventLogProperty =
             DependencyProperty.Register("FilterEventLogs", typeof(ObservableCollection<Filters.FilterEventLog>), typeof(MainWindow));
+
+        public ObservableCollection<Filters.FilterUserCodes> FilterUserCodes
+        {
+            get { return (ObservableCollection<Filters.FilterUserCodes>)GetValue(FilterUserCodesProperty); }
+            set { SetValue(FilterUserCodesProperty, value); }
+        }
+        public static readonly DependencyProperty FilterUserCodesProperty =
+            DependencyProperty.Register("FilterUserCodes", typeof(ObservableCollection<Filters.FilterUserCodes>), typeof(MainWindow));
 
         public int CountEventLogRows
         {
@@ -170,11 +178,9 @@ namespace LogBookReader
             try
             {
                 _readerContext = new EF.ReaderContext();
-                _fileDBNotFound = false;
             }
             catch (FileNotFoundException)
             {
-                _fileDBNotFound = true;
                 MessageBox.Show("Не найден файл логов." +
                     "\nСкопируйте файл 1Cv8.lgd в каталог приложения.");
             }
@@ -210,6 +216,7 @@ namespace LogBookReader
                     FillDataAppCodes();
                     FillDataComputerCodes();
                     FillDataEventCodes();
+                    FillDataUserCodes();
                 }
             }
             catch (EntityCommandExecutionException ex)
@@ -260,6 +267,18 @@ namespace LogBookReader
                 FilterEventCodes.Add(new Filters.FilterEventCodes(item) { IsChecked = isChecked });
         }
 
+        private async void FillDataUserCodes(bool isChecked = true)
+        {
+            FilterUserCodes.Clear();
+
+            var repoUserCodes = new EF.Repository<Models.UserCodes>(_readerContext);
+
+            List<Models.UserCodes> userCodes = await repoUserCodes.GetListAsync();
+
+            foreach (Models.UserCodes item in userCodes.OrderBy(f => f.Name))
+                FilterUserCodes.Add(new Filters.FilterUserCodes(item) { IsChecked = isChecked });
+        }
+
         private async void FillDataEventLogs()
         {
             _filterEventLogsBase.Clear();
@@ -274,12 +293,14 @@ namespace LogBookReader
             {
                 string appName = FilterAppCodes.FirstOrDefault(f => f.Code == eventLog.AppCode)?.Name;
                 string computerName = FilterComputerCodes.FirstOrDefault(f => f.Code == eventLog.ComputerCode)?.Name;
+                string userName = FilterUserCodes.FirstOrDefault(f => f.Code == eventLog.UserCode)?.Name;
 
                 _filterEventLogsBase.Add(
                     new Filters.FilterEventLog(eventLog)
                     {
                         ComputerName = computerName,
-                        AppName = appName
+                        AppName = appName,
+                        UserName = userName
                     });
             }
 
@@ -293,6 +314,7 @@ namespace LogBookReader
             expressionCreator.AddExpression(FilterAppCodes, "AppCode");
             expressionCreator.AddExpression(FilterComputerCodes, "ComputerCode");
             expressionCreator.AddExpression(FilterEventCodes, "EventCode");
+            expressionCreator.AddExpression(FilterUserCodes, "UserCode");
 
             if (StartPeriodDate.Date != new DateTime(1, 1, 1))
             {
@@ -349,6 +371,10 @@ namespace LogBookReader
                     case "FilterEventCodes":
                         FillDataEventCodes(isChecked);
                         break;
+                    case "FilterUserCodes":
+                        FillDataUserCodes(isChecked);
+                        break;
+
                 }
             }
         }
@@ -379,6 +405,7 @@ namespace LogBookReader
                         || (el.ComputerName?.ToLower().Contains(textFilterLower) ?? false)
                         || (el.AppName?.ToLower().Contains(textFilterLower) ?? false)
                         || (el.Comment?.ToLower().Contains(textFilterLower) ?? false)
+                        || (el.UserName?.ToLower().Contains(textFilterLower) ?? false)
                     ));
 
             }

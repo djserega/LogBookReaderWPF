@@ -45,6 +45,7 @@ namespace LogBookReader.Filters
         public string ComputerName { get; set; }
         public string AppName { get; set; }
         public DateTime DateTime { get => DateTime.MinValue.AddSeconds(Date / 10000); }
+        public string UserName { get; set; }
 
         public void Fill(Models.EventLog eventLog)
         {
