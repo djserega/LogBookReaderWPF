@@ -85,6 +85,7 @@
     <Compile Include="Events.cs" />
     <Compile Include="ExpressionEventLogCreator.cs" />
     <Compile Include="Filters\FilterUserCodes.cs" />
+    <Compile Include="Filters\MainWindowFilters.cs" />
     <Compile Include="IFilters\IFilterBase.cs" />
     <Compile Include="Filters\FilterEventLog.cs" />
     <Compile Include="Filters\FilterEventCodes.cs" />
