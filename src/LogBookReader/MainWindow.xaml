@@ -36,7 +36,7 @@
                     md:ButtonProgressAssist.IsIndicatorVisible="{Binding IsLoadingEventLog}"
                     md:ButtonProgressAssist.IsIndeterminate="True"
                     Click="ButtonGetFilterData_Click"/>
-            
+
             <Label Grid.Column="1"
                    Content="Количество записей"
                    VerticalAlignment="Center"/>
@@ -51,7 +51,7 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                
+
                 <Label Grid.Column="0"
                        Content="поле поиска"
                        Opacity=".2"
@@ -251,31 +251,66 @@
                         <Expander HorizontalAlignment="Stretch"
                                   Header="Пользователи">
 
-                            <ListBox ItemsSource="{Binding FilterUserCodes}">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <CheckBox Content="{Binding Name}"
-                                                  Tag="{Binding Code}"
-                                                  IsChecked="{Binding IsChecked}"
-                                                  ToolTip="{Binding Name}"/>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
 
-                                <ListBox.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Icon="{md:PackIcon CheckboxMultipleMarkedOutline}"
+                                <Grid Grid.Row="0"
+                                      Margin="10 0 0 0">
+                                    <Label Grid.Column="0"
+                                           Content="фильтр пользователей"
+                                           Opacity=".2"
+                                           Margin="-4 0 0 0"
+                                           VerticalAlignment="Center">
+                                        <Label.Style>
+                                            <Style TargetType="Label">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ElementName=TextBoxFilterUserCodes, Path=Text}" Value="">
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Label.Style>
+                                    </Label>
+                                    <TextBox Grid.Column="0"
+                                             x:Name="TextBoxFilterUserCodes"
+                                             VerticalAlignment="Center"
+                                             HorizontalAlignment="Left"
+                                             Width="200"
+                                             Text="{Binding TextFilterUserCodes, NotifyOnSourceUpdated=True}"
+                                             SourceUpdated="TextBoxFilterUserCodes_SourceUpdated"/>
+                                </Grid>
+
+                                <ListBox Grid.Row="1"
+                                         ItemsSource="{Binding FilterUserCodes}">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Content="{Binding Name}"
+                                                      Tag="{Binding Code}"
+                                                      IsChecked="{Binding IsChecked}"
+                                                      ToolTip="{Binding Name}"/>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+
+                                    <ListBox.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Icon="{md:PackIcon CheckboxMultipleMarkedOutline}"
                                                   ToolTip="Выбрать все"
                                                   Tag="FilterUserCodes/Marked"
                                                   Click="MenuItemCommandBarFilter_Click"/>
-                                        <MenuItem Icon="{md:PackIcon CheckboxMultipleBlankOutline}"
+                                            <MenuItem Icon="{md:PackIcon CheckboxMultipleBlankOutline}"
                                                   ToolTip="Отменит выбор всех"
                                                   Tag="FilterUserCodes/Blank"
                                                   Click="MenuItemCommandBarFilter_Click"/>
-                                    </ContextMenu>
-                                </ListBox.ContextMenu>
-                                
-                            </ListBox>
-                            
+                                        </ContextMenu>
+                                    </ListBox.ContextMenu>
+
+                                </ListBox>
+
+                            </Grid>
                         </Expander>
 
                         <Expander HorizontalAlignment="Stretch"
@@ -322,7 +357,7 @@
                     </StackPanel>
 
                 </Grid>
-          
+
             </Grid>
 
         </Grid>

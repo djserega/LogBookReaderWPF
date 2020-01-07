@@ -19,6 +19,8 @@ namespace LogBookReader
         private EF.ReaderContext _readerContext;
         private readonly List<Filters.FilterEventLog> _filterEventLogsBase = new List<Filters.FilterEventLog>();
 
+        private List<Filters.FilterUserCodes> _filterUserCodesBase = new List<Filters.FilterUserCodes>();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -63,6 +65,7 @@ namespace LogBookReader
 
             GetDataDB(initializeReaderContext: false);
         }
+
 
         #region Dependency property
 
@@ -170,8 +173,15 @@ namespace LogBookReader
         public static readonly DependencyProperty IsLoadingEventLogProperty =
             DependencyProperty.Register("IsLoadingEventLog", typeof(bool), typeof(MainWindow));
 
-        #endregion
+        public string TextFilterUserCodes
+        {
+            get { return (string)GetValue(TextFilterUserCodesProperty); }
+            set { SetValue(TextFilterUserCodesProperty, value); }
+        }
+        public static readonly DependencyProperty TextFilterUserCodesProperty =
+            DependencyProperty.Register("TextFilterUserCodes", typeof(string), typeof(MainWindow));
 
+        #endregion
 
         private void InitializeReaderContext()
         {
@@ -276,7 +286,12 @@ namespace LogBookReader
             List<Models.UserCodes> userCodes = await repoUserCodes.GetListAsync();
 
             foreach (Models.UserCodes item in userCodes.OrderBy(f => f.Name))
-                FilterUserCodes.Add(new Filters.FilterUserCodes(item) { IsChecked = isChecked });
+            {
+                var newFilter = new Filters.FilterUserCodes(item) { IsChecked = isChecked };
+
+                FilterUserCodes.Add(newFilter);
+                _filterUserCodesBase.Add(newFilter);
+            }
         }
 
         private async void FillDataEventLogs()
@@ -372,7 +387,8 @@ namespace LogBookReader
                         FillDataEventCodes(isChecked);
                         break;
                     case "FilterUserCodes":
-                        FillDataUserCodes(isChecked);
+                        _filterUserCodesBase.ForEach(f => f.IsChecked = isChecked);
+                        FilterUserCodes = new ObservableCollection<Filters.FilterUserCodes>(_filterUserCodesBase);
                         break;
 
                 }
@@ -409,6 +425,20 @@ namespace LogBookReader
                     ));
 
             }
+        }
+
+        private void TextBoxFilterUserCodes_SourceUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)
+        {
+            string textFilterUserCodesLower = TextFilterUserCodes.ToLower();
+
+            foreach (Filters.FilterUserCodes item in FilterUserCodes)
+                _filterUserCodesBase.Where(f => f == item).Select(f => f.IsChecked = item.IsChecked);
+
+            if (string.IsNullOrEmpty(textFilterUserCodesLower))
+                FilterUserCodes = new ObservableCollection<Filters.FilterUserCodes>(_filterUserCodesBase);
+            else
+                FilterUserCodes = new ObservableCollection<Filters.FilterUserCodes>(
+                    _filterUserCodesBase.Where(f => f.Name.ToLower().Contains(textFilterUserCodesLower)));
         }
     }
 }
