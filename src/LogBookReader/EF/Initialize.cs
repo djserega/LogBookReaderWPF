@@ -19,7 +19,7 @@ namespace LogBookReader.EF
                     {
                         stream.WriteLine("<connectionStrings>");
                         stream.WriteLine("  <add name=\"DefaultConnection\"");
-                        stream.WriteLine("       connectionString=\"Data Source=1Cv8.lgd\"");
+                        stream.WriteLine("       connectionString=\"Data Source=1Cv8.lgd; Read Only=True; FailIfMissing=False\"");
                         stream.WriteLine("       providerName=\"System.Data.SQLite\"/>");
                         stream.WriteLine("</connectionStrings>");
                         stream.Flush();

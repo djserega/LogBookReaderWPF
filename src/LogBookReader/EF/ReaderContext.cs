@@ -1,10 +1,15 @@
-﻿using System.Data.Entity;
+﻿using System.IO;
+using System.Data.Entity;
 
 namespace LogBookReader.EF
 {
     public class ReaderContext : DbContext
     {
-        public ReaderContext() : base("DefaultConnection") { }
+        public ReaderContext() : base("DefaultConnection")
+        {
+            if (!Database.Exists())
+                throw new FileNotFoundException();
+        }
 
         public DbSet<Models.AppCodes> AppCodes { get; set; }
         public DbSet<Models.ComputerCodes> ComputerCodes { get; set; }

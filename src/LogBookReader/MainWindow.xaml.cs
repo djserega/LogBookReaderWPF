@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity.Core;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
@@ -15,8 +16,8 @@ namespace LogBookReader
     /// </summary>
     public partial class MainWindow : Window
     {
-
-        private readonly EF.ReaderContext _readerContext;
+        private bool _fileDBNotFound;
+        private EF.ReaderContext _readerContext;
         private readonly List<Filters.FilterEventLog> _filterEventLogsBase = new List<Filters.FilterEventLog>();
 
         public MainWindow()
@@ -26,20 +27,21 @@ namespace LogBookReader
             try
             {
                 new EF.Initialize().FindCreateConnectionFile();
-                _readerContext = new EF.ReaderContext();
             }
             catch (Exception)
             {
                 MessageBox.Show("Не удалось инициализировать объект подключения." +
                     "\nПроверьте наличие файла 'dbConnection.config'.");
             }
+
+            InitializeReaderContext();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             InitializeProperties();
 
-            Events.ChangeIsLoadingEventLogEvents.ChangeIsLoadingEventLog += (bool newValue) => 
+            Events.ChangeIsLoadingEventLogEvents.ChangeIsLoadingEventLog += (bool newValue) =>
             {
                 Dispatcher.Invoke(new ThreadStart(delegate { IsLoadingEventLog = newValue; }));
             };
@@ -59,10 +61,9 @@ namespace LogBookReader
             EndPeriodDate = DateTime.Now;
             TimeControlEndPeriod.Value = new TimeSpan(23, 59, 59);
 
-            GetDataDB();
+            GetDataDB(initializeReaderContext: false);
         }
 
-     
         #region Dependency property
 
         public ObservableCollection<Filters.FilterAppCodes> FilterAppCodes
@@ -163,6 +164,22 @@ namespace LogBookReader
 
         #endregion
 
+
+        private void InitializeReaderContext()
+        {
+            try
+            {
+                _readerContext = new EF.ReaderContext();
+                _fileDBNotFound = false;
+            }
+            catch (FileNotFoundException)
+            {
+                _fileDBNotFound = true;
+                MessageBox.Show("Не найден файл логов." +
+                    "\nСкопируйте файл 1Cv8.lgd в каталог приложения.");
+            }
+        }
+
         private void ButtonGetFilterData_Click(object sender, RoutedEventArgs e)
         {
             if (IsLoadingEventLog)
@@ -171,10 +188,18 @@ namespace LogBookReader
             GetDataDB(true);
         }
 
-        private void GetDataDB(bool readEventLog = false)
+        private void GetDataDB(bool readEventLog = false, bool initializeReaderContext = true)
         {
             if (_readerContext == null)
+            {
+                if (initializeReaderContext)
+                {
+                    InitializeReaderContext();
+                    GetDataDB(initializeReaderContext: false);
+                    GetDataDB(readEventLog, false);
+                }
                 return;
+            }
 
             try
             {
@@ -204,9 +229,9 @@ namespace LogBookReader
             FilterAppCodes.Clear();
 
             var repoAppCodes = new EF.Repository<Models.AppCodes>(_readerContext);
-         
+
             List<Models.AppCodes> appCodes = await repoAppCodes.GetListAsync();
-            
+
             foreach (Models.AppCodes item in appCodes.OrderBy(f => f.Name))
                 FilterAppCodes.Add(new Filters.FilterAppCodes(item) { IsChecked = isChecked });
         }
@@ -216,9 +241,9 @@ namespace LogBookReader
             FilterComputerCodes.Clear();
 
             var repoComputerCodes = new EF.Repository<Models.ComputerCodes>(_readerContext);
-           
+
             List<Models.ComputerCodes> computerCodes = await repoComputerCodes.GetListAsync();
-            
+
             foreach (Models.ComputerCodes item in computerCodes.OrderBy(f => f.Name))
                 FilterComputerCodes.Add(new Filters.FilterComputerCodes(item) { IsChecked = isChecked });
         }
@@ -228,7 +253,7 @@ namespace LogBookReader
             FilterEventCodes.Clear();
 
             var repoEventCodes = new EF.Repository<Models.EventCodes>(_readerContext);
-            
+
             List<Models.EventCodes> eventCodes = await repoEventCodes.GetListAsync();
 
             foreach (Models.EventCodes item in eventCodes.OrderBy(f => f.Name))
@@ -301,7 +326,7 @@ namespace LogBookReader
         {
             long dateSqlite = (long)(date - DateTime.MinValue).TotalMilliseconds * 10;
             dateSqlite += (long)time.TotalMilliseconds * 10;
-            
+
             return dateSqlite;
         }
 
