@@ -8,7 +8,11 @@ namespace LogBookReader.EF
         public ReaderContext() : base("DefaultConnection")
         {
             if (!Database.Exists())
+#if DEBUG
+                throw new FileNotFoundException(Database.Connection.ConnectionString);
+#else
                 throw new FileNotFoundException();
+#endif
         }
 
         public DbSet<Models.AppCodes> AppCodes { get; set; }

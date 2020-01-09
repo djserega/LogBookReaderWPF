@@ -149,10 +149,16 @@ namespace LogBookReader
             {
                 _readerContext = new EF.ReaderContext();
             }
-            catch (FileNotFoundException)
+            catch (FileNotFoundException ex)
             {
-                MessageBox.Show("Не найден файл логов." +
-                    "\nСкопируйте файл 1Cv8.lgd в каталог приложения.");
+                string message = "Не найден файл логов." +
+                    "\nСкопируйте файл 1Cv8.lgd в каталог приложения.";
+
+#if DEBUG
+                message += ex.Message;
+#endif
+
+                MessageBox.Show(message);
             }
         }
 
