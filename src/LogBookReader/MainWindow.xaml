@@ -9,7 +9,7 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="400" Width="800"
+        Title="LogBookReader" Height="400" Width="800"
         Loaded="Window_Loaded">
     <Grid>
         <Grid.RowDefinitions>
