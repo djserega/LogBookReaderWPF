@@ -9,7 +9,7 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
-        Title="LogBookReader" Height="400" Width="800"
+        Title="LogBookReader" Height="400" Width="900"
         Loaded="Window_Loaded">
     <Grid>
         <Grid.RowDefinitions>
@@ -25,6 +25,7 @@
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto" MinWidth="40"/>
                 <ColumnDefinition />
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
@@ -113,6 +114,12 @@
                         BorderThickness="0"
                         Click="ButtonClearTextFilter_Click"/>
             </Grid>
+
+            <Button Grid.Column="5"
+                    Content="{md:PackIcon Kind=BookLock}"
+                    Margin="5 0"
+                    ToolTip="Выбрать файл"
+                    Click="ButtonSelectLogBookFile_Click"/>
 
         </Grid>
 

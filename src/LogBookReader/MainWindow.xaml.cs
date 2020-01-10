@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity.Core;
@@ -16,6 +17,7 @@ namespace LogBookReader
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly string _mainTitle;
         private EF.ReaderContext _readerContext;
         private readonly List<Filters.FilterEventLog> _filterEventLogsBase = new List<Filters.FilterEventLog>();
 
@@ -24,6 +26,8 @@ namespace LogBookReader
         public MainWindow()
         {
             InitializeComponent();
+
+            _mainTitle = Title;
 
             try
             {
@@ -148,6 +152,8 @@ namespace LogBookReader
             try
             {
                 _readerContext = new EF.ReaderContext();
+                Title = _mainTitle;
+                Title += " - " + GetDataSource(_readerContext.Database.Connection.ConnectionString);
             }
             catch (FileNotFoundException ex)
             {
@@ -290,6 +296,51 @@ namespace LogBookReader
         private void TextBoxTextFilter_SourceUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)
         {
             FilterListEventLog();
+        }
+
+        private void ButtonSelectLogBookFile_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog fileDialog = new OpenFileDialog()
+            {
+                AddExtension = false,
+                CheckFileExists = true,
+                DefaultExt = "*.lgd",
+                Filter = "Файл журнала регистрации (*.lgd)|*.lgd",
+                Multiselect = false
+            };
+            fileDialog.ShowDialog(this);
+            string logBookFileName = fileDialog.FileName;
+            if (!string.IsNullOrEmpty(logBookFileName))
+            {
+                if (new EF.Initialize().ChangeDataSourceConfigSQLite(logBookFileName))
+                {
+                    InitializeReaderContext();
+                }
+                else
+                {
+                    MessageBox.Show("Не удалось изменить источник данных.");
+                }
+            }
+        }
+
+        private string GetDataSource(string connectioString)
+        {
+            string result = string.Empty;
+
+            string startPositionText = "Data Source";
+            int startPosition = connectioString.IndexOf(startPositionText);
+            if (startPosition >= 0)
+            {
+                startPosition += startPositionText.Length;
+
+                int endPosition = connectioString.IndexOf(";", startPosition);
+                if (endPosition > 0)
+                {
+                    result = connectioString.Substring(startPosition + 1, endPosition - startPosition - 1);
+                }
+            }
+
+            return result;
         }
 
     }

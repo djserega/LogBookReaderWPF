@@ -7,11 +7,11 @@ namespace LogBookReader.EF
     {
         private readonly string _baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
-        internal bool FindCreateConnectionFile()
+        internal bool FindCreateConnectionFile(string dataSource = "1Cv8.lgd", bool overwriteFile = false)
         {
             string pathConfig = Path.Combine(_baseDirectory, "dbConnection.config");
             FileInfo configFile = new FileInfo(pathConfig);
-            if (!configFile.Exists)
+            if (!configFile.Exists || overwriteFile)
             {
                 try
                 {
@@ -19,7 +19,7 @@ namespace LogBookReader.EF
                     {
                         stream.WriteLine("<connectionStrings>");
                         stream.WriteLine("  <add name=\"DefaultConnection\"");
-                        stream.WriteLine("       connectionString=\"Data Source=1Cv8.lgd; Read Only=True; FailIfMissing=False\"");
+                        stream.WriteLine($"       connectionString=\"Data Source={dataSource}; Read Only=True; FailIfMissing=False\"");
                         stream.WriteLine("       providerName=\"System.Data.SQLite\"/>");
                         stream.WriteLine("</connectionStrings>");
                         stream.Flush();
@@ -34,6 +34,11 @@ namespace LogBookReader.EF
             }
             else
                 return true;
+        }
+
+        internal bool ChangeDataSourceConfigSQLite(string fileName)
+        {
+            return FindCreateConnectionFile(fileName, true);
         }
     }
 }
