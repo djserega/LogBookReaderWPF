@@ -155,7 +155,7 @@ namespace LogBookReader
                     "\nСкопируйте файл 1Cv8.lgd в каталог приложения.";
 
 #if DEBUG
-                message += ex.Message;
+                message += "\n" + ex.Message;
 #endif
 
                 MessageBox.Show(message);
