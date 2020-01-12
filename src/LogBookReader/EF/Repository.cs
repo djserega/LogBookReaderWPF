@@ -58,7 +58,7 @@ namespace LogBookReader.EF
                 return query.ToList();
         }
 
-        public Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate = null,
+        public async Task<List<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate = null,
                                                 Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
         {
             IQueryable<TEntity> query = _dbSet;
@@ -67,9 +67,9 @@ namespace LogBookReader.EF
                 query = query.Where(predicate);
 
             if (orderBy != null)
-                return orderBy(query).ToListAsync();
+                return await orderBy(query).ToListAsync();
             else
-                return query.ToListAsync();
+                return await query.ToListAsync();
         }
 
         public async Task<List<TEntity>> GetListTakeAsync(Expression<Func<TEntity, bool>> predicate = null,
