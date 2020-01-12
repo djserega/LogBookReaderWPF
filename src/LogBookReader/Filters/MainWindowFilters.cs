@@ -97,8 +97,14 @@ namespace LogBookReader
 
             List<Models.EventCodes> eventCodes = await repoEventCodes.GetListAsync();
 
+            List<Filters.FilterEventCodes> eventCodeList = new List<Filters.FilterEventCodes>();
+
             foreach (Models.EventCodes item in eventCodes.OrderBy(f => f.Name))
-                FilterEventCodes.Add(new Filters.FilterEventCodes(item) { IsChecked = isChecked });
+                eventCodeList.Add(new Filters.FilterEventCodes(item) { IsChecked = isChecked });
+
+            eventCodeList.Sort((a, b) => a.Name.CompareTo(b.Name));
+
+            FilterEventCodes = new ObservableCollection<Filters.FilterEventCodes>(eventCodeList);
         }
 
         private async void FillDataUserCodes(bool isChecked = true)
