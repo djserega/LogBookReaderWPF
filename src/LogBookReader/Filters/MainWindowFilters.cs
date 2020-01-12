@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using LogBookReader.Additions;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -53,6 +55,15 @@ namespace LogBookReader
         #endregion
 
         #region Fill filter list
+
+        private void FillDataMinMaxDate()
+        {
+            var repoEventLog = new EF.Repository<Models.EventLog>(_readerContext);
+
+            long dateMinLong = repoEventLog.GetMin<long>(f => f.Date);
+
+            StartPeriodDate = dateMinLong.DateToSQLite();
+        }
 
         private async void FillDataAppCodes(bool isChecked = true)
         {

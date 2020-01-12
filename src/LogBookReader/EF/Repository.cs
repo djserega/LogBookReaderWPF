@@ -34,6 +34,7 @@ namespace LogBookReader.EF
         }
 
         public TEntity Find(params object[] keyValues) => _dbSet.Find(keyValues);
+    
         public Task<TEntity> FindAsync(params object[] keyValues) => _dbSet.FindAsync(keyValues);
 
         public int Count(Expression<Func<TEntity, bool>> predicate = null)
@@ -97,6 +98,11 @@ namespace LogBookReader.EF
                     );
             else
                 return await query.Take(count).ToListAsync();
+        }
+    
+        public TResult GetMin<TResult>(Expression<Func<TEntity, TResult>> selector = null) 
+        {
+            return _dbSet.Min(selector);
         }
     }
 }
