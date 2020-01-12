@@ -18,6 +18,7 @@ namespace LogBookReader.EF
                     using (StreamWriter stream = configFile.CreateText())
                     {
                         stream.WriteLine("<connectionStrings>");
+                        stream.WriteLine("  <clear/> ");
                         stream.WriteLine("  <add name=\"DefaultConnection\"");
                         stream.WriteLine($"       connectionString=\"Data Source={dataSource}; Read Only=True; FailIfMissing=False\"");
                         stream.WriteLine("       providerName=\"System.Data.SQLite\"/>");
