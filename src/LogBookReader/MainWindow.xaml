@@ -347,6 +347,7 @@
                             <DataGridTextColumn Header="Пользователь"   Binding="{Binding UserName}"/>
                             <DataGridTextColumn Header="Компьютер"      Binding="{Binding ComputerName}"/>
                             <DataGridTextColumn Header="Приложение"     Binding="{Binding AppName}"/>
+                            <DataGridTextColumn Header="Событие"        Binding="{Binding EventName}"/>
                             <DataGridTextColumn Header="Комментарий"    Binding="{Binding Comment}"
                                                 MaxWidth="750"/>
                         </DataGrid.Columns>

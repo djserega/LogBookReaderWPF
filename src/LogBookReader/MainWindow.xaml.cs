@@ -228,13 +228,15 @@ namespace LogBookReader
                 string appName = FilterAppCodes.FirstOrDefault(f => f.Code == eventLog.AppCode)?.Name;
                 string computerName = FilterComputerCodes.FirstOrDefault(f => f.Code == eventLog.ComputerCode)?.Name;
                 string userName = FilterUserCodes.FirstOrDefault(f => f.Code == eventLog.UserCode)?.Name;
+                string eventName = FilterEventCodes.FirstOrDefault(f => f.Code == eventLog.EventCode)?.Name;
 
                 _filterEventLogsBase.Add(
                     new Filters.FilterEventLog(eventLog)
                     {
                         ComputerName = computerName,
                         AppName = appName,
-                        UserName = userName
+                        UserName = userName,
+                        EventName = eventName
                     });
             }
 
