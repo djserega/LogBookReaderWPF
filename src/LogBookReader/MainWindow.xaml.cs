@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity.Core;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -316,7 +318,9 @@ namespace LogBookReader
             {
                 if (new EF.Initialize().ChangeDataSourceConfigSQLite(logBookFileName))
                 {
-                    InitializeReaderContext();
+                    Process.Start(new ProcessStartInfo(Assembly.GetExecutingAssembly().Location));
+                    Application.Current.Shutdown();
+
                 }
                 else
                 {
