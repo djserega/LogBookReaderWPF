@@ -83,6 +83,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Additions\SQLDate.cs" />
     <Compile Include="EF\Initialize.cs" />
     <Compile Include="EF\Repository.cs" />
     <Compile Include="Enums.cs" />

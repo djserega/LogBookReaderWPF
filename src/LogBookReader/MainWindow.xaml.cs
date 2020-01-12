@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using LogBookReader.Additions;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -197,6 +198,7 @@ namespace LogBookReader
                     FillDataEventLogs();
                 else
                 {
+                    FillDataMinMaxDate();
                     FillDataAppCodes();
                     FillDataComputerCodes();
                     FillDataEventCodes();
@@ -284,7 +286,7 @@ namespace LogBookReader
 
         private static long GetDateSQLite(DateTime date, TimeSpan time)
         {
-            long dateSqlite = (long)(date - DateTime.MinValue).TotalMilliseconds * 10;
+            long dateSqlite = date.DateToSQLite();
             dateSqlite += (long)time.TotalMilliseconds * 10;
 
             return dateSqlite;
