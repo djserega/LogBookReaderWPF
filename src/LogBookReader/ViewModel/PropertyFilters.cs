@@ -24,10 +24,40 @@ namespace LogBookReader.ViewModel
             FilterUserCodes = CollectionViewSource.GetDefaultView(new List<Filters.FilterUserCodes>());
         }
 
-        internal DateTime StartPeriodDate { get; set; }
 
         #region Property
 
+        public DateTime StartPeriodDate
+        {
+            get { return (DateTime)GetValue(StartPeriodDateProperty); }
+            set { SetValue(StartPeriodDateProperty, value); }
+        }
+        public static readonly DependencyProperty StartPeriodDateProperty =
+            DependencyProperty.Register("StartPeriodDate", typeof(DateTime), typeof(PropertyFilters));
+
+        public TimeSpan StartPeriodTime
+        {
+            get { return (TimeSpan)GetValue(StartPeriodTimeProperty); }
+            set { SetValue(StartPeriodTimeProperty, value); }
+        }
+        public static readonly DependencyProperty StartPeriodTimeProperty =
+            DependencyProperty.Register("StartPeriodTime", typeof(TimeSpan), typeof(PropertyFilters));
+
+        public DateTime EndPeriodDate
+        {
+            get { return (DateTime)GetValue(EndPeriodDateProperty); }
+            set { SetValue(EndPeriodDateProperty, value); }
+        }
+        public static readonly DependencyProperty EndPeriodDateProperty =
+            DependencyProperty.Register("EndPeriodDate", typeof(DateTime), typeof(PropertyFilters));
+
+        public TimeSpan EndPeriodTime
+        {
+            get { return (TimeSpan)GetValue(EndPeriodTimeProperty); }
+            set { SetValue(EndPeriodTimeProperty, value); }
+        }
+        public static readonly DependencyProperty EndPeriodTimeProperty =
+            DependencyProperty.Register("EndPeriodTime", typeof(TimeSpan), typeof(PropertyFilters));
 
         public string TextFilterUserCodes
         {
@@ -118,9 +148,11 @@ namespace LogBookReader.ViewModel
         {
             var repoEventLog = new EF.Repository<Models.EventLog>(_readerContext);
 
-            long dateMinLong = repoEventLog.GetMin<long>(f => f.Date);
+            long dateMinLong = repoEventLog.GetMin(f => f.Date);
+            long dateMaxLong = repoEventLog.GetMax(f => f.Date);
 
             StartPeriodDate = dateMinLong.DateToSQLite();
+            EndPeriodDate = dateMaxLong.DateToSQLite();
         }
 
         internal async void FillDataAppCodes(bool isChecked = true)

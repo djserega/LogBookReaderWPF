@@ -104,5 +104,10 @@ namespace LogBookReader.EF
         {
             return _dbSet.Min(selector);
         }
+      
+        public TResult GetMax<TResult>(Expression<Func<TEntity, TResult>> selector = null)
+        {
+            return _dbSet.Max(selector);
+        }
     }
 }

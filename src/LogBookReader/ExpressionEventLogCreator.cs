@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LogBookReader.Additions;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,15 +16,32 @@ namespace LogBookReader
 
         internal bool CommentIsFilled { get; set; }
 
-
-        internal void FillExpression(ViewModel.PropertyFilters propertyFiltersViewModel)
+        internal void FillExpression(ViewModel.PropertyFilters propertyFiltersViewModel, TimeSpan startPeriodTime, TimeSpan endPeriodTime)
         {
-            AddExpression(propertyFiltersViewModel.FilterAppCodes.Cast<Filters.FilterAppCodes>().ToList(), "AppCode");
-            AddExpression(propertyFiltersViewModel.FilterComputerCodes.Cast<Filters.FilterComputerCodes>().ToList(), "ComputerCode");
-            AddExpression(propertyFiltersViewModel.FilterEventCodes.Cast<Filters.FilterEventCodes>().ToList(), "EventCode");
+            AddExpression<Filters.FilterAppCodes>(propertyFiltersViewModel.FilterAppCodes, "AppCode");
+            AddExpression<Filters.FilterComputerCodes>(propertyFiltersViewModel.FilterComputerCodes, "ComputerCode");
+            AddExpression<Filters.FilterEventCodes>(propertyFiltersViewModel.FilterEventCodes, "EventCode");
             AddExpression<Filters.FilterUserCodes>(propertyFiltersViewModel.FilterUserCodes, "UserCode");
-        }
 
+            if (propertyFiltersViewModel.StartPeriodDate.Date != new DateTime(1, 1, 1))
+            {
+                AddExpression("Date",
+                              ComparsionType.GreaterThanOrEqual,
+                              GetDateSQLite(propertyFiltersViewModel.StartPeriodDate.Date, startPeriodTime));
+            }
+
+            if (propertyFiltersViewModel.EndPeriodDate.Date != new DateTime(1, 1, 1))
+            {
+                AddExpression("Date",
+                              ComparsionType.LessThanOrEqual,
+                              GetDateSQLite(propertyFiltersViewModel.EndPeriodDate.Date, endPeriodTime));
+            }
+
+            if (CommentIsFilled)
+                AddExpression("Comment", ComparsionType.NotEqual, "");
+
+
+        }
 
         internal void AddExpression(string field, ComparsionType comparsionType, long rightValue)
             => AddExpression(field, comparsionType, Expression.Constant(rightValue));
@@ -31,7 +49,7 @@ namespace LogBookReader
         internal void AddExpression(string field, ComparsionType comparsionType, DateTime rightValue)
             => AddExpression(field, comparsionType, Expression.Constant(rightValue));
 
-        internal void AddExpression(string field, ComparsionType comparsionType, string rightValue) 
+        internal void AddExpression(string field, ComparsionType comparsionType, string rightValue)
             => AddExpression(field, comparsionType, Expression.Constant(rightValue));
 
         internal void AddExpression(string field, ComparsionType comparsionType, Expression rightValue)
@@ -46,7 +64,7 @@ namespace LogBookReader
                     resultExpression = Expression.Equal(leftValue, rightValue);
                     break;
                 case ComparsionType.NotEqual:
-                    resultExpression = Expression.NotEqual(leftValue, rightValue); 
+                    resultExpression = Expression.NotEqual(leftValue, rightValue);
                     break;
                 case ComparsionType.LessThanOrEqual:
                     resultExpression = Expression.LessThanOrEqual(leftValue, rightValue);
@@ -57,7 +75,7 @@ namespace LogBookReader
                 default:
                     throw new NotImplementedException($"Реализация сравнения {comparsionType} не реализована.");
             }
-            
+
             SetResultExpression(resultExpression);
         }
 
@@ -84,7 +102,7 @@ namespace LogBookReader
 
         internal void AddExpression<T>(ICollectionView listData, string field) where T : IFilters.IFilterBase
         {
-            AddExpression(listData.Cast<Filters.FilterUserCodes>().ToList(), field);
+            AddExpression(listData.Cast<T>().ToList(), field);
         }
 
         private void SetResultExpression(Expression resultExpression)
@@ -107,5 +125,14 @@ namespace LogBookReader
 
             return expression;
         }
+
+        private static long GetDateSQLite(DateTime date, TimeSpan time)
+        {
+            long dateSqlite = date.DateToSQLite();
+            dateSqlite += (long)time.TotalMilliseconds * 10;
+
+            return dateSqlite;
+        }
+
     }
 }

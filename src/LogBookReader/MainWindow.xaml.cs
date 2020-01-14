@@ -61,17 +61,21 @@ namespace LogBookReader
         private void InitializeProperties()
         {
             _propertyFiltersViewModel = new ViewModel.PropertyFilters();
-            GridPropertyFilters.DataContext = _propertyFiltersViewModel;
+            //_propertyFiltersViewModel.StartPeriodDate = DateTime.Now;
+            //_propertyFiltersViewModel.EndPeriodDate = DateTime.Now;
+
 
             _filterEventLogViewModel = new ViewModel.FilterEventLog();
+
+
+            GridPropertyFilters.DataContext = _propertyFiltersViewModel;
+
             GridEventLogs.DataContext = _filterEventLogViewModel;
             GridFilterEventLog.DataContext = _filterEventLogViewModel;
 
             CountEventLogRows = 100;
 
-            StartPeriodDate = DateTime.Now;
             TimeControlStartPeriod.Value = new TimeSpan(0, 0, 0);
-            EndPeriodDate = DateTime.Now;
             TimeControlEndPeriod.Value = new TimeSpan(23, 59, 59);
 
             GetDataDB(initializeReaderContext: false);
@@ -97,37 +101,6 @@ namespace LogBookReader
             DependencyProperty.Register("CommentIsFilled", typeof(bool), typeof(MainWindow));
 
   
-        public DateTime StartPeriodDate
-        {
-            get { return (DateTime)GetValue(StartPeriodDateProperty); }
-            set { SetValue(StartPeriodDateProperty, value); }
-        }
-        public static readonly DependencyProperty StartPeriodDateProperty =
-            DependencyProperty.Register("StartPeriodDate", typeof(DateTime), typeof(MainWindow));
-
-        public TimeSpan StartPeriodTime
-        {
-            get { return (TimeSpan)GetValue(StartPeriodTimeProperty); }
-            set { SetValue(StartPeriodTimeProperty, value); }
-        }
-        public static readonly DependencyProperty StartPeriodTimeProperty =
-            DependencyProperty.Register("StartPeriodTime", typeof(TimeSpan), typeof(MainWindow));
-
-        public DateTime EndPeriodDate
-        {
-            get { return (DateTime)GetValue(EndPeriodDateProperty); }
-            set { SetValue(EndPeriodDateProperty, value); }
-        }
-        public static readonly DependencyProperty EndPeriodDateProperty =
-            DependencyProperty.Register("EndPeriodDate", typeof(DateTime), typeof(MainWindow));
-
-        public TimeSpan EndPeriodTime
-        {
-            get { return (TimeSpan)GetValue(EndPeriodTimeProperty); }
-            set { SetValue(EndPeriodTimeProperty, value); }
-        }
-        public static readonly DependencyProperty EndPeriodTimeProperty =
-            DependencyProperty.Register("EndPeriodTime", typeof(TimeSpan), typeof(MainWindow));
 
         public bool IsLoadingEventLog
         {
@@ -188,7 +161,7 @@ namespace LogBookReader
                 else
                 {
                     _propertyFiltersViewModel.Fill(_readerContext);
-                    StartPeriodDate = _propertyFiltersViewModel.StartPeriodDate;
+                    //StartPeriodDate = _propertyFiltersViewModel.StartPeriodDate;
                 }
             }
             catch (EntityCommandExecutionException ex)
@@ -264,24 +237,9 @@ namespace LogBookReader
         {
             ExpressionEventLogCreator expressionCreator = new ExpressionEventLogCreator();
 
-            expressionCreator.FillExpression(_propertyFiltersViewModel);
-
-            if (StartPeriodDate.Date != new DateTime(1, 1, 1))
-            {
-                expressionCreator.AddExpression("Date",
-                                                ComparsionType.GreaterThanOrEqual,
-                                                GetDateSQLite(StartPeriodDate.Date, TimeControlStartPeriod.Value));
-            }
-
-            if (EndPeriodDate.Date != new DateTime(1, 1, 1))
-            {
-                expressionCreator.AddExpression("Date",
-                                                ComparsionType.LessThanOrEqual,
-                                                GetDateSQLite(EndPeriodDate.Date, TimeControlEndPeriod.Value));
-            }
-
-            if (CommentIsFilled)
-                expressionCreator.AddExpression("Comment", ComparsionType.NotEqual, "");
+            expressionCreator.FillExpression(_propertyFiltersViewModel,
+                                             TimeControlStartPeriod.Value,
+                                             TimeControlEndPeriod.Value);
 
             try
             {
@@ -294,13 +252,6 @@ namespace LogBookReader
             }
         }
 
-        private static long GetDateSQLite(DateTime date, TimeSpan time)
-        {
-            long dateSqlite = date.DateToSQLite();
-            dateSqlite += (long)time.TotalMilliseconds * 10;
-
-            return dateSqlite;
-        }
 
         private void ButtonClearTextFilter_Click(object sender, RoutedEventArgs e)
         {
