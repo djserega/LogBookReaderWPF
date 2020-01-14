@@ -92,7 +92,6 @@
     <Compile Include="Events.cs" />
     <Compile Include="ExpressionEventLogCreator.cs" />
     <Compile Include="Filters\FilterUserCodes.cs" />
-    <Compile Include="Filters\MainWindowFilters.cs" />
     <Compile Include="IFilters\IFilterBase.cs" />
     <Compile Include="Filters\FilterEventLog.cs" />
     <Compile Include="Filters\FilterEventCodes.cs" />
@@ -110,6 +109,7 @@
     </Compile>
     <Compile Include="Validators\TimeControl.cs" />
     <Compile Include="ViewModel\FilterEventLog.cs" />
+    <Compile Include="ViewModel\PropertyFilters.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

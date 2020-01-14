@@ -26,9 +26,8 @@ namespace LogBookReader
         private EF.ReaderContext _readerContext;
         private readonly List<Filters.FilterEventLog> _filterEventLogsBase = new List<Filters.FilterEventLog>();
 
-        private List<Filters.FilterUserCodes> _filterUserCodesBase = new List<Filters.FilterUserCodes>();
-
         private ViewModel.FilterEventLog _filterEventLogViewModel;
+        private ViewModel.PropertyFilters _propertyFiltersViewModel;
 
         public MainWindow()
         {
@@ -61,10 +60,8 @@ namespace LogBookReader
 
         private void InitializeProperties()
         {
-            FilterAppCodes = new ObservableCollection<Filters.FilterAppCodes>();
-            FilterComputerCodes = new ObservableCollection<Filters.FilterComputerCodes>();
-            FilterEventCodes = new ObservableCollection<Filters.FilterEventCodes>();
-            FilterUserCodes = new ObservableCollection<Filters.FilterUserCodes>();
+            _propertyFiltersViewModel = new ViewModel.PropertyFilters();
+            GridPropertyFilters.DataContext = _propertyFiltersViewModel;
 
             _filterEventLogViewModel = new ViewModel.FilterEventLog();
             GridEventLogs.DataContext = _filterEventLogViewModel;
@@ -197,11 +194,8 @@ namespace LogBookReader
                     FillDataEventLogs();
                 else
                 {
-                    FillDataMinMaxDate();
-                    FillDataAppCodes();
-                    FillDataComputerCodes();
-                    FillDataEventCodes();
-                    FillDataUserCodes();
+                    _propertyFiltersViewModel.Fill(_readerContext);
+                    StartPeriodDate = _propertyFiltersViewModel.StartPeriodDate;
                 }
             }
             catch (EntityCommandExecutionException ex)
@@ -213,6 +207,33 @@ namespace LogBookReader
             {
                 MessageBox.Show(ex.Message + "\n" + ex.InnerException?.Message + "\n" + ex.InnerException?.InnerException?.Message);
                 return;
+            }
+        }
+
+        private void MenuItemCommandBarFilter_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem)
+            {
+                string[] dataTag = ((string)menuItem.Tag).Split('/');
+
+                bool isChecked = dataTag[1] == "Marked";
+
+                switch (dataTag[0])
+                {
+                    case "FilterAppCodes":
+                        _propertyFiltersViewModel.FillDataAppCodes(isChecked);
+                        break;
+                    case "FilterComputerCodes":
+                        _propertyFiltersViewModel.FillDataComputerCodes(isChecked);
+                        break;
+                    case "FilterEventCodes":
+                        _propertyFiltersViewModel.FillDataEventCodes(isChecked);
+                        break;
+                    case "FilterUserCodes":
+                        _propertyFiltersViewModel.FillDataUserCodes(null);
+                        break;
+
+                }
             }
         }
 
@@ -228,10 +249,10 @@ namespace LogBookReader
 
             foreach (Models.EventLog eventLog in eventLogs)
             {
-                string appName = FilterAppCodes.FirstOrDefault(f => f.Code == eventLog.AppCode)?.Name;
-                string computerName = FilterComputerCodes.FirstOrDefault(f => f.Code == eventLog.ComputerCode)?.Name;
-                string userName = FilterUserCodes.FirstOrDefault(f => f.Code == eventLog.UserCode)?.Name;
-                string eventName = FilterEventCodes.FirstOrDefault(f => f.Code == eventLog.EventCode)?.Name;
+                string appName = _propertyFiltersViewModel.FilterAppCodes.FirstOrDefault(f => f.Code == eventLog.AppCode)?.Name;
+                string computerName = _propertyFiltersViewModel.FilterComputerCodes.FirstOrDefault(f => f.Code == eventLog.ComputerCode)?.Name;
+                string userName = _propertyFiltersViewModel.FilterUserCodes.FirstOrDefault(f => f.Code == eventLog.UserCode)?.Name;
+                string eventName = _propertyFiltersViewModel.FilterEventCodes.FirstOrDefault(f => f.Code == eventLog.EventCode)?.Name;
 
                 _filterEventLogsBase.Add(
                     new Filters.FilterEventLog(eventLog)
@@ -250,10 +271,10 @@ namespace LogBookReader
         {
             ExpressionEventLogCreator expressionCreator = new ExpressionEventLogCreator();
 
-            expressionCreator.AddExpression(FilterAppCodes, "AppCode");
-            expressionCreator.AddExpression(FilterComputerCodes, "ComputerCode");
-            expressionCreator.AddExpression(FilterEventCodes, "EventCode");
-            expressionCreator.AddExpression(FilterUserCodes, "UserCode");
+            expressionCreator.AddExpression(_propertyFiltersViewModel.FilterAppCodes, "AppCode");
+            expressionCreator.AddExpression(_propertyFiltersViewModel.FilterComputerCodes, "ComputerCode");
+            expressionCreator.AddExpression(_propertyFiltersViewModel.FilterEventCodes, "EventCode");
+            expressionCreator.AddExpression(_propertyFiltersViewModel.FilterUserCodes, "UserCode");
 
             if (StartPeriodDate.Date != new DateTime(1, 1, 1))
             {

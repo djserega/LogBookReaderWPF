@@ -11,7 +11,6 @@ namespace LogBookReader.ViewModel
 {
     public class FilterEventLog : DependencyObject
     {
-
         public FilterEventLog()
         {
             SetSource(new List<Filters.FilterEventLog>());
@@ -67,6 +66,5 @@ namespace LogBookReader.ViewModel
       
         public static readonly DependencyProperty FilterEventLogProperty =
             DependencyProperty.Register("FilterEventLogs", typeof(ICollectionView), typeof(FilterEventLog));
-
     }
 }

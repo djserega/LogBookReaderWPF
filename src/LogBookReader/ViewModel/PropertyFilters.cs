@@ -2,16 +2,29 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 
-namespace LogBookReader
+namespace LogBookReader.ViewModel
 {
-    public partial class MainWindow : Window
+    public class PropertyFilters : DependencyObject
     {
+        private EF.ReaderContext _readerContext;
+        private readonly List<Filters.FilterUserCodes> _filterUserCodesBase = new List<Filters.FilterUserCodes>();
+
+
+        public PropertyFilters()
+        {
+            FilterAppCodes = new ObservableCollection<Filters.FilterAppCodes>();
+            FilterComputerCodes = new ObservableCollection<Filters.FilterComputerCodes>();
+            FilterEventCodes = new ObservableCollection<Filters.FilterEventCodes>();
+            FilterUserCodes = new ObservableCollection<Filters.FilterUserCodes>();
+        }
+
+        internal DateTime StartPeriodDate { get; set; }
+
         #region Dependency property
 
         public ObservableCollection<Filters.FilterAppCodes> FilterAppCodes
@@ -20,7 +33,7 @@ namespace LogBookReader
             set { SetValue(FilterAppCodesProperty, value); }
         }
         public static readonly DependencyProperty FilterAppCodesProperty =
-         DependencyProperty.Register("FilterAppCodes", typeof(ObservableCollection<Filters.FilterAppCodes>), typeof(MainWindow));
+         DependencyProperty.Register("FilterAppCodes", typeof(ObservableCollection<Filters.FilterAppCodes>), typeof(PropertyFilters));
 
         public ObservableCollection<Filters.FilterComputerCodes> FilterComputerCodes
         {
@@ -28,7 +41,7 @@ namespace LogBookReader
             set { SetValue(FiltersComputerCodesProperty, value); }
         }
         public static readonly DependencyProperty FiltersComputerCodesProperty =
-            DependencyProperty.Register("FilterComputerCodes", typeof(ObservableCollection<Filters.FilterComputerCodes>), typeof(MainWindow));
+            DependencyProperty.Register("FilterComputerCodes", typeof(ObservableCollection<Filters.FilterComputerCodes>), typeof(PropertyFilters));
 
         public ObservableCollection<Filters.FilterEventCodes> FilterEventCodes
         {
@@ -36,7 +49,7 @@ namespace LogBookReader
             set { SetValue(FilterEventCodesProperty, value); }
         }
         public static readonly DependencyProperty FilterEventCodesProperty =
-            DependencyProperty.Register("FilterEventCodes", typeof(ObservableCollection<Filters.FilterEventCodes>), typeof(MainWindow));
+            DependencyProperty.Register("FilterEventCodes", typeof(ObservableCollection<Filters.FilterEventCodes>), typeof(PropertyFilters));
 
         public ObservableCollection<Filters.FilterUserCodes> FilterUserCodes
         {
@@ -44,13 +57,24 @@ namespace LogBookReader
             set { SetValue(FilterUserCodesProperty, value); }
         }
         public static readonly DependencyProperty FilterUserCodesProperty =
-            DependencyProperty.Register("FilterUserCodes", typeof(ObservableCollection<Filters.FilterUserCodes>), typeof(MainWindow));
+            DependencyProperty.Register("FilterUserCodes", typeof(ObservableCollection<Filters.FilterUserCodes>), typeof(PropertyFilters));
 
         #endregion
 
         #region Fill filter list
 
-        private void FillDataMinMaxDate()
+        internal void Fill(EF.ReaderContext readerContext)
+        {
+            _readerContext = readerContext;
+
+            FillDataMinMaxDate();
+            FillDataAppCodes();
+            FillDataComputerCodes();
+            FillDataEventCodes();
+            FillDataUserCodes();
+        }
+
+        internal void FillDataMinMaxDate()
         {
             var repoEventLog = new EF.Repository<Models.EventLog>(_readerContext);
 
@@ -59,7 +83,7 @@ namespace LogBookReader
             StartPeriodDate = dateMinLong.DateToSQLite();
         }
 
-        private async void FillDataAppCodes(bool isChecked = true)
+        internal async void FillDataAppCodes(bool isChecked = true)
         {
             FilterAppCodes.Clear();
 
@@ -71,7 +95,7 @@ namespace LogBookReader
                 FilterAppCodes.Add(new Filters.FilterAppCodes(item) { IsChecked = isChecked });
         }
 
-        private async void FillDataComputerCodes(bool isChecked = true)
+        internal async void FillDataComputerCodes(bool isChecked = true)
         {
             FilterComputerCodes.Clear();
 
@@ -83,7 +107,7 @@ namespace LogBookReader
                 FilterComputerCodes.Add(new Filters.FilterComputerCodes(item) { IsChecked = isChecked });
         }
 
-        private async void FillDataEventCodes(bool isChecked = true)
+        internal async void FillDataEventCodes(bool isChecked = true)
         {
             FilterEventCodes.Clear();
 
@@ -101,66 +125,31 @@ namespace LogBookReader
             FilterEventCodes = new ObservableCollection<Filters.FilterEventCodes>(eventCodeList);
         }
 
-        private async void FillDataUserCodes(bool isChecked = true)
+        internal async void FillDataUserCodes(bool? isChecked = true)
         {
-            FilterUserCodes.Clear();
-
-            var repoUserCodes = new EF.Repository<Models.UserCodes>(_readerContext);
-
-            List<Models.UserCodes> userCodes = await repoUserCodes.GetListAsync();
-
-            foreach (Models.UserCodes item in userCodes.OrderBy(f => f.Name))
+            if (isChecked == null)
             {
-                var newFilter = new Filters.FilterUserCodes(item) { IsChecked = isChecked };
-
-                FilterUserCodes.Add(newFilter);
-                _filterUserCodesBase.Add(newFilter);
+                _filterUserCodesBase.ForEach(f => f.IsChecked = true);
+                FilterUserCodes = new ObservableCollection<Filters.FilterUserCodes>(_filterUserCodesBase);
             }
-        }
-
-        #endregion
-
-        private void MenuItemCommandBarFilter_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is MenuItem menuItem)
+            else
             {
-                string[] dataTag = ((string)menuItem.Tag).Split('/');
+                FilterUserCodes.Clear();
 
-                bool isChecked = dataTag[1] == "Marked";
+                var repoUserCodes = new EF.Repository<Models.UserCodes>(_readerContext);
 
-                switch (dataTag[0])
+                List<Models.UserCodes> userCodes = await repoUserCodes.GetListAsync();
+
+                foreach (Models.UserCodes item in userCodes.OrderBy(f => f.Name))
                 {
-                    case "FilterAppCodes":
-                        FillDataAppCodes(isChecked);
-                        break;
-                    case "FilterComputerCodes":
-                        FillDataComputerCodes(isChecked);
-                        break;
-                    case "FilterEventCodes":
-                        FillDataEventCodes(isChecked);
-                        break;
-                    case "FilterUserCodes":
-                        _filterUserCodesBase.ForEach(f => f.IsChecked = isChecked);
-                        FilterUserCodes = new ObservableCollection<Filters.FilterUserCodes>(_filterUserCodesBase);
-                        break;
+                    var newFilter = new Filters.FilterUserCodes(item) { IsChecked = (bool)isChecked };
 
+                    FilterUserCodes.Add(newFilter);
+                    _filterUserCodesBase.Add(newFilter);
                 }
             }
         }
 
-        private void TextBoxFilterUserCodes_SourceUpdated(object sender, DataTransferEventArgs e)
-        {
-            string textFilterUserCodesLower = TextFilterUserCodes.ToLower();
-
-            foreach (Filters.FilterUserCodes item in FilterUserCodes)
-                _filterUserCodesBase.Where(f => f == item).Select(f => f.IsChecked = item.IsChecked);
-
-            if (string.IsNullOrEmpty(textFilterUserCodesLower))
-                FilterUserCodes = new ObservableCollection<Filters.FilterUserCodes>(_filterUserCodesBase);
-            else
-                FilterUserCodes = new ObservableCollection<Filters.FilterUserCodes>(
-                    _filterUserCodesBase.Where(f => f.Name.ToLower().Contains(textFilterUserCodesLower)));
-        }
-
+        #endregion
     }
 }

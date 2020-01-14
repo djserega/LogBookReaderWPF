@@ -130,7 +130,8 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <ScrollViewer Grid.Column="0">
+                <ScrollViewer Grid.Column="0"
+                              x:Name="GridPropertyFilters">
 
                     <StackPanel>
 
@@ -164,8 +165,7 @@
                         <Expander HorizontalAlignment="Stretch"
                                   Header="Приложения">
 
-                            <ListBox x:Name="ListBoxFilterAppCodes"
-                                     ItemsSource="{Binding FilterAppCodes}">
+                            <ListBox ItemsSource="{Binding FilterAppCodes}">
 
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
@@ -286,8 +286,7 @@
                                              VerticalAlignment="Center"
                                              HorizontalAlignment="Left"
                                              Width="200"
-                                             Text="{Binding TextFilterUserCodes, NotifyOnSourceUpdated=True}"
-                                             SourceUpdated="TextBoxFilterUserCodes_SourceUpdated"/>
+                                             Text="{Binding TextFilterUserCodes, NotifyOnSourceUpdated=True}"/>
                                 </Grid>
 
                                 <ListBox Grid.Row="1"
