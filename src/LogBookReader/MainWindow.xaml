@@ -73,8 +73,7 @@
                          x:Name="TextBoxTextFilter"
                          VerticalAlignment="Center"
                          HorizontalAlignment="Left"
-                         Text="{Binding TextFilter, NotifyOnSourceUpdated=True}"
-                         SourceUpdated="TextBoxTextFilter_SourceUpdated">
+                         Text="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged}">
                     <TextBox.Style>
                         <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignTextBox}">
                             <Setter Property="Width" Value="120"/>
@@ -334,7 +333,8 @@
 
                 </ScrollViewer>
 
-                <Grid Grid.Column="1">
+                <Grid x:Name="GridEventLogs"
+                      Grid.Column="1">
 
                     <DataGrid ItemsSource="{Binding FilterEventLogs}"
                               IsReadOnly="True"

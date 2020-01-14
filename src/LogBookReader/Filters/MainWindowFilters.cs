@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace LogBookReader
 {
@@ -35,14 +37,6 @@ namespace LogBookReader
         }
         public static readonly DependencyProperty FilterEventCodesProperty =
             DependencyProperty.Register("FilterEventCodes", typeof(ObservableCollection<Filters.FilterEventCodes>), typeof(MainWindow));
-
-        public ObservableCollection<Filters.FilterEventLog> FilterEventLogs
-        {
-            get { return (ObservableCollection<Filters.FilterEventLog>)GetValue(FilterEventLogProperty); }
-            set { SetValue(FilterEventLogProperty, value); }
-        }
-        public static readonly DependencyProperty FilterEventLogProperty =
-            DependencyProperty.Register("FilterEventLogs", typeof(ObservableCollection<Filters.FilterEventLog>), typeof(MainWindow));
 
         public ObservableCollection<Filters.FilterUserCodes> FilterUserCodes
         {
@@ -154,27 +148,7 @@ namespace LogBookReader
             }
         }
 
-        private void FilterListEventLog()
-        {
-            if (string.IsNullOrWhiteSpace(TextFilter))
-                FilterEventLogs = new ObservableCollection<Filters.FilterEventLog>(_filterEventLogsBase);
-            else
-            {
-                string textFilterLower = TextFilter.ToLower();
-
-                FilterEventLogs = new ObservableCollection<Filters.FilterEventLog>(_filterEventLogsBase?.Where(
-                    el =>
-                        (el.RowID.ToString().ToLower().Contains(textFilterLower))
-                        || (el.ComputerName?.ToLower().Contains(textFilterLower) ?? false)
-                        || (el.AppName?.ToLower().Contains(textFilterLower) ?? false)
-                        || (el.Comment?.ToLower().Contains(textFilterLower) ?? false)
-                        || (el.UserName?.ToLower().Contains(textFilterLower) ?? false)
-                    ));
-
-            }
-        }
-
-        private void TextBoxFilterUserCodes_SourceUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)
+        private void TextBoxFilterUserCodes_SourceUpdated(object sender, DataTransferEventArgs e)
         {
             string textFilterUserCodesLower = TextFilterUserCodes.ToLower();
 

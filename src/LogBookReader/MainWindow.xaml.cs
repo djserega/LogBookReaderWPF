@@ -3,6 +3,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data.Entity.Core;
 using System.Diagnostics;
 using System.IO;
@@ -12,6 +13,7 @@ using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace LogBookReader
 {
@@ -25,6 +27,8 @@ namespace LogBookReader
         private readonly List<Filters.FilterEventLog> _filterEventLogsBase = new List<Filters.FilterEventLog>();
 
         private List<Filters.FilterUserCodes> _filterUserCodesBase = new List<Filters.FilterUserCodes>();
+
+        private ViewModel.FilterEventLog _filterEventLogViewModel;
 
         public MainWindow()
         {
@@ -60,8 +64,10 @@ namespace LogBookReader
             FilterAppCodes = new ObservableCollection<Filters.FilterAppCodes>();
             FilterComputerCodes = new ObservableCollection<Filters.FilterComputerCodes>();
             FilterEventCodes = new ObservableCollection<Filters.FilterEventCodes>();
-            FilterEventLogs = new ObservableCollection<Filters.FilterEventLog>();
             FilterUserCodes = new ObservableCollection<Filters.FilterUserCodes>();
+
+            _filterEventLogViewModel = new ViewModel.FilterEventLog();
+            GridEventLogs.DataContext = _filterEventLogViewModel;
 
             CountEventLogRows = 100;
 
@@ -92,14 +98,7 @@ namespace LogBookReader
         public static readonly DependencyProperty CommentIsFilledProperty =
             DependencyProperty.Register("CommentIsFilled", typeof(bool), typeof(MainWindow));
 
-        public string TextFilter
-        {
-            get { return (string)GetValue(TextFilterProperty); }
-            set { SetValue(TextFilterProperty, value); }
-        }
-        public static readonly DependencyProperty TextFilterProperty =
-            DependencyProperty.Register("TextFilter", typeof(string), typeof(MainWindow));
-
+  
         public DateTime StartPeriodDate
         {
             get { return (DateTime)GetValue(StartPeriodDateProperty); }
@@ -244,7 +243,7 @@ namespace LogBookReader
                     });
             }
 
-            FilterEventLogs = new ObservableCollection<Filters.FilterEventLog>(_filterEventLogsBase);
+            _filterEventLogViewModel.SetSource(_filterEventLogsBase);
         }
 
         private Expression<Func<Models.EventLog, bool>> GetExpressionFilterLogs()
@@ -294,14 +293,7 @@ namespace LogBookReader
 
         private void ButtonClearTextFilter_Click(object sender, RoutedEventArgs e)
         {
-            TextFilter = string.Empty;
-
-            FilterListEventLog();
-        }
-
-        private void TextBoxTextFilter_SourceUpdated(object sender, System.Windows.Data.DataTransferEventArgs e)
-        {
-            FilterListEventLog();
+            _filterEventLogViewModel.TextFilter = "";
         }
 
         private void ButtonSelectLogBookFile_Click(object sender, RoutedEventArgs e)
