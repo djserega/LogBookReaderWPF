@@ -65,6 +65,7 @@ namespace LogBookReader
 
             _filterEventLogViewModel = new ViewModel.FilterEventLog();
             GridEventLogs.DataContext = _filterEventLogViewModel;
+            GridFilterEventLog.DataContext = _filterEventLogViewModel;
 
             CountEventLogRows = 100;
 
