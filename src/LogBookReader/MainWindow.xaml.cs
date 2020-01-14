@@ -60,6 +60,8 @@ namespace LogBookReader
 
         private void InitializeProperties()
         {
+            ButtonGetFilterData.DataContext = this;
+
             _propertyFiltersViewModel = new ViewModel.PropertyFilters();
             GridPropertyFilters.DataContext = _propertyFiltersViewModel;
             GridFilterEventLog.DataContext = _propertyFiltersViewModel;

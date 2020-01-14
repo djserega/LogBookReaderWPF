@@ -31,6 +31,7 @@
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0"
+                    x:Name="ButtonGetFilterData"
                     Content="Получить данные"
                     Height="30"
                     Margin="10 0"
@@ -44,7 +45,7 @@
                    VerticalAlignment="Center"/>
 
             <TextBox Grid.Column="2"
-                     Text="{Binding CountEventLogRows, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Text="{Binding CountEventLogRows}"
                      VerticalAlignment="Center"/>
 
             <Grid Grid.Column="4"
