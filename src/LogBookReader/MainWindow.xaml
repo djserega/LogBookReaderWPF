@@ -19,7 +19,8 @@
             <RowDefinition Height="5"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1"
+              x:Name="GridFilterEventLog">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
@@ -43,11 +44,10 @@
                    VerticalAlignment="Center"/>
 
             <TextBox Grid.Column="2"
-                     Text="{Binding CountEventLogRows}"
+                     Text="{Binding CountEventLogRows, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      VerticalAlignment="Center"/>
 
             <Grid Grid.Column="4"
-                  x:Name="GridFilterEventLog"
                   VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>

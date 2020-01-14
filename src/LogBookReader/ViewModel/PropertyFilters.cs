@@ -15,7 +15,6 @@ namespace LogBookReader.ViewModel
     {
         private EF.ReaderContext _readerContext;
         
-
         public PropertyFilters()
         {
             FilterAppCodes = CollectionViewSource.GetDefaultView(new List<Filters.FilterAppCodes>());
@@ -23,7 +22,6 @@ namespace LogBookReader.ViewModel
             FilterEventCodes = CollectionViewSource.GetDefaultView(new List<Filters.FilterEventCodes>());
             FilterUserCodes = CollectionViewSource.GetDefaultView(new List<Filters.FilterUserCodes>());
         }
-
 
         #region Property
 
@@ -75,7 +73,7 @@ namespace LogBookReader.ViewModel
                 PropertyFilters.FilterUserCodes.Filter = PropertyFilters.TextFilterUserCodesObject;
             }
         }
-
+      
         private bool TextFilterUserCodesObject(object obj)
         {
             bool result = true;
@@ -91,11 +89,26 @@ namespace LogBookReader.ViewModel
             return result;
         }
 
+        public int CountEventLogRows
+        {
+            get { return (int)GetValue(CountEventLogRowsProperty); }
+            set { SetValue(CountEventLogRowsProperty, value); }
+        }
+        public static readonly DependencyProperty CountEventLogRowsProperty =
+            DependencyProperty.Register("CountEventLogRows", typeof(int), typeof(PropertyFilters), new PropertyMetadata(100));
+
+        public bool CommentIsFilled
+        {
+            get { return (bool)GetValue(CommentIsFilledProperty); }
+            set { SetValue(CommentIsFilledProperty, value); }
+        }
+        public static readonly DependencyProperty CommentIsFilledProperty =
+            DependencyProperty.Register("CommentIsFilled", typeof(bool), typeof(PropertyFilters));
+
         internal List<Filters.FilterAppCodes> FilterAppCodesBase { get; set; } = new List<Filters.FilterAppCodes>();
         internal List<Filters.FilterComputerCodes> FilterComputerCodesBase { get; set; } = new List<Filters.FilterComputerCodes>();
         internal List<Filters.FilterEventCodes> FilterEventCodesBase { get; set; } = new List<Filters.FilterEventCodes>();
         internal List<Filters.FilterUserCodes> FilterUserCodesBase { get; set; } = new List<Filters.FilterUserCodes>();
-
 
         public ICollectionView FilterAppCodes
         {

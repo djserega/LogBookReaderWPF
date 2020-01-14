@@ -61,56 +61,17 @@ namespace LogBookReader
         private void InitializeProperties()
         {
             _propertyFiltersViewModel = new ViewModel.PropertyFilters();
-            //_propertyFiltersViewModel.StartPeriodDate = DateTime.Now;
-            //_propertyFiltersViewModel.EndPeriodDate = DateTime.Now;
-
+            GridPropertyFilters.DataContext = _propertyFiltersViewModel;
+            GridFilterEventLog.DataContext = _propertyFiltersViewModel;
 
             _filterEventLogViewModel = new ViewModel.FilterEventLog();
-
-
-            GridPropertyFilters.DataContext = _propertyFiltersViewModel;
-
             GridEventLogs.DataContext = _filterEventLogViewModel;
-            GridFilterEventLog.DataContext = _filterEventLogViewModel;
-
-            CountEventLogRows = 100;
 
             TimeControlStartPeriod.Value = new TimeSpan(0, 0, 0);
             TimeControlEndPeriod.Value = new TimeSpan(23, 59, 59);
 
             GetDataDB(initializeReaderContext: false);
         }
-
-        #region Dependency property
-
-
-        public int CountEventLogRows
-        {
-            get { return (int)GetValue(CountEventLogRowsProperty); }
-            set { SetValue(CountEventLogRowsProperty, value); }
-        }
-        public static readonly DependencyProperty CountEventLogRowsProperty =
-            DependencyProperty.Register("CountEventLogRows", typeof(int), typeof(MainWindow));
-
-        public bool CommentIsFilled
-        {
-            get { return (bool)GetValue(CommentIsFilledProperty); }
-            set { SetValue(CommentIsFilledProperty, value); }
-        }
-        public static readonly DependencyProperty CommentIsFilledProperty =
-            DependencyProperty.Register("CommentIsFilled", typeof(bool), typeof(MainWindow));
-
-  
-
-        public bool IsLoadingEventLog
-        {
-            get { return (bool)GetValue(IsLoadingEventLogProperty); }
-            set { SetValue(IsLoadingEventLogProperty, value); }
-        }
-        public static readonly DependencyProperty IsLoadingEventLogProperty =
-            DependencyProperty.Register("IsLoadingEventLog", typeof(bool), typeof(MainWindow));
-
-        #endregion
 
         private void InitializeReaderContext()
         {
@@ -132,6 +93,15 @@ namespace LogBookReader
                 MessageBox.Show(message);
             }
         }
+
+        public bool IsLoadingEventLog
+        {
+            get { return (bool)GetValue(IsLoadingEventLogProperty); }
+            set { SetValue(IsLoadingEventLogProperty, value); }
+        }
+        public static readonly DependencyProperty IsLoadingEventLogProperty =
+            DependencyProperty.Register("IsLoadingEventLog", typeof(bool), typeof(MainWindow));
+
 
         private void ButtonGetFilterData_Click(object sender, RoutedEventArgs e)
         {
@@ -161,7 +131,6 @@ namespace LogBookReader
                 else
                 {
                     _propertyFiltersViewModel.Fill(_readerContext);
-                    //StartPeriodDate = _propertyFiltersViewModel.StartPeriodDate;
                 }
             }
             catch (EntityCommandExecutionException ex)
@@ -211,7 +180,7 @@ namespace LogBookReader
             List<Models.EventLog> eventLogs = await repoEventLogs.GetListTakeAsync(
                 GetExpressionFilterLogs(),
                 f => f.OrderBy(o => -o.RowID),
-                CountEventLogRows);
+                _propertyFiltersViewModel.CountEventLogRows);
 
             foreach (Models.EventLog eventLog in eventLogs)
             {

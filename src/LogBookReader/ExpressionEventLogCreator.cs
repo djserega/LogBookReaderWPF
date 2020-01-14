@@ -14,8 +14,6 @@ namespace LogBookReader
         private Expression _result;
         private readonly ParameterExpression _parameter = Expression.Parameter(typeof(Models.EventLog));
 
-        internal bool CommentIsFilled { get; set; }
-
         internal void FillExpression(ViewModel.PropertyFilters propertyFiltersViewModel, TimeSpan startPeriodTime, TimeSpan endPeriodTime)
         {
             AddExpression<Filters.FilterAppCodes>(propertyFiltersViewModel.FilterAppCodes, "AppCode");
@@ -37,10 +35,8 @@ namespace LogBookReader
                               GetDateSQLite(propertyFiltersViewModel.EndPeriodDate.Date, endPeriodTime));
             }
 
-            if (CommentIsFilled)
+            if (propertyFiltersViewModel.CommentIsFilled)
                 AddExpression("Comment", ComparsionType.NotEqual, "");
-
-
         }
 
         internal void AddExpression(string field, ComparsionType comparsionType, long rightValue)
