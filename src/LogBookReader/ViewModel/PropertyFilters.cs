@@ -2,62 +2,102 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 
 namespace LogBookReader.ViewModel
 {
     public class PropertyFilters : DependencyObject
     {
         private EF.ReaderContext _readerContext;
-        private readonly List<Filters.FilterUserCodes> _filterUserCodesBase = new List<Filters.FilterUserCodes>();
-
+        
 
         public PropertyFilters()
         {
-            FilterAppCodes = new ObservableCollection<Filters.FilterAppCodes>();
-            FilterComputerCodes = new ObservableCollection<Filters.FilterComputerCodes>();
-            FilterEventCodes = new ObservableCollection<Filters.FilterEventCodes>();
-            FilterUserCodes = new ObservableCollection<Filters.FilterUserCodes>();
+            FilterAppCodes = CollectionViewSource.GetDefaultView(new List<Filters.FilterAppCodes>());
+            FilterComputerCodes = CollectionViewSource.GetDefaultView(new List<Filters.FilterComputerCodes>());
+            FilterEventCodes = CollectionViewSource.GetDefaultView(new List<Filters.FilterEventCodes>());
+            FilterUserCodes = CollectionViewSource.GetDefaultView(new List<Filters.FilterUserCodes>());
         }
 
         internal DateTime StartPeriodDate { get; set; }
 
-        #region Dependency property
+        #region Property
 
-        public ObservableCollection<Filters.FilterAppCodes> FilterAppCodes
+
+        public string TextFilterUserCodes
         {
-            get { return (ObservableCollection<Filters.FilterAppCodes>)GetValue(FilterAppCodesProperty); }
+            get { return (string)GetValue(TextFilterUserCodesProperty); }
+            set { SetValue(TextFilterUserCodesProperty, value); }
+        }
+        public static readonly DependencyProperty TextFilterUserCodesProperty =
+            DependencyProperty.Register("TextFilterUserCodes", typeof(string), typeof(PropertyFilters), new PropertyMetadata("", TextFilter_Changed));
+
+        private static void TextFilter_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is PropertyFilters PropertyFilters)
+            {
+                PropertyFilters.FilterUserCodes.Filter = null;
+                PropertyFilters.FilterUserCodes.Filter = PropertyFilters.TextFilterUserCodesObject;
+            }
+        }
+
+        private bool TextFilterUserCodesObject(object obj)
+        {
+            bool result = true;
+
+            if (!string.IsNullOrWhiteSpace(TextFilterUserCodes)
+                && obj is Filters.FilterUserCodes userCodes)
+            {
+                string textFilterLower = TextFilterUserCodes.ToLower();
+
+                result = userCodes.Name?.ToLower().Contains(textFilterLower) ?? false;
+            }
+
+            return result;
+        }
+
+        internal List<Filters.FilterAppCodes> FilterAppCodesBase { get; set; } = new List<Filters.FilterAppCodes>();
+        internal List<Filters.FilterComputerCodes> FilterComputerCodesBase { get; set; } = new List<Filters.FilterComputerCodes>();
+        internal List<Filters.FilterEventCodes> FilterEventCodesBase { get; set; } = new List<Filters.FilterEventCodes>();
+        internal List<Filters.FilterUserCodes> FilterUserCodesBase { get; set; } = new List<Filters.FilterUserCodes>();
+
+
+        public ICollectionView FilterAppCodes
+        {
+            get { return (ICollectionView)GetValue(FilterAppCodesProperty); }
             set { SetValue(FilterAppCodesProperty, value); }
         }
         public static readonly DependencyProperty FilterAppCodesProperty =
-         DependencyProperty.Register("FilterAppCodes", typeof(ObservableCollection<Filters.FilterAppCodes>), typeof(PropertyFilters));
+         DependencyProperty.Register("FilterAppCodes", typeof(ICollectionView), typeof(PropertyFilters));
 
-        public ObservableCollection<Filters.FilterComputerCodes> FilterComputerCodes
+        public ICollectionView FilterComputerCodes
         {
-            get { return (ObservableCollection<Filters.FilterComputerCodes>)GetValue(FiltersComputerCodesProperty); }
+            get { return (ICollectionView)GetValue(FiltersComputerCodesProperty); }
             set { SetValue(FiltersComputerCodesProperty, value); }
         }
         public static readonly DependencyProperty FiltersComputerCodesProperty =
-            DependencyProperty.Register("FilterComputerCodes", typeof(ObservableCollection<Filters.FilterComputerCodes>), typeof(PropertyFilters));
+            DependencyProperty.Register("FilterComputerCodes", typeof(ICollectionView), typeof(PropertyFilters));
 
-        public ObservableCollection<Filters.FilterEventCodes> FilterEventCodes
+        public ICollectionView FilterEventCodes
         {
-            get { return (ObservableCollection<Filters.FilterEventCodes>)GetValue(FilterEventCodesProperty); }
+            get { return (ICollectionView)GetValue(FilterEventCodesProperty); }
             set { SetValue(FilterEventCodesProperty, value); }
         }
         public static readonly DependencyProperty FilterEventCodesProperty =
-            DependencyProperty.Register("FilterEventCodes", typeof(ObservableCollection<Filters.FilterEventCodes>), typeof(PropertyFilters));
+            DependencyProperty.Register("FilterEventCodes", typeof(ICollectionView), typeof(PropertyFilters));
 
-        public ObservableCollection<Filters.FilterUserCodes> FilterUserCodes
+        public ICollectionView FilterUserCodes
         {
-            get { return (ObservableCollection<Filters.FilterUserCodes>)GetValue(FilterUserCodesProperty); }
+            get { return (ICollectionView)GetValue(FilterUserCodesProperty); }
             set { SetValue(FilterUserCodesProperty, value); }
         }
         public static readonly DependencyProperty FilterUserCodesProperty =
-            DependencyProperty.Register("FilterUserCodes", typeof(ObservableCollection<Filters.FilterUserCodes>), typeof(PropertyFilters));
+            DependencyProperty.Register("FilterUserCodes", typeof(ICollectionView), typeof(PropertyFilters));
 
         #endregion
 
@@ -85,69 +125,83 @@ namespace LogBookReader.ViewModel
 
         internal async void FillDataAppCodes(bool isChecked = true)
         {
-            FilterAppCodes.Clear();
-
             var repoAppCodes = new EF.Repository<Models.AppCodes>(_readerContext);
 
             List<Models.AppCodes> appCodes = await repoAppCodes.GetListAsync();
 
+            List<Filters.FilterAppCodes> filterAppCodes = new List<Filters.FilterAppCodes>();
             foreach (Models.AppCodes item in appCodes.OrderBy(f => f.Name))
-                FilterAppCodes.Add(new Filters.FilterAppCodes(item) { IsChecked = isChecked });
+            {
+                var newFilter = new Filters.FilterAppCodes(item) { IsChecked = isChecked };
+
+                filterAppCodes.Add(newFilter);
+                FilterAppCodesBase.Add(newFilter);
+            }
+
+            filterAppCodes.Sort((a, b) => a.Name.CompareTo(b.Name));
+
+            FilterAppCodes = CollectionViewSource.GetDefaultView(filterAppCodes);
         }
 
         internal async void FillDataComputerCodes(bool isChecked = true)
         {
-            FilterComputerCodes.Clear();
-
             var repoComputerCodes = new EF.Repository<Models.ComputerCodes>(_readerContext);
 
             List<Models.ComputerCodes> computerCodes = await repoComputerCodes.GetListAsync();
 
+            List<Filters.FilterComputerCodes> filterComputerCodes = new List<Filters.FilterComputerCodes>();
             foreach (Models.ComputerCodes item in computerCodes.OrderBy(f => f.Name))
-                FilterComputerCodes.Add(new Filters.FilterComputerCodes(item) { IsChecked = isChecked });
+            {
+                var newFilter = new Filters.FilterComputerCodes(item) { IsChecked = isChecked };
+
+                filterComputerCodes.Add(newFilter);
+                FilterComputerCodesBase.Add(newFilter);
+            }
+
+            filterComputerCodes.Sort((a, b) => a.Name.CompareTo(b.Name));
+
+            FilterComputerCodes = CollectionViewSource.GetDefaultView(filterComputerCodes);
         }
 
         internal async void FillDataEventCodes(bool isChecked = true)
         {
-            FilterEventCodes.Clear();
-
             var repoEventCodes = new EF.Repository<Models.EventCodes>(_readerContext);
 
             List<Models.EventCodes> eventCodes = await repoEventCodes.GetListAsync();
 
-            List<Filters.FilterEventCodes> eventCodeList = new List<Filters.FilterEventCodes>();
-
+            List<Filters.FilterEventCodes> filterEventCodes = new List<Filters.FilterEventCodes>();
             foreach (Models.EventCodes item in eventCodes.OrderBy(f => f.Name))
-                eventCodeList.Add(new Filters.FilterEventCodes(item) { IsChecked = isChecked });
+            {
+                var newFilter = new Filters.FilterEventCodes(item) { IsChecked = isChecked };
 
-            eventCodeList.Sort((a, b) => a.Name.CompareTo(b.Name));
+                filterEventCodes.Add(newFilter);
+                FilterEventCodesBase.Add(newFilter);
+            }
 
-            FilterEventCodes = new ObservableCollection<Filters.FilterEventCodes>(eventCodeList);
+            filterEventCodes.Sort((a, b) => a.Name.CompareTo(b.Name));
+
+            FilterEventCodes = CollectionViewSource.GetDefaultView(filterEventCodes);
         }
 
-        internal async void FillDataUserCodes(bool? isChecked = true)
+        internal async void FillDataUserCodes(bool isChecked = true)
         {
-            if (isChecked == null)
+
+            var repoUserCodes = new EF.Repository<Models.UserCodes>(_readerContext);
+
+            List<Models.UserCodes> userCodes = await repoUserCodes.GetListAsync();
+
+            List<Filters.FilterUserCodes> filterUsersCode = new List<Filters.FilterUserCodes>();
+            foreach (Models.UserCodes item in userCodes.OrderBy(f => f.Name))
             {
-                _filterUserCodesBase.ForEach(f => f.IsChecked = true);
-                FilterUserCodes = new ObservableCollection<Filters.FilterUserCodes>(_filterUserCodesBase);
+                var newFilter = new Filters.FilterUserCodes(item) { IsChecked = isChecked };
+
+                filterUsersCode.Add(newFilter);
+                FilterUserCodesBase.Add(newFilter);
             }
-            else
-            {
-                FilterUserCodes.Clear();
 
-                var repoUserCodes = new EF.Repository<Models.UserCodes>(_readerContext);
+            filterUsersCode.Sort((a, b) => a.Name.CompareTo(b.Name));
 
-                List<Models.UserCodes> userCodes = await repoUserCodes.GetListAsync();
-
-                foreach (Models.UserCodes item in userCodes.OrderBy(f => f.Name))
-                {
-                    var newFilter = new Filters.FilterUserCodes(item) { IsChecked = (bool)isChecked };
-
-                    FilterUserCodes.Add(newFilter);
-                    _filterUserCodesBase.Add(newFilter);
-                }
-            }
+            FilterUserCodes = CollectionViewSource.GetDefaultView(filterUsersCode);
         }
 
         #endregion

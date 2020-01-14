@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -11,6 +14,16 @@ namespace LogBookReader
         private readonly ParameterExpression _parameter = Expression.Parameter(typeof(Models.EventLog));
 
         internal bool CommentIsFilled { get; set; }
+
+
+        internal void FillExpression(ViewModel.PropertyFilters propertyFiltersViewModel)
+        {
+            AddExpression(propertyFiltersViewModel.FilterAppCodes.Cast<Filters.FilterAppCodes>().ToList(), "AppCode");
+            AddExpression(propertyFiltersViewModel.FilterComputerCodes.Cast<Filters.FilterComputerCodes>().ToList(), "ComputerCode");
+            AddExpression(propertyFiltersViewModel.FilterEventCodes.Cast<Filters.FilterEventCodes>().ToList(), "EventCode");
+            AddExpression<Filters.FilterUserCodes>(propertyFiltersViewModel.FilterUserCodes, "UserCode");
+        }
+
 
         internal void AddExpression(string field, ComparsionType comparsionType, long rightValue)
             => AddExpression(field, comparsionType, Expression.Constant(rightValue));
@@ -48,7 +61,7 @@ namespace LogBookReader
             SetResultExpression(resultExpression);
         }
 
-        internal void AddExpression<T>(ObservableCollection<T> listData, string field) where T : IFilters.IFilterBase
+        internal void AddExpression<T>(List<T> listData, string field) where T : IFilters.IFilterBase
         {
             Expression resultExpression = null;
 
@@ -67,6 +80,11 @@ namespace LogBookReader
             }
 
             SetResultExpression(resultExpression);
+        }
+
+        internal void AddExpression<T>(ICollectionView listData, string field) where T : IFilters.IFilterBase
+        {
+            AddExpression(listData.Cast<Filters.FilterUserCodes>().ToList(), field);
         }
 
         private void SetResultExpression(Expression resultExpression)

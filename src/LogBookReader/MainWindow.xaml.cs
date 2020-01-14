@@ -137,14 +137,6 @@ namespace LogBookReader
         public static readonly DependencyProperty IsLoadingEventLogProperty =
             DependencyProperty.Register("IsLoadingEventLog", typeof(bool), typeof(MainWindow));
 
-        public string TextFilterUserCodes
-        {
-            get { return (string)GetValue(TextFilterUserCodesProperty); }
-            set { SetValue(TextFilterUserCodesProperty, value); }
-        }
-        public static readonly DependencyProperty TextFilterUserCodesProperty =
-            DependencyProperty.Register("TextFilterUserCodes", typeof(string), typeof(MainWindow));
-
         #endregion
 
         private void InitializeReaderContext()
@@ -231,7 +223,7 @@ namespace LogBookReader
                         _propertyFiltersViewModel.FillDataEventCodes(isChecked);
                         break;
                     case "FilterUserCodes":
-                        _propertyFiltersViewModel.FillDataUserCodes(null);
+                        _propertyFiltersViewModel.FillDataUserCodes(isChecked);
                         break;
 
                 }
@@ -250,10 +242,10 @@ namespace LogBookReader
 
             foreach (Models.EventLog eventLog in eventLogs)
             {
-                string appName = _propertyFiltersViewModel.FilterAppCodes.FirstOrDefault(f => f.Code == eventLog.AppCode)?.Name;
-                string computerName = _propertyFiltersViewModel.FilterComputerCodes.FirstOrDefault(f => f.Code == eventLog.ComputerCode)?.Name;
-                string userName = _propertyFiltersViewModel.FilterUserCodes.FirstOrDefault(f => f.Code == eventLog.UserCode)?.Name;
-                string eventName = _propertyFiltersViewModel.FilterEventCodes.FirstOrDefault(f => f.Code == eventLog.EventCode)?.Name;
+                string appName = _propertyFiltersViewModel.FilterAppCodesBase.FirstOrDefault(f => f.Code == eventLog.AppCode)?.Name;
+                string computerName = _propertyFiltersViewModel.FilterComputerCodesBase.FirstOrDefault(f => f.Code == eventLog.ComputerCode)?.Name;
+                string userName = _propertyFiltersViewModel.FilterUserCodesBase.FirstOrDefault(f => f.Code == eventLog.UserCode)?.Name;
+                string eventName = _propertyFiltersViewModel.FilterEventCodesBase.FirstOrDefault(f => f.Code == eventLog.EventCode)?.Name;
 
                 _filterEventLogsBase.Add(
                     new Filters.FilterEventLog(eventLog)
@@ -272,10 +264,7 @@ namespace LogBookReader
         {
             ExpressionEventLogCreator expressionCreator = new ExpressionEventLogCreator();
 
-            expressionCreator.AddExpression(_propertyFiltersViewModel.FilterAppCodes, "AppCode");
-            expressionCreator.AddExpression(_propertyFiltersViewModel.FilterComputerCodes, "ComputerCode");
-            expressionCreator.AddExpression(_propertyFiltersViewModel.FilterEventCodes, "EventCode");
-            expressionCreator.AddExpression(_propertyFiltersViewModel.FilterUserCodes, "UserCode");
+            expressionCreator.FillExpression(_propertyFiltersViewModel);
 
             if (StartPeriodDate.Date != new DateTime(1, 1, 1))
             {
