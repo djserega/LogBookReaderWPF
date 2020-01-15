@@ -68,6 +68,7 @@ namespace LogBookReader
 
             _filterEventLogViewModel = new ViewModel.FilterEventLog();
             GridEventLogs.DataContext = _filterEventLogViewModel;
+            TextBoxTextFilter.DataContext = _filterEventLogViewModel;
 
             TimeControlStartPeriod.Value = new TimeSpan(0, 0, 0);
             TimeControlEndPeriod.Value = new TimeSpan(23, 59, 59);
