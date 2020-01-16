@@ -20,8 +20,10 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="1"
-              x:Name="GridFilterEventLog">
+              x:Name="GridFilterEventLog"
+              Margin="5 0">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto" MinWidth="40"/>
@@ -31,24 +33,31 @@
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0"
+                    x:Name="ButtonFilter"
+                    Content="{md:PackIcon Kind=Filter}"
+                    Click="ButtonFilter_Click"
+                    BorderBrush="LightSeaGreen"
+                    BorderThickness="4"/>
+
+            <Button Grid.Column="1"
                     x:Name="ButtonGetFilterData"
                     Content="Получить данные"
                     Height="30"
-                    Margin="10 0"
+                    Margin="5 0"
                     HorizontalAlignment="Left"
                     md:ButtonProgressAssist.IsIndicatorVisible="{Binding IsLoadingEventLog}"
                     md:ButtonProgressAssist.IsIndeterminate="True"
                     Click="ButtonGetFilterData_Click"/>
 
-            <Label Grid.Column="1"
+            <Label Grid.Column="2"
                    Content="Количество записей"
                    VerticalAlignment="Center"/>
 
-            <TextBox Grid.Column="2"
+            <TextBox Grid.Column="3"
                      Text="{Binding CountEventLogRows}"
                      VerticalAlignment="Center"/>
 
-            <Grid Grid.Column="4"
+            <Grid Grid.Column="5"
                   VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
@@ -116,9 +125,9 @@
                         Click="ButtonClearTextFilter_Click"/>
             </Grid>
 
-            <Button Grid.Column="5"
+            <Button Grid.Column="6"
                     Content="{md:PackIcon Kind=BookLock}"
-                    Margin="5 0"
+                    Margin="5 0 0 0"
                     ToolTip="Выбрать файл"
                     Click="ButtonSelectLogBookFile_Click"/>
 
@@ -128,13 +137,13 @@
 
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition MaxWidth="250"/>
+                    <ColumnDefinition Width="auto" MaxWidth="250"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
                 <ScrollViewer Grid.Column="0"
-                              x:Name="GridPropertyFilters">
-
+                              x:Name="GridPropertyFilters"
+                              Width="227">
                     <StackPanel>
 
                         <Expander HorizontalAlignment="Stretch"

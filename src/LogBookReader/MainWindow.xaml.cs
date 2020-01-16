@@ -14,6 +14,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media.Animation;
 
 namespace LogBookReader
 {
@@ -105,11 +106,12 @@ namespace LogBookReader
         public static readonly DependencyProperty IsLoadingEventLogProperty =
             DependencyProperty.Register("IsLoadingEventLog", typeof(bool), typeof(MainWindow));
 
-
         private void ButtonGetFilterData_Click(object sender, RoutedEventArgs e)
         {
             if (IsLoadingEventLog)
                 return;
+
+            ChangeVisibilityFilterPanel(true);
 
             GetDataDB(true);
         }
@@ -277,5 +279,38 @@ namespace LogBookReader
             return result;
         }
 
+        private void ChangeVisibilityFilterPanel(bool collapsedFilter = false)
+        {
+            if (collapsedFilter
+                && GridPropertyFilters.Visibility == Visibility.Collapsed)
+                return;
+
+            GridPropertyFilters.Tag = "";
+
+            ThicknessAnimation timeAnimationButtonFilter = new ThicknessAnimation(new Thickness(0), new Duration(TimeSpan.FromMilliseconds(300)));
+
+            DoubleAnimation timeAnimation = new DoubleAnimation(0, TimeSpan.FromMilliseconds(300));
+            timeAnimation.Completed += (object sender, EventArgs e) =>
+            {
+                if ((string)GridPropertyFilters.Tag != "Visible")
+                    GridPropertyFilters.Visibility = GridPropertyFilters.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+            };
+
+            if (GridPropertyFilters.Visibility != Visibility.Visible)
+            {
+                timeAnimationButtonFilter.To = new Thickness(4);
+                GridPropertyFilters.Tag = "Visible";
+                GridPropertyFilters.Visibility = Visibility.Visible;
+                timeAnimation.To = 227;
+            }
+
+            ButtonFilter.BeginAnimation(BorderThicknessProperty, timeAnimationButtonFilter);
+            GridPropertyFilters.BeginAnimation(WidthProperty, timeAnimation);
+        }
+
+        private void ButtonFilter_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeVisibilityFilterPanel();
+        }
     }
 }
