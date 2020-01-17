@@ -89,7 +89,7 @@ namespace LogBookReader
             {
                 _readerContext = new EF.ReaderContext();
                 Title = _mainTitle;
-                Title += " - " + GetDataSource(_readerContext.Database.Connection.ConnectionString);
+                Title += " - " + _readerContext.DataSourceConnectionString;
             }
             catch (FileNotFoundException ex)
             {
@@ -279,25 +279,6 @@ namespace LogBookReader
             }
         }
 
-        private string GetDataSource(string connectioString)
-        {
-            string result = string.Empty;
-
-            string startPositionText = "Data Source";
-            int startPosition = connectioString.IndexOf(startPositionText);
-            if (startPosition >= 0)
-            {
-                startPosition += startPositionText.Length;
-
-                int endPosition = connectioString.IndexOf(";", startPosition);
-                if (endPosition > 0)
-                {
-                    result = connectioString.Substring(startPosition + 1, endPosition - startPosition - 1);
-                }
-            }
-
-            return result;
-        }
 
         private void ChangeVisibilityFilterPanel(bool collapsedFilter = false)
         {
