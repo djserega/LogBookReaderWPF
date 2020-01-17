@@ -34,33 +34,34 @@
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0"
-                    x:Name="ButtonFilter"
-                    Content="{md:PackIcon Kind=Filter}"
-                    Click="ButtonFilter_Click"
-                    BorderBrush="LightSeaGreen"
-                    BorderThickness="4"/>
-
             <Grid Grid.Column="1"
                   x:Name="GridLoadData">
-                
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
+                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                
+
                 <Button Grid.Column="0"
+                        x:Name="ButtonFilter"
+                        Content="{md:PackIcon Kind=Filter}"
+                        BorderBrush="LightSeaGreen"
+                        BorderThickness="4"
+                        Command="{Binding ClickFilter}"/>
+                
+                <Button Grid.Column="1"
                         Content="Получить данные"
                         Height="30"
                         Margin="5 0"
                         HorizontalAlignment="Left"
                         Command="{Binding GetLogBookData}"/>
 
-                <ProgressBar Grid.Column="1"
+                <ProgressBar Grid.Column="2"
                              Style="{StaticResource MaterialDesignCircularProgressBar}"
                              Value="0"
                              IsIndeterminate="True"
                              Visibility="{Binding ProgressBarLoadDataVisibility}"/>
+            
             </Grid>
             
             <Label Grid.Column="3"

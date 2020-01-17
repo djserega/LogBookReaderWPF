@@ -136,6 +136,12 @@ namespace LogBookReader
             }
         }
 
+        public ICommand ClickFilter
+        {
+            get => new DelegateCommand(() => { ChangeVisibilityFilterPanel(); });
+        }
+
+
         private void GetDataDB(bool readEventLog = false, bool initializeReaderContext = true)
         {
             if (_readerContext == null)
@@ -320,11 +326,6 @@ namespace LogBookReader
 
             ButtonFilter.BeginAnimation(BorderThicknessProperty, timeAnimationButtonFilter);
             GridPropertyFilters.BeginAnimation(WidthProperty, timeAnimation);
-        }
-
-        private void ButtonFilter_Click(object sender, RoutedEventArgs e)
-        {
-            ChangeVisibilityFilterPanel();
         }
     }
 }
