@@ -11,6 +11,7 @@
         mc:Ignorable="d"
         Title="LogBookReader" Height="400" Width="900"
         Loaded="Window_Loaded">
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="5"/>
@@ -23,6 +24,7 @@
               x:Name="GridFilterEventLog"
               Margin="5 0">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
@@ -39,25 +41,38 @@
                     BorderBrush="LightSeaGreen"
                     BorderThickness="4"/>
 
-            <Button Grid.Column="1"
-                    x:Name="ButtonGetFilterData"
-                    Content="Получить данные"
-                    Height="30"
-                    Margin="5 0"
-                    HorizontalAlignment="Left"
-                    md:ButtonProgressAssist.IsIndicatorVisible="{Binding IsLoadingEventLog}"
-                    md:ButtonProgressAssist.IsIndeterminate="True"
-                    Click="ButtonGetFilterData_Click"/>
+            <Grid Grid.Column="1"
+                  x:Name="GridLoadData">
+                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                
+                <Button Grid.Column="0"
+                        Content="Получить данные"
+                        Height="30"
+                        Margin="5 0"
+                        HorizontalAlignment="Left"
+                        Command="{Binding GetLogBookData}"/>
 
-            <Label Grid.Column="2"
+                <ProgressBar Grid.Column="1"
+                             Style="{StaticResource MaterialDesignCircularProgressBar}"
+                             Value="0"
+                             IsIndeterminate="True"
+                             Visibility="{Binding ProgressBarLoadDataVisibility}"/>
+            </Grid>
+            
+            <Label Grid.Column="3"
                    Content="Количество записей"
                    VerticalAlignment="Center"/>
 
-            <TextBox Grid.Column="3"
+            <TextBox Grid.Column="4"
                      Text="{Binding CountEventLogRows}"
                      VerticalAlignment="Center"/>
 
-            <Grid Grid.Column="5"
+            <Grid Grid.Column="6"
+                  x:Name="GridTextFilter"
                   VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
@@ -81,7 +96,6 @@
                     </Label.Style>
                 </Label>
                 <TextBox Grid.Column="0"
-                         x:Name="TextBoxTextFilter"
                          VerticalAlignment="Center"
                          HorizontalAlignment="Left"
                          Text="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged}">
@@ -122,10 +136,10 @@
                         Foreground="Black"
                         Opacity=".3"
                         BorderThickness="0"
-                        Click="ButtonClearTextFilter_Click"/>
+                        Command="{Binding ClearTextFilter}"/>
             </Grid>
 
-            <Button Grid.Column="6"
+            <Button Grid.Column="7"
                     Content="{md:PackIcon Kind=BookLock}"
                     Margin="5 0 0 0"
                     ToolTip="Выбрать файл"
@@ -327,7 +341,7 @@
                                 </ListBox>
 
                             </Grid>
-                   
+
                         </Expander>
 
                         <Expander HorizontalAlignment="Stretch"
@@ -382,4 +396,5 @@
         </Grid>
 
     </Grid>
+
 </Window>

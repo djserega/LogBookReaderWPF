@@ -1,4 +1,5 @@
-﻿using LogBookReader.Additions;
+﻿using DevExpress.Mvvm;
+using LogBookReader.Additions;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using System.Windows.Media.Animation;
 
 namespace LogBookReader
@@ -55,13 +57,17 @@ namespace LogBookReader
 
             Events.ChangeIsLoadingEventLogEvents.ChangeIsLoadingEventLog += (bool newValue) =>
             {
-                Dispatcher.Invoke(new ThreadStart(delegate { IsLoadingEventLog = newValue; }));
+                Dispatcher.Invoke(new ThreadStart(delegate 
+                {
+                    ProgressBarLoadDataVisibility = newValue ? Visibility.Visible : Visibility.Hidden;
+                    IsLoadingEventLog = newValue;
+                }));
             };
         }
 
         private void InitializeProperties()
         {
-            ButtonGetFilterData.DataContext = this;
+            GridLoadData.DataContext = this;
 
             _propertyFiltersViewModel = new ViewModel.PropertyFilters();
             GridPropertyFilters.DataContext = _propertyFiltersViewModel;
@@ -69,7 +75,7 @@ namespace LogBookReader
 
             _filterEventLogViewModel = new ViewModel.FilterEventLog();
             GridEventLogs.DataContext = _filterEventLogViewModel;
-            TextBoxTextFilter.DataContext = _filterEventLogViewModel;
+            GridTextFilter.DataContext = _filterEventLogViewModel;
 
             TimeControlStartPeriod.Value = new TimeSpan(0, 0, 0);
             TimeControlEndPeriod.Value = new TimeSpan(23, 59, 59);
@@ -106,14 +112,28 @@ namespace LogBookReader
         public static readonly DependencyProperty IsLoadingEventLogProperty =
             DependencyProperty.Register("IsLoadingEventLog", typeof(bool), typeof(MainWindow));
 
-        private void ButtonGetFilterData_Click(object sender, RoutedEventArgs e)
+        public Visibility ProgressBarLoadDataVisibility
         {
-            if (IsLoadingEventLog)
-                return;
+            get { return (Visibility)GetValue(ProgressBarLoadDataVisibilityProperty); }
+            set { SetValue(ProgressBarLoadDataVisibilityProperty, value); }
+        }
+        public static readonly DependencyProperty ProgressBarLoadDataVisibilityProperty =
+            DependencyProperty.Register("ProgressBarLoadDataVisibility", typeof(Visibility), typeof(MainWindow), new PropertyMetadata(Visibility.Hidden));
 
-            ChangeVisibilityFilterPanel(true);
 
-            GetDataDB(true);
+        public ICommand GetLogBookData
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    ChangeVisibilityFilterPanel(true);
+
+                    GetDataDB(true);
+
+                }, () => !IsLoadingEventLog);
+
+            }
         }
 
         private void GetDataDB(bool readEventLog = false, bool initializeReaderContext = true)
@@ -224,12 +244,6 @@ namespace LogBookReader
                 MessageBox.Show(ex.Message);
                 return null;
             }
-        }
-
-
-        private void ButtonClearTextFilter_Click(object sender, RoutedEventArgs e)
-        {
-            _filterEventLogViewModel.TextFilter = "";
         }
 
         private void ButtonSelectLogBookFile_Click(object sender, RoutedEventArgs e)

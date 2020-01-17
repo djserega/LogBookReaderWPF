@@ -1,10 +1,12 @@
-﻿using System;
+﻿using DevExpress.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Data;
 
 namespace LogBookReader.ViewModel
@@ -66,5 +68,10 @@ namespace LogBookReader.ViewModel
       
         public static readonly DependencyProperty FilterEventLogProperty =
             DependencyProperty.Register("FilterEventLogs", typeof(ICollectionView), typeof(FilterEventLog));
+
+        public ICommand ClearTextFilter
+        {
+            get => new DelegateCommand(() => { TextFilter = string.Empty; });
+        }
     }
 }
