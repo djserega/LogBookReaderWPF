@@ -27,7 +27,6 @@ namespace LogBookReader
     {
         private readonly string _mainTitle;
         private EF.ReaderContext _readerContext;
-        private readonly List<Filters.FilterEventLog> _filterEventLogsBase = new List<Filters.FilterEventLog>();
 
         private ViewModel.FilterEventLog _filterEventLogViewModel;
         private ViewModel.PropertyFilters _propertyFiltersViewModel;
@@ -176,53 +175,12 @@ namespace LogBookReader
             }
         }
 
-        private async void FillDataEventLogs()
+        private void FillDataEventLogs()
         {
-            _filterEventLogsBase.Clear();
-
-            var repoEventLogs = new EF.Repository<Models.EventLog>(_readerContext);
-            List<Models.EventLog> eventLogs = await repoEventLogs.GetListTakeAsync(
-                GetExpressionFilterLogs(),
-                f => f.OrderBy(o => -o.RowID),
-                _propertyFiltersViewModel.CountEventLogRows);
-
-            foreach (Models.EventLog eventLog in eventLogs)
-            {
-                string appName = _propertyFiltersViewModel.FilterAppCodesBase.FirstOrDefault(f => f.Code == eventLog.AppCode)?.Name;
-                string computerName = _propertyFiltersViewModel.FilterComputerCodesBase.FirstOrDefault(f => f.Code == eventLog.ComputerCode)?.Name;
-                string userName = _propertyFiltersViewModel.FilterUserCodesBase.FirstOrDefault(f => f.Code == eventLog.UserCode)?.Name;
-                string eventName = _propertyFiltersViewModel.FilterEventCodesBase.FirstOrDefault(f => f.Code == eventLog.EventCode)?.Name;
-
-                _filterEventLogsBase.Add(
-                    new Filters.FilterEventLog(eventLog)
-                    {
-                        ComputerName = computerName,
-                        AppName = appName,
-                        UserName = userName,
-                        EventName = eventName
-                    });
-            }
-
-            _filterEventLogViewModel.SetSource(_filterEventLogsBase);
-        }
-
-        private Expression<Func<Models.EventLog, bool>> GetExpressionFilterLogs()
-        {
-            ExpressionEventLogCreator expressionCreator = new ExpressionEventLogCreator();
-
-            expressionCreator.FillExpression(_propertyFiltersViewModel,
-                                             TimeControlStartPeriod.Value,
-                                             TimeControlEndPeriod.Value);
-
-            try
-            {
-                return expressionCreator.GetResult();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                return null;
-            }
+            _filterEventLogViewModel.GetEventLog(_readerContext,
+                                                 _propertyFiltersViewModel,
+                                                 TimeControlStartPeriod.Value,
+                                                 TimeControlEndPeriod.Value);
         }
 
         private void ButtonSelectLogBookFile_Click(object sender, RoutedEventArgs e)
@@ -251,7 +209,6 @@ namespace LogBookReader
                 }
             }
         }
-
 
         private void ChangeVisibilityFilterPanel(bool collapsedFilter = false)
         {

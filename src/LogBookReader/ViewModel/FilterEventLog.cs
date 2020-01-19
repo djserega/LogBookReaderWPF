@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Data;
+using System.Linq.Expressions;
 
 namespace LogBookReader.ViewModel
 {
@@ -16,6 +17,39 @@ namespace LogBookReader.ViewModel
         public FilterEventLog()
         {
             SetSource(new List<Filters.FilterEventLog>());
+        }
+
+
+        public async void GetEventLog(EF.ReaderContext readerContext, PropertyFilters propertyFilters, TimeSpan timeStart, TimeSpan timeEnd)
+        {
+            var filterExpression = GetExpressionFilterLogs(propertyFilters, timeStart, timeEnd);
+
+            List<Filters.FilterEventLog> list = new List<Filters.FilterEventLog>();
+
+            var repoEventLogs = new EF.Repository<Models.EventLog>(readerContext);
+            List<Models.EventLog> eventLogs = await repoEventLogs.GetListTakeAsync(
+                filterExpression,
+                f => f.OrderBy(o => -o.RowID),
+                propertyFilters.CountEventLogRows);
+
+            foreach (Models.EventLog eventLog in eventLogs)
+            {
+                string appName = propertyFilters.FilterAppCodesBase.FirstOrDefault(f => f.Code == eventLog.AppCode)?.Name;
+                string computerName = propertyFilters.FilterComputerCodesBase.FirstOrDefault(f => f.Code == eventLog.ComputerCode)?.Name;
+                string userName = propertyFilters.FilterUserCodesBase.FirstOrDefault(f => f.Code == eventLog.UserCode)?.Name;
+                string eventName = propertyFilters.FilterEventCodesBase.FirstOrDefault(f => f.Code == eventLog.EventCode)?.Name;
+
+                list.Add(
+                    new Filters.FilterEventLog(eventLog)
+                    {
+                        ComputerName = computerName,
+                        AppName = appName,
+                        UserName = userName,
+                        EventName = eventName
+                    });
+            }
+
+            SetSource(list);
         }
 
         public void SetSource(List<Filters.FilterEventLog> list)
@@ -73,5 +107,25 @@ namespace LogBookReader.ViewModel
         {
             get => new DelegateCommand(() => { TextFilter = string.Empty; });
         }
+
+        private Expression<Func<Models.EventLog, bool>> GetExpressionFilterLogs(PropertyFilters propertyFilters, TimeSpan timeStart, TimeSpan timeEnd)
+        {
+            ExpressionEventLogCreator expressionCreator = new ExpressionEventLogCreator();
+
+            expressionCreator.FillExpression(propertyFilters,
+                                             timeStart,
+                                             timeEnd);
+
+            try
+            {
+                return expressionCreator.GetResult();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
+        }
+
     }
 }
