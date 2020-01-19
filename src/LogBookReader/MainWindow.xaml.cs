@@ -176,33 +176,6 @@ namespace LogBookReader
             }
         }
 
-        private void MenuItemCommandBarFilter_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is MenuItem menuItem)
-            {
-                string[] dataTag = ((string)menuItem.Tag).Split('/');
-
-                bool isChecked = dataTag[1] == "Marked";
-
-                switch (dataTag[0])
-                {
-                    case "FilterAppCodes":
-                        _propertyFiltersViewModel.FillDataAppCodes(isChecked);
-                        break;
-                    case "FilterComputerCodes":
-                        _propertyFiltersViewModel.FillDataComputerCodes(isChecked);
-                        break;
-                    case "FilterEventCodes":
-                        _propertyFiltersViewModel.FillDataEventCodes(isChecked);
-                        break;
-                    case "FilterUserCodes":
-                        _propertyFiltersViewModel.FillDataUserCodes(isChecked);
-                        break;
-
-                }
-            }
-        }
-
         private async void FillDataEventLogs()
         {
             _filterEventLogsBase.Clear();

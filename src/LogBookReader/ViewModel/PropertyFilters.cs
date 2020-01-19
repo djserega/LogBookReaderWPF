@@ -1,4 +1,5 @@
-﻿using LogBookReader.Additions;
+﻿using DevExpress.Mvvm;
+using LogBookReader.Additions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,13 +9,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Input;
 
 namespace LogBookReader.ViewModel
 {
     public class PropertyFilters : DependencyObject
     {
         private EF.ReaderContext _readerContext;
-        
+
         public PropertyFilters()
         {
             FilterAppCodes = CollectionViewSource.GetDefaultView(new List<Filters.FilterAppCodes>());
@@ -73,7 +75,7 @@ namespace LogBookReader.ViewModel
                 PropertyFilters.FilterUserCodes.Filter = PropertyFilters.TextFilterUserCodesObject;
             }
         }
-      
+
         private bool TextFilterUserCodesObject(object obj)
         {
             bool result = true;
@@ -168,7 +170,27 @@ namespace LogBookReader.ViewModel
             EndPeriodDate = dateMaxLong.DateToSQLite();
         }
 
-        internal async void FillDataAppCodes(bool isChecked = true)
+        public ICommand FillDataAppCodesCommand
+        {
+            get => new DelegateCommand<bool>((bool marked) => FillDataAppCodes(marked));
+        }
+
+        public ICommand FillDataComputerCodesCommand
+        {
+            get => new DelegateCommand<bool>((bool marked) => FillDataComputerCodes(marked));
+        }
+
+        public ICommand FillDataEventCodesCommand
+        {
+            get => new DelegateCommand<bool>((bool marked) => FillDataEventCodes(marked));
+        }
+
+        public ICommand FillDataUserCodesCommand
+        {
+            get => new DelegateCommand<bool>((bool marked) => FillDataUserCodes(marked));
+        }
+
+        private async void FillDataAppCodes(bool isChecked = true)
         {
             var repoAppCodes = new EF.Repository<Models.AppCodes>(_readerContext);
 
@@ -188,7 +210,7 @@ namespace LogBookReader.ViewModel
             FilterAppCodes = CollectionViewSource.GetDefaultView(filterAppCodes);
         }
 
-        internal async void FillDataComputerCodes(bool isChecked = true)
+        private async void FillDataComputerCodes(bool isChecked = true)
         {
             var repoComputerCodes = new EF.Repository<Models.ComputerCodes>(_readerContext);
 
@@ -208,7 +230,7 @@ namespace LogBookReader.ViewModel
             FilterComputerCodes = CollectionViewSource.GetDefaultView(filterComputerCodes);
         }
 
-        internal async void FillDataEventCodes(bool isChecked = true)
+        private async void FillDataEventCodes(bool isChecked = true)
         {
             var repoEventCodes = new EF.Repository<Models.EventCodes>(_readerContext);
 
@@ -228,7 +250,7 @@ namespace LogBookReader.ViewModel
             FilterEventCodes = CollectionViewSource.GetDefaultView(filterEventCodes);
         }
 
-        internal async void FillDataUserCodes(bool isChecked = true)
+        private async void FillDataUserCodes(bool isChecked = true)
         {
 
             var repoUserCodes = new EF.Repository<Models.UserCodes>(_readerContext);

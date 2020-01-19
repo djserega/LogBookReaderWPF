@@ -206,12 +206,12 @@
                                     <ContextMenu>
                                         <MenuItem Icon="{md:PackIcon CheckboxMultipleMarkedOutline}"
                                                   ToolTip="Выбрать все"
-                                                  Tag="FilterAppCodes/Marked"
-                                                  Click="MenuItemCommandBarFilter_Click"/>
+                                                  Command="{Binding FillDataAppCodesCommand}"
+                                                  CommandParameter="true"/>
                                         <MenuItem Icon="{md:PackIcon CheckboxMultipleBlankOutline}"
                                                   ToolTip="Отменить выбор всех"
-                                                  Tag="FilterAppCodes/Blank"
-                                                  Click="MenuItemCommandBarFilter_Click"/>
+                                                  Command="{Binding FillDataAppCodesCommand}"
+                                                  CommandParameter="false"/>
                                     </ContextMenu>
                                 </ListBox.ContextMenu>
 
@@ -237,12 +237,12 @@
                                     <ContextMenu>
                                         <MenuItem Icon="{md:PackIcon CheckboxMultipleMarkedOutline}"
                                                   ToolTip="Выбрать все"
-                                                  Tag="FilterComputerCodes/Marked"
-                                                  Click="MenuItemCommandBarFilter_Click"/>
+                                                  Command="{Binding FillDataComputerCodesCommand}"
+                                                  CommandParameter="true"/>
                                         <MenuItem Icon="{md:PackIcon CheckboxMultipleBlankOutline}"
                                                   ToolTip="Отменить выбор всех"
-                                                  Tag="FilterComputerCodes/Blank"
-                                                  Click="MenuItemCommandBarFilter_Click"/>
+                                                  Command="{Binding FillDataComputerCodesCommand}"
+                                                  CommandParameter="false"/>
                                     </ContextMenu>
                                 </ListBox.ContextMenu>
 
@@ -267,12 +267,12 @@
                                     <ContextMenu>
                                         <MenuItem Icon="{md:PackIcon CheckboxMultipleMarkedOutline}"
                                                   ToolTip="Выбрать все"
-                                                  Tag="FilterEventCodes/Marked"
-                                                  Click="MenuItemCommandBarFilter_Click"/>
+                                                  Command="{Binding FillDataEventCodesCommand}"
+                                                  CommandParameter="true"/>
                                         <MenuItem Icon="{md:PackIcon CheckboxMultipleBlankOutline}"
                                                   ToolTip="Отменить выбор всех"
-                                                  Tag="FilterEventCodes/Blank"
-                                                  Click="MenuItemCommandBarFilter_Click"/>
+                                                  Command="{Binding FillDataEventCodesCommand}"
+                                                  CommandParameter="false"/>
                                     </ContextMenu>
                                 </ListBox.ContextMenu>
 
@@ -330,15 +330,14 @@
                                         <ContextMenu>
                                             <MenuItem Icon="{md:PackIcon CheckboxMultipleMarkedOutline}"
                                                   ToolTip="Выбрать все"
-                                                  Tag="FilterUserCodes/Marked"
-                                                  Click="MenuItemCommandBarFilter_Click"/>
+                                                  Command="{Binding FillDataUserCodesCommand}"
+                                                  CommandParameter="true"/>
                                             <MenuItem Icon="{md:PackIcon CheckboxMultipleBlankOutline}"
                                                   ToolTip="Отменит выбор всех"
-                                                  Tag="FilterUserCodes/Blank"
-                                                  Click="MenuItemCommandBarFilter_Click"/>
+                                                  Command="{Binding FillDataUserCodesCommand}"
+                                                  CommandParameter="false"/>
                                         </ContextMenu>
                                     </ListBox.ContextMenu>
-
                                 </ListBox>
 
                             </Grid>
