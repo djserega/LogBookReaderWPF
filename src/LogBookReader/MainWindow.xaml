@@ -56,12 +56,6 @@
                         HorizontalAlignment="Left"
                         Command="{Binding GetLogBookData}"/>
 
-                <ProgressBar Grid.Column="2"
-                             Style="{StaticResource MaterialDesignCircularProgressBar}"
-                             Value="0"
-                             IsIndeterminate="True"
-                             Visibility="{Binding ProgressBarLoadDataVisibility}"/>
-            
             </Grid>
             
             <Label Grid.Column="3"
@@ -377,6 +371,15 @@
                         </DataGrid.Columns>
 
                     </DataGrid>
+
+                    <ProgressBar Grid.Column="2"
+                                 x:Name="ProgressBarLoadData"
+                                 Style="{StaticResource MaterialDesignCircularProgressBar}"
+                                 Value="0"
+                                 IsIndeterminate="True"
+                                 Height="50"
+                                 Width="50"
+                                 Visibility="{Binding ProgressBarLoadDataVisibility}"/>
 
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Right"

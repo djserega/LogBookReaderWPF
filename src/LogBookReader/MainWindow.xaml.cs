@@ -67,6 +67,7 @@ namespace LogBookReader
         private void InitializeProperties()
         {
             GridLoadData.DataContext = this;
+            ProgressBarLoadData.DataContext = this;
 
             _propertyFiltersViewModel = new ViewModel.PropertyFilters();
             GridPropertyFilters.DataContext = _propertyFiltersViewModel;
