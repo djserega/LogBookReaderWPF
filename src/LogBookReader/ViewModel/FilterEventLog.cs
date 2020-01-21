@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Data;
@@ -19,8 +17,10 @@ namespace LogBookReader.ViewModel
             SetSource(new List<Filters.FilterEventLog>());
         }
 
-
-        public async void GetEventLog(EF.ReaderContext readerContext, PropertyFilters propertyFilters, TimeSpan timeStart, TimeSpan timeEnd)
+        public async void GetEventLog(EF.ReaderContext readerContext,
+                                      PropertyFilters propertyFilters,
+                                      TimeSpan timeStart,
+                                      TimeSpan timeEnd)
         {
             var filterExpression = GetExpressionFilterLogs(propertyFilters, timeStart, timeEnd);
 
@@ -108,7 +108,9 @@ namespace LogBookReader.ViewModel
             get => new DelegateCommand(() => { TextFilter = string.Empty; });
         }
 
-        private Expression<Func<Models.EventLog, bool>> GetExpressionFilterLogs(PropertyFilters propertyFilters, TimeSpan timeStart, TimeSpan timeEnd)
+        private Expression<Func<Models.EventLog, bool>> GetExpressionFilterLogs(PropertyFilters propertyFilters,
+                                                                                TimeSpan timeStart,
+                                                                                TimeSpan timeEnd)
         {
             ExpressionEventLogCreator expressionCreator = new ExpressionEventLogCreator();
 
@@ -126,6 +128,5 @@ namespace LogBookReader.ViewModel
                 return null;
             }
         }
-
     }
 }

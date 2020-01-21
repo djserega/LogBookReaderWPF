@@ -1,6 +1,5 @@
 ﻿namespace LogBookReader.Filters
 {
-
     public class FilterAppCodes : IModels.IAppCodes, IFilters.IFilterBase
     {
         public FilterAppCodes() { }

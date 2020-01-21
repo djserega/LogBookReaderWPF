@@ -1,20 +1,12 @@
 ﻿using DevExpress.Mvvm;
-using LogBookReader.Additions;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Data.Entity.Core;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 
@@ -25,11 +17,15 @@ namespace LogBookReader
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Fields
+
         private readonly string _mainTitle;
         private EF.ReaderContext _readerContext;
 
         private ViewModel.FilterEventLog _filterEventLogViewModel;
         private ViewModel.PropertyFilters _propertyFiltersViewModel;
+
+        #endregion
 
         public MainWindow()
         {
@@ -63,6 +59,8 @@ namespace LogBookReader
                 }));
             };
         }
+
+        #region Initializers
 
         private void InitializeProperties()
         {
@@ -104,6 +102,10 @@ namespace LogBookReader
             }
         }
 
+        #endregion
+
+        #region DependencyProperty
+
         public bool IsLoadingEventLog
         {
             get { return (bool)GetValue(IsLoadingEventLogProperty); }
@@ -120,6 +122,9 @@ namespace LogBookReader
         public static readonly DependencyProperty ProgressBarLoadDataVisibilityProperty =
             DependencyProperty.Register("ProgressBarLoadDataVisibility", typeof(Visibility), typeof(MainWindow), new PropertyMetadata(Visibility.Hidden));
 
+        #endregion
+
+        #region ICommand
 
         public ICommand GetLogBookData
         {
@@ -141,6 +146,7 @@ namespace LogBookReader
             get => new DelegateCommand(() => { ChangeVisibilityFilterPanel(); });
         }
 
+        #endregion
 
         private void GetDataDB(bool readEventLog = false, bool initializeReaderContext = true)
         {

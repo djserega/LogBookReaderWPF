@@ -1,8 +1,6 @@
 ﻿using LogBookReader.Additions;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
@@ -14,7 +12,9 @@ namespace LogBookReader
         private Expression _result;
         private readonly ParameterExpression _parameter = Expression.Parameter(typeof(Models.EventLog));
 
-        internal void FillExpression(ViewModel.PropertyFilters propertyFiltersViewModel, TimeSpan startPeriodTime, TimeSpan endPeriodTime)
+        internal void FillExpression(ViewModel.PropertyFilters propertyFiltersViewModel,
+                                     TimeSpan startPeriodTime,
+                                     TimeSpan endPeriodTime)
         {
             AddExpression<Filters.FilterAppCodes>(propertyFiltersViewModel.FilterAppCodes, "AppCode");
             AddExpression<Filters.FilterComputerCodes>(propertyFiltersViewModel.FilterComputerCodes, "ComputerCode");
@@ -41,13 +41,10 @@ namespace LogBookReader
 
         internal void AddExpression(string field, ComparsionType comparsionType, long rightValue)
             => AddExpression(field, comparsionType, Expression.Constant(rightValue));
-
         internal void AddExpression(string field, ComparsionType comparsionType, DateTime rightValue)
             => AddExpression(field, comparsionType, Expression.Constant(rightValue));
-
         internal void AddExpression(string field, ComparsionType comparsionType, string rightValue)
             => AddExpression(field, comparsionType, Expression.Constant(rightValue));
-
         internal void AddExpression(string field, ComparsionType comparsionType, Expression rightValue)
         {
             Expression resultExpression = null;
@@ -95,7 +92,6 @@ namespace LogBookReader
 
             SetResultExpression(resultExpression);
         }
-
         internal void AddExpression<T>(ICollectionView listData, string field) where T : IFilters.IFilterBase
         {
             AddExpression(listData.Cast<T>().ToList(), field);
@@ -129,6 +125,5 @@ namespace LogBookReader
 
             return dateSqlite;
         }
-
     }
 }
