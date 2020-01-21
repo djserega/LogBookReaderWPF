@@ -18,7 +18,6 @@ namespace LogBookReader.EF
             _dbSet = _dbContext.Set<TEntity>();
         }
 
-
         public TEntity GetFirstOrDefault(Expression<Func<TEntity, bool>> predicate = null,
                                          Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
         {

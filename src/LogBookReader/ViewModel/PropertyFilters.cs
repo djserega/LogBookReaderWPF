@@ -56,38 +56,6 @@ namespace LogBookReader.ViewModel
         public static readonly DependencyProperty EndPeriodTimeProperty =
             DependencyProperty.Register("EndPeriodTime", typeof(TimeSpan), typeof(PropertyFilters));
 
-        public string TextFilterUserCodes
-        {
-            get { return (string)GetValue(TextFilterUserCodesProperty); }
-            set { SetValue(TextFilterUserCodesProperty, value); }
-        }
-        public static readonly DependencyProperty TextFilterUserCodesProperty =
-            DependencyProperty.Register("TextFilterUserCodes", typeof(string), typeof(PropertyFilters), new PropertyMetadata("", TextFilter_Changed));
-
-        private static void TextFilter_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (d is PropertyFilters PropertyFilters)
-            {
-                PropertyFilters.FilterUserCodes.Filter = null;
-                PropertyFilters.FilterUserCodes.Filter = PropertyFilters.TextFilterUserCodesObject;
-            }
-        }
-
-        private bool TextFilterUserCodesObject(object obj)
-        {
-            bool result = true;
-
-            if (!string.IsNullOrWhiteSpace(TextFilterUserCodes)
-                && obj is Filters.FilterUserCodes userCodes)
-            {
-                string textFilterLower = TextFilterUserCodes.ToLower();
-
-                result = userCodes.Name?.ToLower().Contains(textFilterLower) ?? false;
-            }
-
-            return result;
-        }
-
         public int CountEventLogRows
         {
             get { return (int)GetValue(CountEventLogRowsProperty); }
@@ -104,10 +72,12 @@ namespace LogBookReader.ViewModel
         public static readonly DependencyProperty CommentIsFilledProperty =
             DependencyProperty.Register("CommentIsFilled", typeof(bool), typeof(PropertyFilters));
 
+
         internal List<Filters.FilterAppCodes> FilterAppCodesBase { get; set; } = new List<Filters.FilterAppCodes>();
         internal List<Filters.FilterComputerCodes> FilterComputerCodesBase { get; set; } = new List<Filters.FilterComputerCodes>();
         internal List<Filters.FilterEventCodes> FilterEventCodesBase { get; set; } = new List<Filters.FilterEventCodes>();
         internal List<Filters.FilterUserCodes> FilterUserCodesBase { get; set; } = new List<Filters.FilterUserCodes>();
+        internal List<Filters.FilterMetadataCodes> FilterMetadataCodesBase { get; set; } = new List<Filters.FilterMetadataCodes>();
 
         public ICollectionView FilterAppCodes
         {
@@ -141,31 +111,99 @@ namespace LogBookReader.ViewModel
         public static readonly DependencyProperty FilterUserCodesProperty =
             DependencyProperty.Register("FilterUserCodes", typeof(ICollectionView), typeof(PropertyFilters));
 
+        public ICollectionView FilterMetadataCodes
+        {
+            get { return (ICollectionView)GetValue(FilterMetadataCodesProperty); }
+            set { SetValue(FilterMetadataCodesProperty, value); }
+        }
+        public static readonly DependencyProperty FilterMetadataCodesProperty =
+            DependencyProperty.Register("FilterMetadataCodes", typeof(ICollectionView), typeof(PropertyFilters));
+
         #endregion
 
-        #region Fill filter list
+        #region Property_FilterList
 
-        internal void Fill(EF.ReaderContext readerContext)
+        #region FilterUsers
+
+        public string TextFilterUserCodes
         {
-            _readerContext = readerContext;
+            get { return (string)GetValue(TextFilterUserCodesProperty); }
+            set { SetValue(TextFilterUserCodesProperty, value); }
+        }
+        public static readonly DependencyProperty TextFilterUserCodesProperty =
+            DependencyProperty.Register("TextFilterUserCodes",
+                                        typeof(string),
+                                        typeof(PropertyFilters),
+                                        new PropertyMetadata("", TextFilterUserCodes_Changed));
 
-            FillDataMinMaxDate();
-            FillDataAppCodes();
-            FillDataComputerCodes();
-            FillDataEventCodes();
-            FillDataUserCodes();
+        private static void TextFilterUserCodes_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is PropertyFilters PropertyFilters)
+            {
+                PropertyFilters.FilterUserCodes.Filter = null;
+                PropertyFilters.FilterUserCodes.Filter = PropertyFilters.TextFilterUserCodesObject;
+            }
         }
 
-        internal void FillDataMinMaxDate()
+        private bool TextFilterUserCodesObject(object obj)
         {
-            var repoEventLog = new EF.Repository<Models.EventLog>(_readerContext);
+            bool result = true;
 
-            long dateMinLong = repoEventLog.GetMin(f => f.Date);
-            long dateMaxLong = repoEventLog.GetMax(f => f.Date);
+            if (!string.IsNullOrWhiteSpace(TextFilterUserCodes)
+                && obj is Filters.FilterUserCodes userCodes)
+            {
+                string textFilterLower = TextFilterUserCodes.ToLower();
 
-            StartPeriodDate = dateMinLong.DateToSQLite();
-            EndPeriodDate = dateMaxLong.DateToSQLite();
+                result = userCodes.Name?.ToLower().Contains(textFilterLower) ?? false;
+            }
+
+            return result;
         }
+
+        #endregion
+
+        #region FilterMetadata
+
+        public string TextFilterMetadataCodes
+        {
+            get { return (string)GetValue(TextFilterMetadataCodesProperty); }
+            set { SetValue(TextFilterMetadataCodesProperty, value); }
+        }
+        public static readonly DependencyProperty TextFilterMetadataCodesProperty =
+            DependencyProperty.Register("TextFilterMetadataCodes",
+                                        typeof(string),
+                                        typeof(PropertyFilters),
+                                        new PropertyMetadata("", TextFilterMetadataCodes_Changed));
+
+        private static void TextFilterMetadataCodes_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is PropertyFilters PropertyFilters)
+            {
+                PropertyFilters.FilterMetadataCodes.Filter = null;
+                PropertyFilters.FilterMetadataCodes.Filter = PropertyFilters.TextFilterMetadataCodesObject;
+            }
+        }
+
+        private bool TextFilterMetadataCodesObject(object obj)
+        {
+            bool result = true;
+
+            if (!string.IsNullOrWhiteSpace(TextFilterMetadataCodes)
+                && obj is Filters.FilterMetadataCodes metadataCodes)
+            {
+                string textFilterLower = TextFilterMetadataCodes.ToLower();
+
+                result = metadataCodes.Name?.ToLower().Contains(textFilterLower) ?? false;
+            }
+
+            return result;
+        }
+
+        #endregion
+
+        #endregion
+
+        #region ICommand
 
         public ICommand FillDataAppCodesCommand
         {
@@ -185,6 +223,36 @@ namespace LogBookReader.ViewModel
         public ICommand FillDataUserCodesCommand
         {
             get => new DelegateCommand<bool>((bool marked) => FillDataUserCodes(marked));
+        }
+        public ICommand FillDataMetadataCodesCommand
+        {
+            get => new DelegateCommand<bool>((bool marked) => FillDataMetadataCodes(marked));
+        }
+
+        #endregion
+
+        internal void Fill(EF.ReaderContext readerContext)
+        {
+            _readerContext = readerContext;
+
+            FillDataMinMaxDate();
+            FillDataAppCodes();
+            FillDataComputerCodes();
+            FillDataEventCodes();
+            FillDataUserCodes();
+            FillDataMetadataCodes();
+        }
+
+        #region FillData
+        internal void FillDataMinMaxDate()
+        {
+            var repoEventLog = new EF.Repository<Models.EventLog>(_readerContext);
+
+            long dateMinLong = repoEventLog.GetMin(f => f.Date);
+            long dateMaxLong = repoEventLog.GetMax(f => f.Date);
+
+            StartPeriodDate = dateMinLong.DateToSQLite();
+            EndPeriodDate = dateMaxLong.DateToSQLite();
         }
 
         private async void FillDataAppCodes(bool isChecked = true)
@@ -266,6 +334,29 @@ namespace LogBookReader.ViewModel
             filterUsersCode.Sort((a, b) => a.Name.CompareTo(b.Name));
 
             FilterUserCodes = CollectionViewSource.GetDefaultView(filterUsersCode);
+        }
+
+        private async void FillDataMetadataCodes(bool isChecked = true)
+        {
+            var repoMetadataCodes = new EF.Repository<Models.MetadataCodes>(_readerContext);
+
+            List<Models.MetadataCodes> metadataCodes = await repoMetadataCodes.GetListAsync();
+
+            List<Filters.FilterMetadataCodes> filterMetadataCode = new List<Filters.FilterMetadataCodes>();
+            foreach (Models.MetadataCodes item in metadataCodes.OrderBy(f => f.Name))
+            {
+                if (!string.IsNullOrWhiteSpace(item.Name))
+                {
+                    var newFilter = new Filters.FilterMetadataCodes(item) { IsChecked = isChecked };
+
+                    filterMetadataCode.Add(newFilter);
+                    FilterMetadataCodesBase.Add(newFilter);
+                }
+            }
+
+            filterMetadataCode.Sort((a, b) => a.Name.CompareTo(b.Name));
+
+            FilterMetadataCodes = CollectionViewSource.GetDefaultView(filterMetadataCode);
         }
 
         #endregion

@@ -20,7 +20,7 @@ namespace LogBookReader.EF
         public DbSet<Models.EventCodes> EventCodes { get; set; }
         public DbSet<Models.EventLog> EventLog { get; set; }
         public DbSet<Models.UserCodes> UserCodes { get; set; }
-
+        public DbSet<Models.MetadataCodes> MetadataCodes { get; set; }
 
         internal string DataSourceConnectionString
         {

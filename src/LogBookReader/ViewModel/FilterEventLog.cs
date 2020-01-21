@@ -34,10 +34,15 @@ namespace LogBookReader.ViewModel
 
             foreach (Models.EventLog eventLog in eventLogs)
             {
+
                 string appName = propertyFilters.FilterAppCodesBase.FirstOrDefault(f => f.Code == eventLog.AppCode)?.Name;
                 string computerName = propertyFilters.FilterComputerCodesBase.FirstOrDefault(f => f.Code == eventLog.ComputerCode)?.Name;
                 string userName = propertyFilters.FilterUserCodesBase.FirstOrDefault(f => f.Code == eventLog.UserCode)?.Name;
                 string eventName = propertyFilters.FilterEventCodesBase.FirstOrDefault(f => f.Code == eventLog.EventCode)?.Name;
+
+                string metadataName = string.IsNullOrWhiteSpace(eventLog.MetadataCodes)
+                    ? string.Empty
+                    : propertyFilters.FilterMetadataCodesBase.FirstOrDefault(f => f.Code == int.Parse(eventLog.MetadataCodes))?.Name;
 
                 list.Add(
                     new Filters.FilterEventLog(eventLog)
@@ -45,7 +50,8 @@ namespace LogBookReader.ViewModel
                         ComputerName = computerName,
                         AppName = appName,
                         UserName = userName,
-                        EventName = eventName
+                        EventName = eventName,
+                        MetadataName = metadataName
                     });
             }
 
@@ -99,7 +105,7 @@ namespace LogBookReader.ViewModel
             get { return (ICollectionView)GetValue(FilterEventLogProperty); }
             set { SetValue(FilterEventLogProperty, value); }
         }
-      
+
         public static readonly DependencyProperty FilterEventLogProperty =
             DependencyProperty.Register("FilterEventLogs", typeof(ICollectionView), typeof(FilterEventLog));
 

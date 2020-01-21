@@ -42,6 +42,7 @@ namespace LogBookReader.Filters
         public DateTime DateTime { get => Date.DateToSQLite(); }
         public string UserName { get; set; }
         public string EventName { get; set; }
+        public string MetadataName { get; set; }
 
         public void Fill(Models.EventLog eventLog)
         {

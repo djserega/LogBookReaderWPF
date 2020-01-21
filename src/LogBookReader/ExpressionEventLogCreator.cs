@@ -20,6 +20,7 @@ namespace LogBookReader
             AddExpression<Filters.FilterComputerCodes>(propertyFiltersViewModel.FilterComputerCodes, "ComputerCode");
             AddExpression<Filters.FilterEventCodes>(propertyFiltersViewModel.FilterEventCodes, "EventCode");
             AddExpression<Filters.FilterUserCodes>(propertyFiltersViewModel.FilterUserCodes, "UserCode");
+            AddExpression<Filters.FilterMetadataCodes>(propertyFiltersViewModel.FilterMetadataCodes, "MetadataCodes", true);
 
             if (propertyFiltersViewModel.StartPeriodDate.Date != new DateTime(1, 1, 1))
             {
@@ -72,7 +73,7 @@ namespace LogBookReader
             SetResultExpression(resultExpression);
         }
 
-        internal void AddExpression<T>(List<T> listData, string field) where T : IFilters.IFilterBase
+        internal void AddExpression<T>(List<T> listData, string field, bool toStringValue = false) where T : IFilters.IFilterBase
         {
             Expression resultExpression = null;
 
@@ -81,20 +82,23 @@ namespace LogBookReader
             {
                 foreach (T item in listData.Where(f => f.IsChecked))
                 {
-                    Expression currentExpression = Expression.Equal(Expression.Property(_parameter, field), Expression.Constant(item.Code));
+                    Expression expressionRight = toStringValue
+                        ? expressionRight = Expression.Constant(item.Code.ToString())
+                        : expressionRight = Expression.Constant(item.Code);
 
-                    if (resultExpression == null)
-                        resultExpression = currentExpression;
-                    else
-                        resultExpression = Expression.Or(resultExpression, currentExpression);
+                    Expression currentExpression = Expression.Equal(Expression.Property(_parameter, field), expressionRight);
+
+                    resultExpression = resultExpression == null
+                        ? resultExpression = currentExpression
+                        : resultExpression = Expression.Or(resultExpression, currentExpression);
                 }
             }
 
             SetResultExpression(resultExpression);
         }
-        internal void AddExpression<T>(ICollectionView listData, string field) where T : IFilters.IFilterBase
+        internal void AddExpression<T>(ICollectionView listData, string field, bool toStringValue = false) where T : IFilters.IFilterBase
         {
-            AddExpression(listData.Cast<T>().ToList(), field);
+            AddExpression(listData.Cast<T>().ToList(), field, toStringValue);
         }
 
         private void SetResultExpression(Expression resultExpression)
