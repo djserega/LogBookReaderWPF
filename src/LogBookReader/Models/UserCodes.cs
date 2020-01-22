@@ -2,7 +2,7 @@
 
 namespace LogBookReader.Models
 {
-    public class UserCodes : IModels.IUserCodes
+    public class UserCodes : IModels.IUserCodes, IModels.IModelsBase
     {
         [Key]
         public int Code { get; set; }

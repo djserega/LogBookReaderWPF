@@ -104,6 +104,7 @@
     <Compile Include="Filters\FilterEventCodes.cs" />
     <Compile Include="Filters\FilterComputerCodes.cs" />
     <Compile Include="Filters\FilterAppCodes.cs" />
+    <Compile Include="IModels\IModelsBase.cs" />
     <Compile Include="IModels\IMetadataCodes.cs" />
     <Compile Include="IModels\IUserCodes.cs" />
     <Compile Include="Models\AppCodes.cs" />

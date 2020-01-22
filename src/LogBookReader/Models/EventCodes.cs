@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using LogBookReader.IModels;
 
 namespace LogBookReader.Models
 {
-    public class EventCodes : IEventCodes
+    public class EventCodes : IModels.IEventCodes, IModels.IModelsBase
     {
         [Key]
         public int Code { get; set; }
