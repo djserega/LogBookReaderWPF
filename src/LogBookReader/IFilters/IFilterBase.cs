@@ -1,6 +1,6 @@
 ﻿namespace LogBookReader.IFilters
 {
-    interface IFilterBase
+    public interface IFilterBase
     {
         bool IsChecked { get; set; }
         int Code { get; set; }
