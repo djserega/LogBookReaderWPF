@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2050
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogBookReader", "LogBookReader\LogBookReader.csproj", "{157E73AB-A2DF-4767-83B2-0F2A762AC97B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogBookReaderTest", "LogBookReaderTest\LogBookReaderTest.csproj", "{E4DE1F9D-2BB4-43C6-AA03-12E254605835}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{157E73AB-A2DF-4767-83B2-0F2A762AC97B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{157E73AB-A2DF-4767-83B2-0F2A762AC97B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{157E73AB-A2DF-4767-83B2-0F2A762AC97B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4DE1F9D-2BB4-43C6-AA03-12E254605835}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4DE1F9D-2BB4-43C6-AA03-12E254605835}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4DE1F9D-2BB4-43C6-AA03-12E254605835}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4DE1F9D-2BB4-43C6-AA03-12E254605835}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
