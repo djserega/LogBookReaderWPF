@@ -2,6 +2,7 @@
 using LogBookReader.Additions;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -10,7 +11,7 @@ using System.Windows.Input;
 
 namespace LogBookReader.ViewModel
 {
-    public class PropertyFilters : DependencyObject
+    public partial class PropertyFilters : DependencyObject
     {
         private EF.ReaderContext _readerContext;
 
@@ -111,6 +112,16 @@ namespace LogBookReader.ViewModel
         public static readonly DependencyProperty FilterUserCodesProperty =
             DependencyProperty.Register("FilterUserCodes", typeof(ICollectionView), typeof(PropertyFilters));
 
+
+
+        public ObservableCollection<Filters.MetadataCodesNode> FilterMetadataCodesTree
+        {
+            get { return (ObservableCollection<Filters.MetadataCodesNode>)GetValue(FilterMetadataCodesTreeProperty); }
+            set { SetValue(FilterMetadataCodesTreeProperty, value); }
+        }
+        public static readonly DependencyProperty FilterMetadataCodesTreeProperty =
+            DependencyProperty.Register("FilterMetadataCodesTree", typeof(ObservableCollection<Filters.MetadataCodesNode>), typeof(PropertyFilters), new PropertyMetadata(null));
+        
         public ICollectionView FilterMetadataCodes
         {
             get { return (ICollectionView)GetValue(FilterMetadataCodesProperty); }
@@ -355,6 +366,31 @@ namespace LogBookReader.ViewModel
             }
 
             filterMetadataCode.Sort((a, b) => a.Name.CompareTo(b.Name));
+          
+            ObservableCollection<Filters.MetadataCodesNode> nodes = new ObservableCollection<Filters.MetadataCodesNode>();
+            foreach (Filters.FilterMetadataCodes item in filterMetadataCode)
+            {
+                var nodesItemName = nodes.FirstOrDefault(f => f.Name == item.Parent);
+                if (nodesItemName == null)
+                {
+                    nodesItemName = new Filters.MetadataCodesNode
+                    {
+                        IsChecked = true,
+                        Name = item.Parent
+                    };
+                    nodes.Add(nodesItemName);
+                }
+
+                var child = new Filters.MetadataCodesNode
+                {
+                    IsChecked = true,
+                    Name = item.Child
+                };
+
+                nodesItemName.Nodes.Add(child);
+            }
+
+            FilterMetadataCodesTree = nodes;
 
             FilterMetadataCodes = CollectionViewSource.GetDefaultView(filterMetadataCode);
         }

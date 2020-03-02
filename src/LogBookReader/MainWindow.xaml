@@ -9,37 +9,40 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
-        Title="LogBookReader" Height="500" Width="900"
+        Title="LogBookReader"
+        Height="500"
+        Width="900"
         Loaded="Window_Loaded">
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="5"/>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="5"/>
+            <RowDefinition Height="5" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="5" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="1"
               x:Name="GridFilterEventLog"
               Margin="5 0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto" MinWidth="40"/>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto"
+                                  MinWidth="40" />
                 <ColumnDefinition />
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="1"
                   x:Name="GridLoadData">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
                 <Button Grid.Column="0"
@@ -47,31 +50,31 @@
                         Content="{md:PackIcon Kind=Filter}"
                         BorderBrush="LightSeaGreen"
                         BorderThickness="4"
-                        Command="{Binding ClickFilter}"/>
+                        Command="{Binding ClickFilter}" />
 
                 <Button Grid.Column="1"
                         Content="Получить данные"
                         Height="30"
                         Margin="5 0"
                         HorizontalAlignment="Left"
-                        Command="{Binding GetLogBookData}"/>
+                        Command="{Binding GetLogBookData}" />
 
             </Grid>
 
             <Label Grid.Column="3"
                    Content="Количество записей"
-                   VerticalAlignment="Center"/>
+                   VerticalAlignment="Center" />
 
             <TextBox Grid.Column="4"
                      Text="{Binding CountEventLogRows}"
-                     VerticalAlignment="Center"/>
+                     VerticalAlignment="Center" />
 
             <Grid Grid.Column="6"
                   x:Name="GridTextFilter"
                   VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
                 <Label Grid.Column="0"
@@ -81,10 +84,13 @@
                        VerticalAlignment="Center">
                     <Label.Style>
                         <Style TargetType="Label">
-                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Setter Property="Visibility"
+                                    Value="Collapsed" />
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding ElementName=TextBoxTextFilter, Path=Text}" Value="">
-                                    <Setter Property="Visibility" Value="Visible" />
+                                <DataTrigger Binding="{Binding ElementName=TextBoxTextFilter, Path=Text}"
+                                             Value="">
+                                    <Setter Property="Visibility"
+                                            Value="Visible" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -95,8 +101,10 @@
                          HorizontalAlignment="Left"
                          Text="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged}">
                     <TextBox.Style>
-                        <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignTextBox}">
-                            <Setter Property="Width" Value="120"/>
+                        <Style TargetType="TextBox"
+                               BasedOn="{StaticResource MaterialDesignTextBox}">
+                            <Setter Property="Width"
+                                    Value="120" />
                             <Style.Triggers>
                                 <EventTrigger RoutedEvent="TextBox.MouseEnter">
                                     <EventTrigger.Actions>
@@ -104,7 +112,7 @@
                                             <Storyboard>
                                                 <DoubleAnimation Storyboard.TargetProperty="Width"
                                                                  Duration="0:0:0.4"
-                                                                 To="360"/>
+                                                                 To="360" />
                                             </Storyboard>
                                         </BeginStoryboard>
                                     </EventTrigger.Actions>
@@ -115,7 +123,7 @@
                                             <Storyboard>
                                                 <DoubleAnimation Storyboard.TargetProperty="Width"
                                                                  Duration="0:0:0.4"
-                                                                 To="120"/>
+                                                                 To="120" />
                                             </Storyboard>
                                         </BeginStoryboard>
                                     </EventTrigger.Actions>
@@ -131,14 +139,14 @@
                         Foreground="Black"
                         Opacity=".3"
                         BorderThickness="0"
-                        Command="{Binding ClearTextFilter}"/>
+                        Command="{Binding ClearTextFilter}" />
             </Grid>
 
             <Button Grid.Column="7"
                     Content="{md:PackIcon Kind=BookLock}"
                     Margin="5 0 0 0"
                     ToolTip="Выбрать файл"
-                    Click="ButtonSelectLogBookFile_Click"/>
+                    Click="ButtonSelectLogBookFile_Click" />
 
         </Grid>
 
@@ -146,43 +154,64 @@
 
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto" MaxWidth="250"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="7" />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
                 <ScrollViewer Grid.Column="0"
-                              x:Name="GridPropertyFilters"
-                              Width="227">
-                    <StackPanel>
+                              x:Name="GridPropertyFilters">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
 
-                        <Expander HorizontalAlignment="Stretch"
+                        <Expander Grid.Row="0"
+                                  HorizontalAlignment="Stretch"
                                   Header="Период">
 
-                            <StackPanel>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
 
-                                <Label Content="Начало периода"/>
-                                <StackPanel Orientation="Horizontal">
-                                    <DatePicker Width="100"
-                                                HorizontalContentAlignment="Right"
-                                                SelectedDate="{Binding StartPeriodDate}"/>
-                                    <local:TimeControl x:Name="TimeControlStartPeriod"
-                                                       Value="{Binding StartPeriodTime}"/>
+                                <StackPanel Grid.Row="0"
+                                            Orientation="Vertical">
+                                    <Label Content="Начало периода" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <DatePicker Width="100"
+                                                    HorizontalContentAlignment="Right"
+                                                    SelectedDate="{Binding StartPeriodDate}" />
+                                        <local:TimeControl x:Name="TimeControlStartPeriod"
+                                                           Value="{Binding StartPeriodTime}" />
+                                    </StackPanel>
                                 </StackPanel>
 
-                                <Label Content="Конец периода"/>
-                                <StackPanel Orientation="Horizontal">
-                                    <DatePicker Width="100"
-                                                HorizontalContentAlignment="Right"
-                                                SelectedDate="{Binding EndPeriodDate}"/>
-                                    <local:TimeControl x:Name="TimeControlEndPeriod"
-                                                       Value="{Binding EndPeriodTime}"/>
+                                <StackPanel Grid.Row="1"
+                                            Orientation="Vertical">
+                                    <Label Content="Конец периода" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <DatePicker Width="100"
+                                                    HorizontalContentAlignment="Right"
+                                                    SelectedDate="{Binding EndPeriodDate}" />
+                                        <local:TimeControl x:Name="TimeControlEndPeriod"
+                                                           Value="{Binding EndPeriodTime}" />
+                                    </StackPanel>
                                 </StackPanel>
-
-                            </StackPanel>
+                            </Grid>
 
                         </Expander>
 
-                        <Expander HorizontalAlignment="Stretch"
+                        <Expander Grid.Row="1"
+                                  HorizontalAlignment="Stretch"
                                   Header="Приложения">
 
                             <ListBox ItemsSource="{Binding FilterAppCodes}">
@@ -192,7 +221,7 @@
                                         <CheckBox Content="{Binding Name}"
                                                   Tag="{Binding Code}"
                                                   IsChecked="{Binding IsChecked}"
-                                                  ToolTip="{Binding Name}"/>
+                                                  ToolTip="{Binding Name}" />
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
 
@@ -201,11 +230,11 @@
                                         <MenuItem Icon="{md:PackIcon CheckboxMultipleMarkedOutline}"
                                                   ToolTip="Выбрать все"
                                                   Command="{Binding FillDataAppCodesCommand}"
-                                                  CommandParameter="true"/>
+                                                  CommandParameter="true" />
                                         <MenuItem Icon="{md:PackIcon CheckboxMultipleBlankOutline}"
                                                   ToolTip="Отменить выбор всех"
                                                   Command="{Binding FillDataAppCodesCommand}"
-                                                  CommandParameter="false"/>
+                                                  CommandParameter="false" />
                                     </ContextMenu>
                                 </ListBox.ContextMenu>
 
@@ -213,7 +242,8 @@
 
                         </Expander>
 
-                        <Expander HorizontalAlignment="Stretch"
+                        <Expander Grid.Row="2"
+                                  HorizontalAlignment="Stretch"
                                   Header="Компьютеры">
 
                             <ListBox ItemsSource="{Binding FilterComputerCodes}">
@@ -223,7 +253,7 @@
                                         <CheckBox Content="{Binding Name}"
                                                   Tag="{Binding Code}"
                                                   IsChecked="{Binding IsChecked}"
-                                                  ToolTip="{Binding Name}"/>
+                                                  ToolTip="{Binding Name}" />
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
 
@@ -232,11 +262,11 @@
                                         <MenuItem Icon="{md:PackIcon CheckboxMultipleMarkedOutline}"
                                                   ToolTip="Выбрать все"
                                                   Command="{Binding FillDataComputerCodesCommand}"
-                                                  CommandParameter="true"/>
+                                                  CommandParameter="true" />
                                         <MenuItem Icon="{md:PackIcon CheckboxMultipleBlankOutline}"
                                                   ToolTip="Отменить выбор всех"
                                                   Command="{Binding FillDataComputerCodesCommand}"
-                                                  CommandParameter="false"/>
+                                                  CommandParameter="false" />
                                     </ContextMenu>
                                 </ListBox.ContextMenu>
 
@@ -244,7 +274,8 @@
 
                         </Expander>
 
-                        <Expander HorizontalAlignment="Stretch"
+                        <Expander Grid.Row="3"
+                                  HorizontalAlignment="Stretch"
                                   Header="События">
 
                             <ListBox ItemsSource="{Binding FilterEventCodes}">
@@ -253,7 +284,7 @@
                                         <CheckBox Content="{Binding Name}"
                                                   Tag="{Binding Code}"
                                                   IsChecked="{Binding IsChecked}"
-                                                  ToolTip="{Binding Name}"/>
+                                                  ToolTip="{Binding Name}" />
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
 
@@ -262,11 +293,11 @@
                                         <MenuItem Icon="{md:PackIcon CheckboxMultipleMarkedOutline}"
                                                   ToolTip="Выбрать все"
                                                   Command="{Binding FillDataEventCodesCommand}"
-                                                  CommandParameter="true"/>
+                                                  CommandParameter="true" />
                                         <MenuItem Icon="{md:PackIcon CheckboxMultipleBlankOutline}"
                                                   ToolTip="Отменить выбор всех"
                                                   Command="{Binding FillDataEventCodesCommand}"
-                                                  CommandParameter="false"/>
+                                                  CommandParameter="false" />
                                     </ContextMenu>
                                 </ListBox.ContextMenu>
 
@@ -274,13 +305,14 @@
 
                         </Expander>
 
-                        <Expander HorizontalAlignment="Stretch"
+                        <Expander Grid.Row="4"
+                                  HorizontalAlignment="Stretch"
                                   Header="Пользователи">
 
                             <Grid>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
+                                    <RowDefinition />
+                                    <RowDefinition />
                                 </Grid.RowDefinitions>
 
                                 <Grid Grid.Row="0"
@@ -292,10 +324,13 @@
                                            VerticalAlignment="Center">
                                         <Label.Style>
                                             <Style TargetType="Label">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Setter Property="Visibility"
+                                                        Value="Collapsed" />
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding ElementName=TextBoxFilterUserCodes, Path=Text}" Value="">
-                                                        <Setter Property="Visibility" Value="Visible" />
+                                                    <DataTrigger Binding="{Binding ElementName=TextBoxFilterUserCodes, Path=Text}"
+                                                                 Value="">
+                                                        <Setter Property="Visibility"
+                                                                Value="Visible" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -306,7 +341,7 @@
                                              VerticalAlignment="Center"
                                              HorizontalAlignment="Left"
                                              Width="200"
-                                             Text="{Binding TextFilterUserCodes, UpdateSourceTrigger=PropertyChanged}"/>
+                                             Text="{Binding TextFilterUserCodes, UpdateSourceTrigger=PropertyChanged}" />
                                 </Grid>
 
                                 <ListBox Grid.Row="1"
@@ -317,7 +352,7 @@
                                             <CheckBox Content="{Binding Name}"
                                                       Tag="{Binding Code}"
                                                       IsChecked="{Binding IsChecked}"
-                                                      ToolTip="{Binding Name}"/>
+                                                      ToolTip="{Binding Name}" />
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
 
@@ -326,11 +361,11 @@
                                             <MenuItem Icon="{md:PackIcon CheckboxMultipleMarkedOutline}"
                                                       ToolTip="Выбрать все"
                                                       Command="{Binding FillDataUserCodesCommand}"
-                                                      CommandParameter="true"/>
+                                                      CommandParameter="true" />
                                             <MenuItem Icon="{md:PackIcon CheckboxMultipleBlankOutline}"
                                                       ToolTip="Отменит выбор всех"
                                                       Command="{Binding FillDataUserCodesCommand}"
-                                                      CommandParameter="false"/>
+                                                      CommandParameter="false" />
                                         </ContextMenu>
                                     </ListBox.ContextMenu>
 
@@ -340,13 +375,14 @@
 
                         </Expander>
 
-                        <Expander HorizontalAlignment="Stretch"
-                                  Header="Метаданные">
+                        <Expander Grid.Row="5"
+                                  Header="Метаданные"
+                                  Visibility="Visible">
 
                             <Grid>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
+                                    <RowDefinition />
+                                    <RowDefinition />
                                 </Grid.RowDefinitions>
 
                                 <Grid Grid.Row="0"
@@ -359,10 +395,13 @@
                                            VerticalAlignment="Center">
                                         <Label.Style>
                                             <Style TargetType="Label">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Setter Property="Visibility"
+                                                        Value="Collapsed" />
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding ElementName=TextBoxFilterMetadataCodes, Path=Text}" Value="">
-                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    <DataTrigger Binding="{Binding ElementName=TextBoxFilterMetadataCodes, Path=Text}"
+                                                                 Value="">
+                                                        <Setter Property="Visibility"
+                                                                Value="Visible" />
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -373,55 +412,55 @@
                                              VerticalAlignment="Center"
                                              HorizontalAlignment="Left"
                                              Width="200"
-                                             Text="{Binding TextFilterMetadataCodes, UpdateSourceTrigger=PropertyChanged}"/>
+                                             Text="{Binding TextFilterMetadataCodes, UpdateSourceTrigger=PropertyChanged}" />
                                 </Grid>
 
-                                <ListBox Grid.Row="1"
-                                         ItemsSource="{Binding FilterMetadataCodes}">
+                                <Grid Grid.Row="1">
+                                    <TreeView ItemsSource="{Binding FilterMetadataCodesTree}">
+                                        <TreeView.ItemTemplate>
+                                            <HierarchicalDataTemplate ItemsSource="{Binding Nodes}">
+                                                <StackPanel Orientation="Horizontal">
+                                                    
+                                                    <CheckBox Grid.Column="0"
+                                                              IsChecked="{Binding IsChecked}" />
+                                                    <TextBlock Grid.Column="1"
+                                                               Text="{Binding Name}"
+                                                               TextWrapping="WrapWithOverflow" />
+                                                </StackPanel>
 
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <CheckBox Content="{Binding Name}"
-                                                      Tag="{Binding Code}"
-                                                      IsChecked="{Binding IsChecked}"
-                                                      ToolTip="{Binding Name}"/>
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-
-                                    <ListBox.ContextMenu>
-                                        <ContextMenu>
-                                            <MenuItem Icon="{md:PackIcon CheckboxMultipleMarkedOutline}"
-                                                      ToolTip="Выбрать все"
-                                                      Command="{Binding FillDataMetadataCodesCommand}"
-                                                      CommandParameter="true"/>
-                                            <MenuItem Icon="{md:PackIcon CheckboxMultipleBlankOutline}"
-                                                      ToolTip="Отменит выбор всех"
-                                                      Command="{Binding FillDataMetadataCodesCommand}"
-                                                      CommandParameter="false"/>
-                                        </ContextMenu>
-                                    </ListBox.ContextMenu>
-
-                                </ListBox>
+                                            </HierarchicalDataTemplate>
+                                        </TreeView.ItemTemplate>
+                                    </TreeView>
+                                </Grid>
 
                             </Grid>
 
                         </Expander>
 
-                        <Expander HorizontalAlignment="Stretch"
+                        <Expander Grid.Row="6"
+                                  HorizontalAlignment="Stretch"
                                   Header="Другие отборы">
 
                             <CheckBox IsChecked="{Binding CommentIsFilled}"
                                       Content="Не пустые комментарии"
-                                      Margin="10 0 0 0"/>
+                                      Margin="10 0 0 0" />
 
                         </Expander>
 
-                    </StackPanel>
+                    </Grid>
 
                 </ScrollViewer>
+             
+                <GridSplitter Grid.Column="1"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Stretch"
+                              Background="{DynamicResource PrimaryHueLightBrush}"
+                              Opacity="0"
+                              ShowsPreview="true"
+                              Width="5" />
 
                 <Grid x:Name="GridEventLogs"
-                      Grid.Column="1">
+                      Grid.Column="2">
 
                     <DataGrid ItemsSource="{Binding FilterEventLogs}"
                               IsReadOnly="True"
@@ -429,15 +468,23 @@
                               ScrollViewer.CanContentScroll="True">
 
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Номер строки"   Binding="{Binding RowID}"/>
-                            <DataGridTextColumn Header="Дата"           Binding="{Binding DateTime, StringFormat=\{0:dd.MM.yyyy HH:mm:ss\}}"/>
-                            <DataGridTextColumn Header="Пользователь"   Binding="{Binding UserName}"/>
-                            <DataGridTextColumn Header="Компьютер"      Binding="{Binding ComputerName}"/>
-                            <DataGridTextColumn Header="Приложение"     Binding="{Binding AppName}"/>
-                            <DataGridTextColumn Header="Событие"        Binding="{Binding EventName}"/>
-                            <DataGridTextColumn Header="Метаданные"     Binding="{Binding MetadataName}"/>
-                            <DataGridTextColumn Header="Комментарий"    Binding="{Binding Comment}"
-                                                MaxWidth="750"/>
+                            <DataGridTextColumn Header="Номер строки"
+                                                Binding="{Binding RowID}" />
+                            <DataGridTextColumn Header="Дата"
+                                                Binding="{Binding DateTime, StringFormat=\{0:dd.MM.yyyy HH:mm:ss\}}" />
+                            <DataGridTextColumn Header="Пользователь"
+                                                Binding="{Binding UserName}" />
+                            <DataGridTextColumn Header="Компьютер"
+                                                Binding="{Binding ComputerName}" />
+                            <DataGridTextColumn Header="Приложение"
+                                                Binding="{Binding AppName}" />
+                            <DataGridTextColumn Header="Событие"
+                                                Binding="{Binding EventName}" />
+                            <DataGridTextColumn Header="Метаданные"
+                                                Binding="{Binding MetadataName}" />
+                            <DataGridTextColumn Header="Комментарий"
+                                                Binding="{Binding Comment}"
+                                                MaxWidth="750" />
                         </DataGrid.Columns>
 
                     </DataGrid>
@@ -449,7 +496,7 @@
                                  IsIndeterminate="True"
                                  Height="50"
                                  Width="50"
-                                 Visibility="{Binding ProgressBarLoadDataVisibility}"/>
+                                 Visibility="{Binding ProgressBarLoadDataVisibility}" />
 
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Right"
@@ -457,9 +504,9 @@
                                 Opacity=".7"
                                 Margin="0,0,15,15">
                         <Label Content="Выбрано:"
-                               Foreground="{DynamicResource PrimaryHueDarkBrush}"/>
+                               Foreground="{DynamicResource PrimaryHueDarkBrush}" />
                         <Label Foreground="{DynamicResource PrimaryHueDarkBrush}"
-                               Content="{Binding FilterEventLogs.Count}"/>
+                               Content="{Binding FilterEventLogs.Count}" />
                     </StackPanel>
 
                 </Grid>

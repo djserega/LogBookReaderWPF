@@ -119,6 +119,7 @@
     </Compile>
     <Compile Include="Validators\TimeControl.cs" />
     <Compile Include="ViewModel\FilterEventLog.cs" />
+    <Compile Include="Filters\MetadataCodesNode.cs" />
     <Compile Include="ViewModel\PropertyFilters.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

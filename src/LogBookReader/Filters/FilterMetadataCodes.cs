@@ -16,11 +16,21 @@ namespace LogBookReader.Filters
         public string Name { get; set; }
         public string Uuid { get; set; }
 
+        public string Child { get; set; }
+        public string Parent { get; set; }
+
         public void Fill(Models.MetadataCodes metadataCode)
         {
             Code = metadataCode.Code;
             Name = metadataCode.Name;
             Uuid = metadataCode.Uuid;
+
+            int positionDot = Name.IndexOf('.');
+            if (positionDot > 0)
+            {
+                Parent = Name.Substring(0, positionDot);
+                Child = Name.Substring(positionDot + 1, Name.Length - positionDot - 1);
+            }
         }
     }
 }
