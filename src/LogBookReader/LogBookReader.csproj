@@ -121,6 +121,10 @@
     <Compile Include="ViewModel\FilterEventLog.cs" />
     <Compile Include="Filters\MetadataCodesNode.cs" />
     <Compile Include="ViewModel\PropertyFilters.cs" />
+    <Page Include="DictionaryResources\DictionaryBorder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
