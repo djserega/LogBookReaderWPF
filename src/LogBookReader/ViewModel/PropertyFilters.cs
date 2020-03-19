@@ -392,7 +392,7 @@ namespace LogBookReader.ViewModel
 
             FilterMetadataCodesTree = nodes;
 
-            FilterMetadataCodes = CollectionViewSource.GetDefaultView(filterMetadataCode);
+            FilterMetadataCodes = CollectionViewSource.GetDefaultView(FilterMetadataCodesTree);
         }
 
         #endregion

@@ -164,7 +164,7 @@
                               x:Name="GridPropertyFilters">
 
                     <md:Card Background="{DynamicResource MaterialDesignBackground}">
-                      
+
                         <StackPanel>
 
                             <Border Style="{StaticResource BorderDividerHorizontal}" />
